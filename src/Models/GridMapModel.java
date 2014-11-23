@@ -1,3 +1,6 @@
+package Models;
+import Models.PlayerModel;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,5 +31,9 @@ public class GridMapModel implements Serializable
 		allModels[level][dx][dy] = pm;
 		allModels[level][sx][sy] = null;
 		lock.unlock();
+	}
+	public Map<Integer, PlayerModel> getPlayers()
+	{
+		return playerLookup;
 	}
 }

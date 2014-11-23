@@ -1,3 +1,4 @@
+package Models;
 import javax.swing.ImageIcon;
 
 public class ArmorModel extends ItemModel
