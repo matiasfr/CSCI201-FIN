@@ -9,7 +9,6 @@ public class PlayerModel extends AbstractObjectModel
 {
 	int playerID;
 	String playerName;
-	boolean team;
 	int playerCurrentHealth;
 	int playerTotalHealth;
 	int playerArmorPoints; // reduces damage taken by certain %
@@ -18,20 +17,21 @@ public class PlayerModel extends AbstractObjectModel
 	int playerLocationX;
 	int playerLocationY;
 	int playerLocationQuarter;
+	boolean playerTeam;
 	ArrayList<ItemModel> playerInventory;
 	ArrayList<ImageIcon> playerSprites; // all possible images for animation
 	ImageIcon playerImage; // current sprite
-	
 	
 	int playerDirection;//0-up  1-right  2-down  3-left
 	
 	//lock on this object for the server
 	Lock lock = new ReentrantLock();
-	public PlayerModel(int playerID, String playerName, boolean team)
+
+	public PlayerModel(int playerID, String playerName, boolean playerTeam)
 	{
 		this.playerID = playerID;
 		this.playerName = playerName;
-		this.team = team;
+		this.playerTeam = playerTeam;
 		init();
 	}
 	public void init()
