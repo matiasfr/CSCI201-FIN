@@ -9,6 +9,7 @@ public class PlayerModel extends AbstractObjectModel
 {
 	int playerID;
 	String playerName;
+	boolean team;
 	int playerCurrentHealth;
 	int playerTotalHealth;
 	int playerArmorPoints; // reduces damage taken by certain %
@@ -26,10 +27,11 @@ public class PlayerModel extends AbstractObjectModel
 	
 	//lock on this object for the server
 	Lock lock = new ReentrantLock();
-	public PlayerModel(int playerID, String playerName)
+	public PlayerModel(int playerID, String playerName, boolean team)
 	{
 		this.playerID = playerID;
 		this.playerName = playerName;
+		this.team = team;
 		init();
 	}
 	public void init()
