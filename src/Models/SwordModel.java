@@ -1,3 +1,5 @@
+package Models;
+
 import javax.swing.ImageIcon;
 
 public class SwordModel extends ItemModel
