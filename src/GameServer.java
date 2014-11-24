@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.locks.ReentrantLock;
 
 import Models.GridMapModel;
 import Models.PlayerModel;
@@ -25,6 +26,8 @@ public class GameServer
 	int id = 0;
 	boolean gameStart = false;
 	boolean gridMapInit = false;
+	boolean readyState[] = {false, false, false, false}; //fixed at player cap
+	ReentrantLock queryLock = new ReentrantLock();
 
 	//Threads
 	ArrayList<ServerLobbyThread> lobbyThreads;
@@ -61,7 +64,7 @@ public class GameServer
 				allClientWriters.put(id, pw);
 				allClientObjectWriters.put(id, oos);
 				
-				ServerLobbyThread slt = new ServerLobbyThread(s, id);
+				ServerLobbyThread slt = new ServerLobbyThread(s, id, this);
 				lobbyThreads.add(slt);
 				gameThreads.add(new ServerGameThread(s, id, this));
 				updateClientThreads.add(new ServerUpdateClientThread(s, id));
