@@ -17,7 +17,7 @@ public class PlayerModel extends AbstractObjectModel
 	int playerLocationX;
 	int playerLocationY;
 	int playerLocationQuarter;
-	boolean playerTeam;
+	int playerTeam;
 	ArrayList<ItemModel> playerInventory;
 	ArrayList<ImageIcon> playerSprites; // all possible images for animation
 	ImageIcon playerImage; // current sprite
@@ -27,7 +27,7 @@ public class PlayerModel extends AbstractObjectModel
 	//lock on this object for the server
 	Lock lock = new ReentrantLock();
 
-	public PlayerModel(int playerID, String playerName, boolean playerTeam)
+	public PlayerModel(int playerID, String playerName, int playerTeam)
 	{
 		this.playerID = playerID;
 		this.playerName = playerName;
@@ -90,5 +90,11 @@ public class PlayerModel extends AbstractObjectModel
 		lock.lock();
 		playerDirection = dir;
 		lock.unlock();
+	}
+	public String getName() {
+		return playerName;
+	}
+	public int getTeam() {
+		return playerTeam;
 	}
 }
