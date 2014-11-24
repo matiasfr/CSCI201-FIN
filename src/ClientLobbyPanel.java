@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 import javax.swing.event.*;
+import java.io.*;
+import java.net.Socket;
 
 public class ClientLobbyPanel extends JPanel implements Runnable {
 	// Countdown
@@ -14,14 +16,18 @@ public class ClientLobbyPanel extends JPanel implements Runnable {
 	private JTextArea usersTextArea;
 	private static final String PLAYERS_IN_LOBBY_STRING = "Players in Lobby:\n";
 	private ArrayList<String> usersList;
-	// ClientApplication
+	// Game stuff 
 	private ClientApplication myClient;
+	// Networking stuff
+	private Socket s;
+	private BufferedReader br;
 
 	//// Constructor ////
-	public ClientLobbyPanel(ClientApplication myClient) {
+	public ClientLobbyPanel(ClientApplication myClient, Socket s) {
 		//// Initialization ////
-		// ClientApplication
+		// Game stuff 
 		this.myClient = myClient;
+		
 		// Countdown
 		countdownLabel = new JLabel(TIME_UNTIL_START_STRING + countdownNum);
 		countdownTimer = new Timer(SECOND, new ActionListener() {
@@ -30,16 +36,21 @@ public class ClientLobbyPanel extends JPanel implements Runnable {
 				updateCountdown();
 			} // end public void actionPerformed(ActionEvent)
 		});
+
 		// Users in lobby
 		usersTextArea = new JTextArea(PLAYERS_IN_LOBBY_STRING);
 		usersList = new ArrayList<String>();
 
 		// Create ClientLobbyThread
+		// Networking stuff
+		this.s = s;
+		try {
+			br = new BufferedReader(new InputStreamReader(s.getInputStream()));
+		} catch(IOException ioe) {
+			System.out.println(ioe.getMessage());
+		} // end try/catch
 
-		while(true) {
-			// Listen for new player name from server, add when received
-			// Listen for start signal, tell myClient to show gamePanel
-		} // end listening for signals from server
+		
 		// Stop thread
 	} // end public ClientLobbyPanel constructor
 
@@ -69,7 +80,8 @@ public class ClientLobbyPanel extends JPanel implements Runnable {
 	//// Thread Methods ////
 	public void run() {
 		while(true) {
-				
-		}
+			// Listen for new player name from server, add when received
+			// Listen for start signal, tell myClient to show gamePanel
+		} // end listening for signals from server			
 	} // end public void run
 } // end class ClientLobbyPanel
