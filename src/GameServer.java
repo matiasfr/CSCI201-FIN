@@ -8,6 +8,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import Models.GridMapModel;
+import Models.PlayerModel;
+
 
 public class GameServer 
 {
