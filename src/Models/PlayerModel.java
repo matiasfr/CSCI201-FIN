@@ -8,6 +8,10 @@ import javax.swing.ImageIcon;
 
 public class PlayerModel extends AbstractObjectModel 
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2230794125380108205L;
 	public int playerID;
 	public String playerName;
 	public int playerCurrentHealth;
@@ -18,7 +22,7 @@ public class PlayerModel extends AbstractObjectModel
 	public int playerLocationX;
 	public int playerLocationY;
 	public int playerLocationQuarter;
-	boolean playerTeam;
+	int playerTeam;
 	public ArrayList<ItemModel> playerInventory;
 	public ArrayList<ImageIcon> playerSprites; // all possible images for animation
 	public ImageIcon playerImage; // current sprite
@@ -27,11 +31,11 @@ public class PlayerModel extends AbstractObjectModel
 	
 	//lock on this object for the server
 	public Lock lock = new ReentrantLock();
-	public PlayerModel(int playerID, String playerName, boolean playerTeam)
+	public PlayerModel(int playerID, String playerName, int team)
 	{
 		this.playerID = playerID;
 		this.playerName = playerName;
-		this.playerTeam = playerTeam;
+		this.playerTeam = team;
 		init();
 	}
 	public void init()

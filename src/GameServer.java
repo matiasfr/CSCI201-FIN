@@ -1,3 +1,4 @@
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
@@ -7,11 +8,22 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.locks.ReentrantLock;
 
 import Models.GridMapModel;
 import Models.PlayerModel;
 
-
+/*				CLIENT-SERVER Communication Nomenclature
+ * 				Standard policy: all caps, delimited by colons, no spaces.
+ * -Lobby	"USERNAME:theactualusername"	"STATUS:READY" "TIMER:timetoadd"
+ * -chat    -server receives "CHAT:recipient1,recipient2,recipient3:messageContent"
+ * 			 -server sends	   "CHAT:senderName:messageContent"
+ * 
+ * 
+ * 
+ * 
+ * 						ADD YOUR OWN SO EVERYONE CAN STAY IN SYNC
+ */
 public class GameServer 
 {
 	//shared data
@@ -25,12 +37,13 @@ public class GameServer
 	int id = 0;
 	boolean gameStart = false;
 	boolean gridMapInit = false;
+	boolean readyState[] = {false, false, false, false}; //fixed at player cap
+	ReentrantLock queryLock = new ReentrantLock();
 
 	//Threads
 	ArrayList<ServerLobbyThread> lobbyThreads;
 	ArrayList<ServerGameThread> gameThreads;
 	ArrayList<ServerUpdateClientThread> updateClientThreads; 
-	ArrayList<ServerChatThread> chatThreads;
 
 	public GameServer() 
 	{
@@ -61,11 +74,10 @@ public class GameServer
 				allClientWriters.put(id, pw);
 				allClientObjectWriters.put(id, oos);
 				
-				ServerLobbyThread slt = new ServerLobbyThread(s, id);
+				ServerLobbyThread slt = new ServerLobbyThread(s, id, this);
 				lobbyThreads.add(slt);
 				gameThreads.add(new ServerGameThread(s, id, this));
-				updateClientThreads.add(new ServerUpdateClientThread(s, id));
-				chatThreads.add(new ServerChatThread(s, id));
+				updateClientThreads.add(new ServerUpdateClientThread(s, id, this));
 				
 				id++;
 				slt.start();
@@ -82,12 +94,6 @@ public class GameServer
 					itGame.next().start();
 				}
 				
-				//start all ServerChatThread threads
-				Iterator<ServerChatThread> itChat = chatThreads.iterator();
-				while(itChat.hasNext())
-				{
-					itChat.next().start();
-				}
 				
 				//start all ServerUpdateClientThread threads
 				Iterator<ServerUpdateClientThread> itUpdate = updateClientThreads.iterator();
