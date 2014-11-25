@@ -1,11 +1,12 @@
 import javax.swing.*;
 import javax.swing.Timer;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.*;
 import java.util.*;
-import java.io.*;
-import java.net.Socket;
+import Models.PlayerModel;
 
-public class ClientLobbyPanel extends JPanel implements Runnable {
+public class ClientLobbyPanel extends JPanel {
 	private static final long serialVersionUID = -4190798695389804885L;
 	// Countdown
 	private JLabel countdownLabel;
@@ -15,51 +16,68 @@ public class ClientLobbyPanel extends JPanel implements Runnable {
 	private static final int ONE_SECOND = 1000;
 	// Users in lobby
 	private JTextArea usersTextArea;
-	private static final String PLAYERS_IN_LOBBY_STRING = "Players in Lobby:\n";
+	private static final String PLAYERS_IN_LOBBY_STRING = "Players in Lobby:\n\n";
 	private ArrayList<String> usersList;
 	// Game stuff
-	//private ClientApplication myClient;
-	// Networking stuff
-	private Socket s;
-	private BufferedReader br;
+	private ClientApplication myClient;
 
 	//// Constructor ////
-	public ClientLobbyPanel(Socket s, BufferedReader br) {
-		//// Initialization ////
-		// Game stuff
-		//this.myClient = myClient;
+	public ClientLobbyPanel(ClientApplication myClient) {
+		//// Initial GUI setup ////
+		setLayout(null);
+		setSize(1000, 800);
+		setBackground(Color.white);
 		
-		// Countdown
+		//// Game client ////
+		this.myClient = myClient;
+		
+		//// Countdown Setup ////
 		countdownLabel = new JLabel(TIME_UNTIL_START_STRING + countdownNum);
+		Dimension countdownLabelDimensions = countdownLabel.getPreferredSize();
+		countdownLabel.setBounds(700, 300, countdownLabelDimensions.width, countdownLabelDimensions.height);
+		add(countdownLabel);
+		
 		countdownTimer = new Timer(ONE_SECOND, new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				countdownNum--;
 				updateCountdown();
 			} // end public void actionPerformed(ActionEvent)
 		});
-		countdownTimer.start();
 
-		// Users in lobby
-		usersTextArea = new JTextArea(PLAYERS_IN_LOBBY_STRING);
+		//// Users in lobby setup ////
 		usersList = new ArrayList<String>();
-
-		// Create ClientLobbyThread
-		// Networking stuff
-		this.s = s;
-		this.br = br;
-		// Stop thread
+		usersTextArea = new JTextArea(PLAYERS_IN_LOBBY_STRING);
+		usersTextArea.setEditable(false);
+		usersTextArea.setBorder(BorderFactory.createLineBorder(Color.black));
+		Dimension usersTextAreaDimensions = usersTextArea.getPreferredSize();
+		usersTextArea.setBounds(100, 300, usersTextAreaDimensions.width, usersTextAreaDimensions.height);
+		add(usersTextArea);
+		
+		// Final GUI Setup
 	} // end public ClientLobbyPanel constructor
 
 	//// Player List Methods ////
-	public void addPlayer(String newPlayer) {
-		usersList.add(newPlayer);
-		updatePlayers();
-	} // end public void addPlayer(String)
+	public void addPlayers(Map<Integer, PlayerModel> players) {
+		for(Map.Entry<Integer, PlayerModel> entry : players.entrySet()) {
+			PlayerModel player = entry.getValue();
+			usersList.add("Player: " + player.playerName + " - Team: " + player.playerID);
+			updatePlayers();
+		}
+	} // end public void addPlayers(Map<Integer, PlayerModel>)
 
-	public void updatePlayers() {
+	private void updatePlayers() {
 		usersTextArea.setText(PLAYERS_IN_LOBBY_STRING);
 		for(String username : usersList) {
-			usersTextArea.setText(usersTextArea.getText() + username + "\n");
+			// Add player name
+			if(usersList.indexOf(username) != 3) {
+				username += "\n\n";
+			}
+			usersTextArea.setText(usersTextArea.getText() + username);
+
+			// Update text area dimensions and repaint it
+			Dimension usersTextAreaDimensions = usersTextArea.getPreferredSize();
+			usersTextArea.setBounds(100, 300, usersTextAreaDimensions.width, usersTextAreaDimensions.height);
+			repaint();
 		}
 	} // end public void updatePlayers
 
@@ -69,20 +87,18 @@ public class ClientLobbyPanel extends JPanel implements Runnable {
 	} // end public void removePlayer(String)
 
 	//// Countdown Methods ////
+	public void startCountdown() {
+		countdownTimer.start();
+	} // end public void startCountdown
+	
 	public void setCountdown(int newCountdown) {
 		countdownNum = newCountdown;
 		updateCountdown();
 	} // end public void setCountdown(int)
 	
-	public void updateCountdown() {
-		countdownLabel.setText(TIME_UNTIL_START_STRING + countdownNum);
+	private void updateCountdown() {
+		if(countdownNum > 0) {
+			countdownLabel.setText(TIME_UNTIL_START_STRING + countdownNum);
+		}
 	} // end public void updateCountdown
-
-	//// Thread Methods ////
-	public void run() {
-		while(true) {
-			// Listen for new player name from server, add when received
-			// Listen for start signal, tell myClient to show gamePanel
-		} // end listening for signals from server			
-	} // end public void run
 } // end class ClientLobbyPanel
