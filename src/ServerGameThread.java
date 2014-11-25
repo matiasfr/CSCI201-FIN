@@ -144,28 +144,22 @@ public class ServerGameThread extends Thread
 				catch (IOException e) {}
 				
 				//parses the incoming string
-				StringTokenizer st = new StringTokenizer(message," :");
-				String typeMessage = st.nextToken();
+				//StringTokenizer st = new StringTokenizer(message," :");
+				//String typeMessage = st.nextToken();
 				
-				/*String messages[] = message.split(":")
-				 * String typeMessage = messages[0];
-				 * String distance = messages[1];
-				 * etc. 
-				 * 
-				 * if(messages[0] == CHAT) {
-				 * delegate to processMessage(String[] message) {
-				 * 
-				 * when sending	server.gmm.getPlayers().get(id).getName
-				 * 
-				 * }
-				 */
-				
+				String messages[] = message.split(":");
+				String typeMessage = messages[0];
+			    if(messages[0] == "CHAT") {
+			    	processMessage(messages);
+			    }
+				  
 				String distance;
 				//client attacked another client
 				if(typeMessage.equals("A")) 
 				{
 					//value of attack (strength)
-					String attack = st.nextToken();
+					//String attack = st.nextToken();
+					String attack = messages[1];
 					
 					int xpos = server.gmm.playerLookup.get(this.id).playerLocationX;
 					int ypos = server.gmm.playerLookup.get(this.id).playerLocationY;
@@ -210,7 +204,7 @@ public class ServerGameThread extends Thread
 				//client moved
 				else if(typeMessage.equals("U")) 
 				{ 
-					distance = st.nextToken();
+					distance = messages[1];
 					server.gmm.playerLookup.get(this.id).setDirection(0);
 					boolean isMoveable = true;
 					int xpos = server.gmm.playerLookup.get(this.id).playerLocationX;
@@ -272,7 +266,7 @@ public class ServerGameThread extends Thread
 				}
 				else if(typeMessage.equals("D")) 
 				{ 
-					distance = st.nextToken();
+					distance = messages[1];
 					server.gmm.playerLookup.get(this.id).setDirection(2);
 					boolean isMoveable = true;
 					int xpos = server.gmm.playerLookup.get(this.id).playerLocationX;
@@ -332,7 +326,7 @@ public class ServerGameThread extends Thread
 				}
 				else if(typeMessage.equals("L")) 
 				{ 
-					distance = st.nextToken();
+					distance = messages[1];
 					server.gmm.playerLookup.get(this.id).setDirection(3);
 					boolean isMoveable = true;
 					int xpos = server.gmm.playerLookup.get(this.id).playerLocationX;
@@ -393,7 +387,7 @@ public class ServerGameThread extends Thread
 				}
 				else if(typeMessage.equals("R")) 
 				{ 
-					distance = st.nextToken();
+					distance = messages[1];
 					server.gmm.playerLookup.get(this.id).setDirection(1);
 					boolean isMoveable = true;
 					int xpos = server.gmm.playerLookup.get(this.id).playerLocationX;
@@ -458,6 +452,11 @@ public class ServerGameThread extends Thread
 			}
 		}
 	}
+	private void processMessage(String[] m) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	public void killThread()
 	{
 		threadActive = false;
