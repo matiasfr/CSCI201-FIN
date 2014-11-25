@@ -18,18 +18,13 @@ public class ClientLobbyPanel extends JPanel {
 	private JTextArea usersTextArea;
 	private static final String PLAYERS_IN_LOBBY_STRING = "Players in Lobby:\n\n";
 	private ArrayList<String> usersList;
-	// Game stuff
-	private ClientApplication myClient;
 
 	//// Constructor ////
-	public ClientLobbyPanel(ClientApplication myClient) {
+	public ClientLobbyPanel() {
 		//// Initial GUI setup ////
 		setLayout(null);
 		setSize(1000, 800);
 		setBackground(Color.white);
-		
-		//// Game client ////
-		this.myClient = myClient;
 		
 		//// Countdown Setup ////
 		countdownLabel = new JLabel(TIME_UNTIL_START_STRING + countdownNum);
