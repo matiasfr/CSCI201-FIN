@@ -1,14 +1,15 @@
 import javax.swing.*;
-import java.awt.*;
+import javax.swing.Timer;
 import java.awt.event.*;
 import java.util.*;
 import java.io.*;
 import java.net.Socket;
 
 public class ClientLobbyPanel extends JPanel implements Runnable {
+	private static final long serialVersionUID = -4190798695389804885L;
 	// Countdown
 	private JLabel countdownLabel;
-	private static int countdownNum = 60;
+	private static int countdownNum = 30;
 	private static final String TIME_UNTIL_START_STRING = "Seconds until start: ";
 	private Timer countdownTimer;
 	private static final int ONE_SECOND = 1000;
@@ -16,26 +17,27 @@ public class ClientLobbyPanel extends JPanel implements Runnable {
 	private JTextArea usersTextArea;
 	private static final String PLAYERS_IN_LOBBY_STRING = "Players in Lobby:\n";
 	private ArrayList<String> usersList;
-	// Game stuff 
-	private ClientApplication myClient;
+	// Game stuff
+	//private ClientApplication myClient;
 	// Networking stuff
 	private Socket s;
 	private BufferedReader br;
 
 	//// Constructor ////
-	public ClientLobbyPanel(ClientApplication myClient, Socket s) {
+	public ClientLobbyPanel(Socket s, BufferedReader br) {
 		//// Initialization ////
-		// Game stuff 
-		this.myClient = myClient;
+		// Game stuff
+		//this.myClient = myClient;
 		
 		// Countdown
 		countdownLabel = new JLabel(TIME_UNTIL_START_STRING + countdownNum);
-		countdownTimer = new Timer(SECOND, new ActionListener() {
+		countdownTimer = new Timer(ONE_SECOND, new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				countdownNum--;
 				updateCountdown();
 			} // end public void actionPerformed(ActionEvent)
 		});
+		countdownTimer.start();
 
 		// Users in lobby
 		usersTextArea = new JTextArea(PLAYERS_IN_LOBBY_STRING);
@@ -44,13 +46,7 @@ public class ClientLobbyPanel extends JPanel implements Runnable {
 		// Create ClientLobbyThread
 		// Networking stuff
 		this.s = s;
-		try {
-			br = new BufferedReader(new InputStreamReader(s.getInputStream()));
-		} catch(IOException ioe) {
-			System.out.println(ioe.getMessage());
-		} // end try/catch
-
-		
+		this.br = br;
 		// Stop thread
 	} // end public ClientLobbyPanel constructor
 
@@ -73,6 +69,11 @@ public class ClientLobbyPanel extends JPanel implements Runnable {
 	} // end public void removePlayer(String)
 
 	//// Countdown Methods ////
+	public void setCountdown(int newCountdown) {
+		countdownNum = newCountdown;
+		updateCountdown();
+	} // end public void setCountdown(int)
+	
 	public void updateCountdown() {
 		countdownLabel.setText(TIME_UNTIL_START_STRING + countdownNum);
 	} // end public void updateCountdown

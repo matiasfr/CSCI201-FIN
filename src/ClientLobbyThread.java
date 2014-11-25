@@ -1,3 +1,6 @@
+import java.net.Socket;
+import javax.swing.JTextArea;
+
 public class ClientLobbyThread extends Thread {
 	Socket s;
 	JTextArea usersInLobby;
