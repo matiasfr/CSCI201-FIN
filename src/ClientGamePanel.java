@@ -1,23 +1,32 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.Map;
 
 import javax.swing.*;
 
 
-public class ClientGamePanel extends JFrame implements ActionListener {
-
+public class ClientGamePanel extends JPanel {
+	
+	
+	private PrintWriter pw;
+	private BufferedReader br;	
+	private static Socket mySocket;
 	private GridMapModel gridMap;
 	JPanel mainPanel;
-	JPanel drawingPanel;
+	ClientDrawingPanel drawingPanel;
 	JPanel chatPanel;
 	JPanel statsPanel;
 	
 
-	public ClientGamePanel(GridMapModel gridMap){
-		super("Our Game");
-		setResizable(false);
+	public ClientGamePanel( GridMapModel gridMap, PrintWriter pw){
+		
 		this.gridMap= gridMap;
+		
+		this.pw=pw;
 		//Sets up the entire view for the game. Main panel will include:
 		// 1.) ClientDrawingpanel (CENTER) 
 		// 2.) ChatPanel        (EAST)
@@ -27,35 +36,41 @@ public class ClientGamePanel extends JFrame implements ActionListener {
 		mainPanel.setSize(1000,600);
 		
 		//set up chat panel
-		chatPanel = new ClientChatPanel();
-		chatPanel.setSize(200,600);
-		//chatPanel.getPreferredSize();
+		//Map<Integer, PlayerModel> players, PrintWriter pw, BufferedReader br
+		//chatPanel = new ClientChatPanel( gridMap.getPlayers(),pw, br );
+
 		statsPanel = new ClientStatsPanel();
 		statsPanel.setSize(200,600);
 		
 		//set up drawing panel
-		drawingPanel = new ClientDrawingPanel();
+		drawingPanel = new ClientDrawingPanel(gridMap);
 		drawingPanel.setSize(600,600);
 		drawingPanel.setLayout(null);
 		
 		
 		mainPanel.add(drawingPanel);
+		drawingPanel.setLocation(200, 0);
 		mainPanel.add(statsPanel);
-		mainPanel.add(chatPanel);
-		chatPanel.setLocation(800, 0);
+		//mainPanel.add(chatPanel);
+		//chatPanel.setLocation(800, 0);
 		add(mainPanel);
 		//add(chatPanel);
 		//mainPanel.setPreferredSize(new Dimension(600, 600));
 		mainPanel.setVisible(true);
 		
 		
-	}
-	public JPanel gui(){
-		return mainPanel;
+		
+		
 	}
 	
 	
-	public void actionPerformed(ActionEvent ae){
-			
+	
+	//we got a new gridmapmodel so let everyone know. 
+	public void refreshAll(){
+		drawingPanel.repaint();
 	}
+	
+
+	
+	
 }

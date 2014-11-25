@@ -9,25 +9,24 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.*;
 
-public class ClientApplication extends JFrame{
+public class ClientApplication extends JFrame implements Runnable{
 
-	
-	
-		//Panels
-	//	ClientLoginPanel loginPanel;
-		//ClientLobbyPanel lobbyPanel;
-		//ClientGamePanel gamePanel;
-	//	ClientChatPanel chatPanel;
 		ClientDrawingPanel drawingPanel;
 		//Threads
 	//	ClientLoginThread loginThread;
 	//	ClientLobbyThread lobbyThread;
 	//	ClientGameReceiverThread gameReceiverThread;
 	//	ClientGameSenderThread gameSenderThread;
-	//	ClientChatThread chatThread;
+		
+		private JPanel cardsPanel;
+		private CardLayout cl;
+
 		//Model
 		private ObjectOutputStream outToServer;
 		private ObjectInputStream inFromServer;
@@ -36,31 +35,101 @@ public class ClientApplication extends JFrame{
 		private static Socket mySocket;
 		
 		private static GridMapModel myGridMap;
-		private  static ClientGamePanel myGame;
+		private static ClientGamePanel myGame;
+		private Boolean needToLogin = true;
+		private Boolean inLobby = true;
+		
+	//	private static ClientLoginPanel login;
+		//private static ClientLobbyPanel lobby;
+		
+		
+		
 		public ClientApplication() {
-			 myGame = new ClientGamePanel(myGridMap);
-			 myGame.setMinimumSize(new Dimension(1000,600));
-			 //myGame.setMaximumSize(new Dimension(1000,600));
-			 
-			 myGame.setLocationRelativeTo(null);
-			// myGame.pack();
-			 myGame.setVisible(true);
-			 
-			 try{
+			super("Our Game");
+			setResizable(false);
+			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			setMinimumSize(new Dimension(1000,600));
+			setLocationRelativeTo(null);
+			setVisible(true);
+			
+			
+			try{
 					String hostname = "127.0.0.1";
 					int port = 1392;
 					mySocket = new Socket(hostname, port);
 					br =new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
 					pw =new PrintWriter(new OutputStreamWriter(mySocket.getOutputStream()));
-					NetworkThread myNT = new NetworkThread(this, br);
-					myNT.start();
+					//NetworkThread myNT = new NetworkThread(this, br);
+					//myNT.start();
 				}
 				catch(IOException ioe){
 					
 				}
-			//Create panels, pass in this to constructors
-			//Create threads
+			 
+			cl = new CardLayout();
+			cardsPanel = new JPanel(cl);
+						
+			myGame = new ClientGamePanel( myGridMap,pw);
+			//logIn = new ClientLoginPanel( pw);
+			//lobby = new ClientLobbyPanel( myGridMap,pw);
+			
+			cardsPanel.add(myGame, "GamePanel");
+			//cardsPanel.add(logIn, "LoginScreen");
+			//cardsPanel.add(lobby, "Lobby");
+	
+			cl.show(cardsPanel, "LoginScreen");
+			
+			new Thread(this).start();
+
+			
 		} //end public Client constructor
+		
+		public void run(){
+			while(true){
+				try {
+					Thread.sleep(1);
+					
+					//reading from the buffered reader.
+					
+					//MESSAGE PREFIX: CHAT 
+							//send him everything after the colon.
+							//writeChatMessage (msg);
+					
+					//MESSAGE PREFIX: USERNAME
+						//hide loginPanel and show lobbyPanel (loggedIn())
+						//cl.show(cardsPanel, "Lobby");
+					
+					
+					//MESSAGE PREFIX: STATUS
+						//when status is go, hide lobbyPanel and show gamePanel
+						//gamePanel shows the 3
+					
+					//MESSAGE PREFIX: TIMER
+					
+					//Object reading in check. 
+					
+					
+				} catch (InterruptedException e) {
+					
+					e.printStackTrace();
+				}
+				//refreshAll();
+			}
+			//We need to wait for the server to start sending something to us.
+			//then we have to take the object that the server sends to us and deserialize it. 	
+			
+		}
+		
+		public void loggedIn(){
+			//hide login panel and show lobby panel 
+			needToLogin=false;
+		}
+		
+		public void launchGame(){
+			//hide lobby panel and show game panel.
+			inLobby=false;
+		}
+		
 		public void sendToServer(GridMapModel gridMapObject){
 			try{
 				outToServer = new ObjectOutputStream(mySocket.getOutputStream());		
@@ -77,6 +146,8 @@ public class ClientApplication extends JFrame{
 			try{
 				inFromServer = new ObjectInputStream(mySocket.getInputStream());
 				gridMapModel = (GridMapModel)inFromServer.readObject();
+				
+				//update gridmapModel on our side. 
 				
 			}catch (Exception e) {
 		        
@@ -96,11 +167,11 @@ public class ClientApplication extends JFrame{
 		public static void main(String [] args){
 			
 			ClientApplication myClient = new ClientApplication();
-			myClient.setVisible(true);
-			
-			 
-		
 			 
 		}
+		
+		
+			
+		
 }
 
