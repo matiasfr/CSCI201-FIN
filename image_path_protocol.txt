@@ -1,0 +1,31 @@
+Protocol for image naming and file path.
+
+Folder names dictate what the files are.
+Images are overlapped to achieve a certain look.
+
+folder heirarchy  
+	armor—>
+		basic
+		bronze	
+		platinum 
+	arms—>
+		withWeapon—>
+			animated
+			still
+		withoutWeapon—>
+			animated
+			still
+	playerSkeleton 
+	teamColor—>
+		red
+		blue
+
+In each folder there are 4 different images that represent the look of each part of the final image:
+	facing_backwards.png
+	facing_forwards.png
+	facing_left.png
+	facing_right.png
+
+ex. “armor/platinum/facing_left.png“
+This is an image for platinum armor when the player is facing left
+	

@@ -1,5 +1,8 @@
 package Models;
+<<<<<<< HEAD
 import Models.PlayerModel;
+=======
+>>>>>>> 9004662885e9643a94a310ff77f099bb86d48be2
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -11,14 +14,14 @@ import javax.swing.ImageIcon;
 
 public class GridMapModel implements Serializable
 {
-	AbstractObjectModel[][][] allModels;
+	public AbstractObjectModel[][][] allModels;
 	
 	//for quick lookup of id to player
-	Map<Integer, PlayerModel> playerLookup;
+	public Map<Integer, PlayerModel> playerLookup;
 	
-	ImageIcon[] backgrounds = new ImageIcon[4];
+	public ImageIcon[] backgrounds = new ImageIcon[4];
 	
-	Lock lock = new ReentrantLock();
+	public Lock lock = new ReentrantLock();
 	public GridMapModel()
 	{
 		allModels = new AbstractObjectModel[4][10][10];

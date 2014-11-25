@@ -1,16 +1,20 @@
 import javax.swing.*;
+
 import java.awt.Dimension;
 import java.awt.event.*;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 
 import Models.PlayerModel;
 
 public class ClientChatPanel extends JPanel implements ActionListener {
-	private static final long serialVersionUID = -8301904130678673097L;
+	private static final long serialVersionUID = 8301904130678673097L;
 	
 	private Map<Integer, PlayerModel> players;
 	private PrintWriter pw;
+	private BufferedReader br;
 	
 	private JCheckBox global, team1, team2;
 	private ArrayList<JCheckBox> team1_list, team2_list;
@@ -21,9 +25,10 @@ public class ClientChatPanel extends JPanel implements ActionListener {
 	private JScrollPane outputPane;
 	private JTextField input;
 	
-	public ClientChatPanel (Map<Integer, PlayerModel> players, PrintWriter pw) {
+	public ClientChatPanel (Map<Integer, PlayerModel> players, PrintWriter pw, BufferedReader br) {
 		this.players = players;
 		this.pw = pw;
+		this.br = br;
 		
 		team1_list = new ArrayList<JCheckBox>();
 		team2_list = new ArrayList<JCheckBox>();
@@ -34,10 +39,10 @@ public class ClientChatPanel extends JPanel implements ActionListener {
 		
 		for (Map.Entry<Integer, PlayerModel> playerEntry : players.entrySet()) {
 			PlayerModel player = playerEntry.getValue();
-			JCheckBox box = new JCheckBox(player.getName());
+			JCheckBox box = new JCheckBox(player.playerName);
 			box.addActionListener(this);
-			if (player.getTeam() == 1) team1_list.add(box);
-			else /*if player.getTeam() == 2*/ team2_list.add(box);
+			if (player.playerTeam == 1) team1_list.add(box);
+			else /*if player.playerTeam == 2*/ team2_list.add(box);
 		}
 		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -71,7 +76,8 @@ public class ClientChatPanel extends JPanel implements ActionListener {
 	public void actionPerformed (ActionEvent e) {
 		if (e.getSource() == input) {
 			//writeChatMessage(input.getText());
-			pw.println(getSelectedPlayerIDs() + input.getText()); //TODO: flush in chat-thread
+			pw.println(getSelectedPlayerIDs() + input.getText());
+			pw.flush();
 			input.setText("");
 		}
 		else if (e.getSource() == global) {
@@ -126,10 +132,10 @@ public class ClientChatPanel extends JPanel implements ActionListener {
 		for (JCheckBox box : team1_list)
 			if (box.isSelected()) playerNames.add(box.getText());
 		
-		String s = "chat:";
+		String s = "CHAT:";
 		for (Map.Entry<Integer, PlayerModel> player : players.entrySet())
 			for (String playerName : playerNames)
-				if (player.getValue().getName().equals(playerName))
+				if (player.getValue().playerName.equals(playerName))
 					s += (player.getKey()) + ",";
 		
 		return s.substring(0, s.length() - 1) + ":";
