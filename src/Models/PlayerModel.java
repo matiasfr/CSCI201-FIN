@@ -1,3 +1,5 @@
+package Models;
+
 import java.util.ArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -6,29 +8,34 @@ import javax.swing.ImageIcon;
 
 public class PlayerModel extends AbstractObjectModel 
 {
-	int playerID;
-	String playerName;
-	int playerCurrentHealth;
-	int playerTotalHealth;
-	int playerArmorPoints; // reduces damage taken by certain %
-	int playerExperiencePoints;
-	int playerExperienceLevel; // i.e. Level 3
-	int playerLocationX;
-	int playerLocationY;
-	int playerLocationQuarter;
-	ArrayList<ItemModel> playerInventory;
-	ArrayList<ImageIcon> playerSprites; // all possible images for animation
-	ImageIcon playerImage; // current sprite
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2230794125380108205L;
+	public int playerID;
+	public String playerName;
+	public int playerCurrentHealth;
+	public int playerTotalHealth;
+	public int playerArmorPoints; // reduces damage taken by certain %
+	public int playerExperiencePoints;
+	public int playerExperienceLevel; // i.e. Level 3
+	public int playerLocationX;
+	public int playerLocationY;
+	public int playerLocationQuarter;
+	int playerTeam;
+	public ArrayList<ItemModel> playerInventory;
+	public ArrayList<ImageIcon> playerSprites; // all possible images for animation
+	public ImageIcon playerImage; // current sprite
 	
-	
-	int playerDirection;//0-up  1-right  2-down  3-left
+	public int playerDirection;//0-up  1-right  2-down  3-left
 	
 	//lock on this object for the server
-	Lock lock = new ReentrantLock();
-	public PlayerModel(int playerID, String playerName)
+	public Lock lock = new ReentrantLock();
+	public PlayerModel(int playerID, String playerName, int team)
 	{
 		this.playerID = playerID;
 		this.playerName = playerName;
+		this.playerTeam = team;
 		init();
 	}
 	public void init()
