@@ -147,6 +147,19 @@ public class ServerGameThread extends Thread
 				StringTokenizer st = new StringTokenizer(message," :");
 				String typeMessage = st.nextToken();
 				
+				/*String messages[] = message.split(":")
+				 * String typeMessage = messages[0];
+				 * String distance = messages[1];
+				 * etc. 
+				 * 
+				 * if(messages[0] == CHAT) {
+				 * delegate to processMessage(String[] message) {
+				 * 
+				 * when sending	server.gmm.getPlayers().get(id).getName
+				 * 
+				 * }
+				 */
+				
 				String distance;
 				//client attacked another client
 				if(typeMessage.equals("A")) 
