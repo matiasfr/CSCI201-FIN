@@ -81,7 +81,19 @@ public class ClientLobbyPanel extends JPanel implements Runnable {
 	//// Thread Methods ////
 	public void run() {
 		while(true) {
+			String serverInput = br.readLine();
+			String serverCommand = serverInput.substring(0, serverInput.indexOf(":"));
+			String serverData = serverInput.substring(serverInput.indexOf(":") + 1);
 			// Listen for new player name from server, add when received
+			if(serverCommand.equals("USERNAME")) {
+				String newUsername = serverData;
+				addPlayer(newUsername);
+			}
+			else if(serverCommand.equals("STATUS")) {
+			}
+			else if(serverCommand.equals("TIMER")) {
+			}
+			
 			// Listen for start signal, tell myClient to show gamePanel
 		} // end listening for signals from server			
 	} // end public void run
