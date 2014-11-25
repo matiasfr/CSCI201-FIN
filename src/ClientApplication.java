@@ -18,11 +18,8 @@ import javax.swing.*;
 public class ClientApplication extends JFrame implements Runnable{
 
 		ClientDrawingPanel drawingPanel;
-		//Threads
-	//	ClientLoginThread loginThread;
-	//	ClientLobbyThread lobbyThread;
-	//	ClientGameReceiverThread gameReceiverThread;
-	//	ClientGameSenderThread gameSenderThread;
+		//private static ClientLoginPanel login;
+		//private static ClientLobbyPanel lobby;
 		
 		private JPanel cardsPanel;
 		private CardLayout cl;
@@ -39,8 +36,7 @@ public class ClientApplication extends JFrame implements Runnable{
 		private Boolean needToLogin = true;
 		private Boolean inLobby = true;
 		
-	//	private static ClientLoginPanel login;
-		//private static ClientLobbyPanel lobby;
+	
 		
 		
 		
@@ -90,26 +86,41 @@ public class ClientApplication extends JFrame implements Runnable{
 					Thread.sleep(1);
 					
 					//reading from the buffered reader.
+					String msg= br.readLine();
+					String serverMessage[] = msg.split(":");
+					String prefix = serverMessage[0];
+					String content = serverMessage[1];
 					
 					//MESSAGE PREFIX: CHAT 
-							//send him everything after the colon.
-							//writeChatMessage (msg);
-					
+					if(prefix.equals("CHAT")){
+						myGame.chatPanel.writeChatMessage(content);
+					}
+
 					//MESSAGE PREFIX: USERNAME
+					if(prefix.equals("USERNAME")){
 						//hide loginPanel and show lobbyPanel (loggedIn())
+						//myGame.drawingPanel.setName("apple");
 						//cl.show(cardsPanel, "Lobby");
-					
+					}
 					
 					//MESSAGE PREFIX: STATUS
+					if(prefix.equals("STATUS")){
 						//when status is go, hide lobbyPanel and show gamePanel
 						//gamePanel shows the 3
-					
+					}
 					//MESSAGE PREFIX: TIMER
-					
+					if(prefix.equals("TIMER")){
 					//Object reading in check. 
+					}
+					//constantly calling getFromServer() so that way we can always be reading in an object;
+					
 					
 					
 				} catch (InterruptedException e) {
+					
+					e.printStackTrace();
+				}
+					catch (Exception e) {
 					
 					e.printStackTrace();
 				}
@@ -141,12 +152,12 @@ public class ClientApplication extends JFrame implements Runnable{
 	        System.err.println("Stack Trace: " + e.getStackTrace());
 	    }
 		}
-		public GridMapModel getFromServer(){
-			GridMapModel gridMapModel = null;
+		public void getFromServer(){
+			//GridMapModel gridMapModel = null;
 			try{
 				inFromServer = new ObjectInputStream(mySocket.getInputStream());
-				gridMapModel = (GridMapModel)inFromServer.readObject();
-				
+				myGridMap = (GridMapModel)inFromServer.readObject();
+				myGame.drawingPanel.refreshMap(myGridMap);
 				//update gridmapModel on our side. 
 				
 			}catch (Exception e) {
@@ -156,7 +167,7 @@ public class ClientApplication extends JFrame implements Runnable{
 		        System.err.println("Stack Trace: " + e.getStackTrace());
 		    }
 			
-			return gridMapModel;
+			
 		
 		}
 

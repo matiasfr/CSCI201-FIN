@@ -18,7 +18,7 @@ public class ClientGamePanel extends JPanel {
 	private GridMapModel gridMap;
 	JPanel mainPanel;
 	ClientDrawingPanel drawingPanel;
-	JPanel chatPanel;
+	ClientChatPanel chatPanel;
 	JPanel statsPanel;
 	
 
@@ -37,7 +37,7 @@ public class ClientGamePanel extends JPanel {
 		
 		//set up chat panel
 		//Map<Integer, PlayerModel> players, PrintWriter pw, BufferedReader br
-		//chatPanel = new ClientChatPanel( gridMap.getPlayers(),pw, br );
+		chatPanel = new ClientChatPanel( gridMap.getPlayers(),pw, br );
 
 		statsPanel = new ClientStatsPanel();
 		statsPanel.setSize(200,600);
