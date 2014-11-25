@@ -8,6 +8,10 @@ import javax.swing.ImageIcon;
 
 public class PlayerModel extends AbstractObjectModel 
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2230794125380108205L;
 	public int playerID;
 	public String playerName;
 	public int playerCurrentHealth;

@@ -10,6 +10,11 @@ import javax.swing.ImageIcon;
 
 public class GridMapModel implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5209465409547936302L;
+
 	public AbstractObjectModel[][][] allModels;
 	
 	//for quick lookup of id to player

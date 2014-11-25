@@ -1,27 +1,28 @@
+import java.io.IOException;
 import java.net.Socket;
 
 
 public class ServerUpdateClientThread extends Thread{
-
-	public ServerUpdateClientThread(Socket s, int id) 
-	{
-		
-	}
-	/*
-	 * //In charge of sending out the GridMapModel every x milliseconds
-public class UpdateClientThread extends Thread { -Matias
+	
 	private Socket s;
 	int id;
-	public ServerUpdateClientThread(Socket s, int id) {
+	GameServer parent;
+	public boolean running = true;
+	
+	public ServerUpdateClientThread(Socket s, int id, GameServer parent) 
+	{
 		this.s = s;
 		this.id = id;
-}
-public run() {
-	Sleep.(50);
-	//Broadcast GridMapModel to allClientsObjectWriters
-}
-}
-
-	 */
-
+		this.parent = parent;
+	}
+	public void run() {
+		while(running) {
+		try {sleep(50);} catch (InterruptedException e) {e.printStackTrace();}
+		//Broadcast GridMapModel to allClientsObjectWriters
+			for(int i=0;i < parent.allClientObjectWriters.size();i++) {
+				try {parent.allClientObjectWriters.get(i).writeObject(parent.gmm);} catch (IOException e) {e.printStackTrace();}
+			}
+		}
+	}
+	
 }

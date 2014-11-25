@@ -77,7 +77,7 @@ public class GameServer
 				ServerLobbyThread slt = new ServerLobbyThread(s, id, this);
 				lobbyThreads.add(slt);
 				gameThreads.add(new ServerGameThread(s, id, this));
-				updateClientThreads.add(new ServerUpdateClientThread(s, id));
+				updateClientThreads.add(new ServerUpdateClientThread(s, id, this));
 				
 				id++;
 				slt.start();

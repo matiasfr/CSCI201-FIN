@@ -453,8 +453,14 @@ public class ServerGameThread extends Thread
 		}
 	}
 	private void processMessage(String[] m) {
-		// TODO Auto-generated method stub
-		
+		String content = m[m.length];//message content is last
+		String[] recipients  = m[1].split(",");
+		//boradcast
+		for(int i=0; i<recipients.length;i++) {
+			String str = "CHAT:"+server.gmm.playerLookup.get(recipients[i]).playerName+ ":"+content;
+			server.allClientWriters.get(recipients[i]).println(str);
+			server.allClientWriters.get(recipients[i]).flush();
+		}
 	}
 
 	public void killThread()

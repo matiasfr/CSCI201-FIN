@@ -65,7 +65,7 @@ public class ServerLobbyThread extends Thread{
 					//Broadcast that a new player has joined
 					//broadcast the time left in Lobby = 30
 					String announcement = "CHAT:Broadcast:player "+finalUsername+ "has joined the game";
-					String timerPush = "TIMER:30";
+					String timerPush = "TIMER";
 					for(int i =0; i<parent.allClientWriters.size();i++) {
 						parent.allClientWriters.get(i).println(announcement);
 						parent.allClientWriters.get(i).flush();
@@ -83,6 +83,10 @@ public class ServerLobbyThread extends Thread{
 							parent.gameState[0] = false;
 							parent.gameState[1] = true;
 							parent.gameStart = true;
+							for(int i =0; i<parent.allClientWriters.size();i++) {
+								parent.allClientWriters.get(i).println("STATUS:START");
+								parent.allClientWriters.get(i).flush();
+							}							
 						}
 						
 					}
