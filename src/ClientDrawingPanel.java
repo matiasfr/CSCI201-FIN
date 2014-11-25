@@ -13,6 +13,7 @@ class ClientDrawingPanel extends JPanel {
 	private GridMapModel gmm;
 	private int currentQuadrant=0;
 	private String playerName="";
+	private Boolean firstDrawDone=false;
 	
 	//IMAGES
 	BufferedImage imgArmor = null;
@@ -77,6 +78,8 @@ class ClientDrawingPanel extends JPanel {
 						anotherPlayer.direction= gammaPlayer.playerDirection;
 						firstDrawDone=true;
 						new Thread(anotherPlayer).start();
+					}else{
+						//dont draw this player. 
 					}
 					
 					
