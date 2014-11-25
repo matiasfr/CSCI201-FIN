@@ -1,3 +1,4 @@
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
@@ -12,7 +13,17 @@ import java.util.concurrent.locks.ReentrantLock;
 import Models.GridMapModel;
 import Models.PlayerModel;
 
-
+/*				CLIENT-SERVER Communication Nomenclature
+ * 				Standard policy: all caps, delimited by colons, no spaces.
+ * -Lobby	"USERNAME:theactualusername"	"STATUS:READY"
+ * -chat    -server receives "CHAT:recipient1,recipient2,recipient3:messageContent"
+ * 			 -server sends	   "CHAT:senderName:messageContent"
+ * 
+ * 
+ * 
+ * 
+ * 						ADD YOUR OWN SO EVERYONE CAN STAY IN SYNC
+ */
 public class GameServer 
 {
 	//shared data
@@ -68,7 +79,7 @@ public class GameServer
 				lobbyThreads.add(slt);
 				gameThreads.add(new ServerGameThread(s, id, this));
 				updateClientThreads.add(new ServerUpdateClientThread(s, id));
-				chatThreads.add(new ServerChatThread(s, id));
+				chatThreads.add(new ServerChatThread(s, id, this));
 				
 				id++;
 				slt.start();

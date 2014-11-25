@@ -14,6 +14,7 @@ public class ServerLobbyThread extends Thread{
 	GameServer parent;
 	BufferedReader br;
 	boolean team1 = true;
+	int team = 1;
 	String finalUsername = null;
 	
 	public ServerLobbyThread(Socket s, int id, GameServer parent) {
@@ -41,12 +42,17 @@ public class ServerLobbyThread extends Thread{
 				//lookup in mysql database of existing names
 				//if the username is unique, the player is confirmed
 				//send result to client (unique/not unique)	
-				SQLCommand c = new SQLCommand(parent.queryLock, this, originalName);
-				c.run();
+				//SQLCommand c = new SQLCommand(parent.queryLock, this, originalName);
+				//c.run();
+				finalUsername = "Matias#95";
 				pw.println( "USERNAME:" + finalUsername);
 				pw.flush();
-				
-				PlayerModel player = new PlayerModel(id, finalUsername, team1);
+				if(team1 == true) {
+					team = 1;
+				} else {
+					team =2;
+				}
+				PlayerModel player = new PlayerModel(id, finalUsername, team);
 					//creates a PlayerModel	
 					//assigns the PlayerModel to a random team team1 or team2
 					if(team1 == true) {

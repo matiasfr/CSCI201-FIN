@@ -27,7 +27,6 @@ public class PlayerModel extends AbstractObjectModel
 	public int playerDirection;//0-up  1-right  2-down  3-left
 	
 	//lock on this object for the server
-
 	Lock lock = new ReentrantLock();
 
 	public PlayerModel(int playerID, String playerName, int playerTeam)
