@@ -2,8 +2,6 @@ import javax.swing.*;
 
 import java.awt.Dimension;
 import java.awt.event.*;
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 
@@ -14,7 +12,6 @@ public class ClientChatPanel extends JPanel implements ActionListener {
 	
 	private Map<Integer, PlayerModel> players;
 	private PrintWriter pw;
-	private BufferedReader br;
 	
 	private JCheckBox global, team1, team2;
 	private ArrayList<JCheckBox> team1_list, team2_list;
@@ -25,10 +22,9 @@ public class ClientChatPanel extends JPanel implements ActionListener {
 	private JScrollPane outputPane;
 	private JTextField input;
 	
-	public ClientChatPanel (Map<Integer, PlayerModel> players, PrintWriter pw, BufferedReader br) {
+	public ClientChatPanel (Map<Integer, PlayerModel> players, PrintWriter pw) {
 		this.players = players;
 		this.pw = pw;
-		this.br = br;
 		
 		team1_list = new ArrayList<JCheckBox>();
 		team2_list = new ArrayList<JCheckBox>();
@@ -74,10 +70,11 @@ public class ClientChatPanel extends JPanel implements ActionListener {
 	}
 	
 	public void actionPerformed (ActionEvent e) {
-		if (e.getSource() == input) {
-			//writeChatMessage(input.getText());
+		if (e.getSource() == input && !getSelectedPlayerIDs().equals("CHAT:") && !input.getText().equals("")) {
+		//send "CHAT:playerID1,playerID2,etc:message" only if at least 1 recipient is selected, and message is not empty
 			pw.println(getSelectedPlayerIDs() + input.getText());
 			pw.flush();
+			//System.out.println(getSelectedPlayerIDs() + input.getText());
 			input.setText("");
 		}
 		else if (e.getSource() == global) {
@@ -130,6 +127,8 @@ public class ClientChatPanel extends JPanel implements ActionListener {
 	private String getSelectedPlayerIDs () {
 		ArrayList<String> playerNames = new ArrayList<String>();
 		for (JCheckBox box : team1_list)
+			if (box.isSelected()) playerNames.add(box.getText());
+		for (JCheckBox box : team2_list)
 			if (box.isSelected()) playerNames.add(box.getText());
 		
 		String s = "CHAT:";
