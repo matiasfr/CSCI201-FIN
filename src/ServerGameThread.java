@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
+import Models.*;
 
 
 public class ServerGameThread extends Thread
@@ -87,7 +88,7 @@ public class ServerGameThread extends Thread
 							randGen = (int)(Math.random()*3);
 							if(randGen == 0)//health
 							{
-								item = new HealthRefilModel((int)(Math.random()*10));
+								item = new HealthRefillModel((int)(Math.random()*10));
 							}
 							else if(randGen == 1)//armor
 							{
@@ -230,9 +231,9 @@ public class ServerGameThread extends Thread
 										}
 										else if(destination instanceof ItemModel)
 										{
-											if(destination instanceof HealthRefilModel)
+											if(destination instanceof HealthRefillModel)
 											{
-												server.gmm.playerLookup.get(this.id).setHealth(((HealthRefilModel) destination).healthPoints);
+												server.gmm.playerLookup.get(this.id).setHealth(((HealthRefillModel) destination).healthPoints);
 											}
 											else if(destination instanceof ArmorModel)
 											{
@@ -271,9 +272,9 @@ public class ServerGameThread extends Thread
 										}
 										else if(destination instanceof ItemModel)
 										{
-											if(destination instanceof HealthRefilModel)
+											if(destination instanceof HealthRefillModel)
 											{
-												server.gmm.playerLookup.get(this.id).setHealth(((HealthRefilModel) destination).healthPoints);
+												server.gmm.playerLookup.get(this.id).setHealth(((HealthRefillModel) destination).healthPoints);
 											}
 											else if(destination instanceof ArmorModel)
 											{
@@ -313,9 +314,9 @@ public class ServerGameThread extends Thread
 									}
 									else if(destination instanceof ItemModel)
 									{
-										if(destination instanceof HealthRefilModel)
+										if(destination instanceof HealthRefillModel)
 										{
-											server.gmm.playerLookup.get(this.id).setHealth(((HealthRefilModel) destination).healthPoints);
+											server.gmm.playerLookup.get(this.id).setHealth(((HealthRefillModel) destination).healthPoints);
 										}
 										else if(destination instanceof ArmorModel)
 										{
@@ -385,9 +386,9 @@ public class ServerGameThread extends Thread
 										}
 										else if(destination instanceof ItemModel)
 										{
-											if(destination instanceof HealthRefilModel)
+											if(destination instanceof HealthRefillModel)
 											{
-												server.gmm.playerLookup.get(this.id).setHealth(((HealthRefilModel) destination).healthPoints);
+												server.gmm.playerLookup.get(this.id).setHealth(((HealthRefillModel) destination).healthPoints);
 											}
 											else if(destination instanceof ArmorModel)
 											{
@@ -426,9 +427,9 @@ public class ServerGameThread extends Thread
 										}
 										else if(destination instanceof ItemModel)
 										{
-											if(destination instanceof HealthRefilModel)
+											if(destination instanceof HealthRefillModel)
 											{
-												server.gmm.playerLookup.get(this.id).setHealth(((HealthRefilModel) destination).healthPoints);
+												server.gmm.playerLookup.get(this.id).setHealth(((HealthRefillModel) destination).healthPoints);
 											}
 											else if(destination instanceof ArmorModel)
 											{
@@ -468,9 +469,9 @@ public class ServerGameThread extends Thread
 									}
 									else if(destination instanceof ItemModel)
 									{
-										if(destination instanceof HealthRefilModel)
+										if(destination instanceof HealthRefillModel)
 										{
-											server.gmm.playerLookup.get(this.id).setHealth(((HealthRefilModel) destination).healthPoints);
+											server.gmm.playerLookup.get(this.id).setHealth(((HealthRefillModel) destination).healthPoints);
 										}
 										else if(destination instanceof ArmorModel)
 										{
@@ -538,9 +539,9 @@ public class ServerGameThread extends Thread
 										}
 										else if(destination instanceof ItemModel)
 										{
-											if(destination instanceof HealthRefilModel)
+											if(destination instanceof HealthRefillModel)
 											{
-												server.gmm.playerLookup.get(this.id).setHealth(((HealthRefilModel) destination).healthPoints);
+												server.gmm.playerLookup.get(this.id).setHealth(((HealthRefillModel) destination).healthPoints);
 											}
 											else if(destination instanceof ArmorModel)
 											{
@@ -579,9 +580,9 @@ public class ServerGameThread extends Thread
 										}
 										else if(destination instanceof ItemModel)
 										{
-											if(destination instanceof HealthRefilModel)
+											if(destination instanceof HealthRefillModel)
 											{
-												server.gmm.playerLookup.get(this.id).setHealth(((HealthRefilModel) destination).healthPoints);
+												server.gmm.playerLookup.get(this.id).setHealth(((HealthRefillModel) destination).healthPoints);
 											}
 											else if(destination instanceof ArmorModel)
 											{
@@ -621,9 +622,9 @@ public class ServerGameThread extends Thread
 									}
 									else if(destination instanceof ItemModel)
 									{
-										if(destination instanceof HealthRefilModel)
+										if(destination instanceof HealthRefillModel)
 										{
-											server.gmm.playerLookup.get(this.id).setHealth(((HealthRefilModel) destination).healthPoints);
+											server.gmm.playerLookup.get(this.id).setHealth(((HealthRefillModel) destination).healthPoints);
 										}
 										else if(destination instanceof ArmorModel)
 										{
@@ -690,9 +691,9 @@ public class ServerGameThread extends Thread
 										}
 										else if(destination instanceof ItemModel)
 										{
-											if(destination instanceof HealthRefilModel)
+											if(destination instanceof HealthRefillModel)
 											{
-												server.gmm.playerLookup.get(this.id).setHealth(((HealthRefilModel) destination).healthPoints);
+												server.gmm.playerLookup.get(this.id).setHealth(((HealthRefillModel) destination).healthPoints);
 											}
 											else if(destination instanceof ArmorModel)
 											{
@@ -731,9 +732,9 @@ public class ServerGameThread extends Thread
 										}
 										else if(destination instanceof ItemModel)
 										{
-											if(destination instanceof HealthRefilModel)
+											if(destination instanceof HealthRefillModel)
 											{
-												server.gmm.playerLookup.get(this.id).setHealth(((HealthRefilModel) destination).healthPoints);
+												server.gmm.playerLookup.get(this.id).setHealth(((HealthRefillModel) destination).healthPoints);
 											}
 											else if(destination instanceof ArmorModel)
 											{
@@ -773,9 +774,9 @@ public class ServerGameThread extends Thread
 									}
 									else if(destination instanceof ItemModel)
 									{
-										if(destination instanceof HealthRefilModel)
+										if(destination instanceof HealthRefillModel)
 										{
-											server.gmm.playerLookup.get(this.id).setHealth(((HealthRefilModel) destination).healthPoints);
+											server.gmm.playerLookup.get(this.id).setHealth(((HealthRefillModel) destination).healthPoints);
 										}
 										else if(destination instanceof ArmorModel)
 										{

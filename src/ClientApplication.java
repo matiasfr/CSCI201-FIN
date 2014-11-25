@@ -12,6 +12,7 @@ import java.net.Socket;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import Models.*;
 
 import javax.swing.*;
 

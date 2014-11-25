@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.util.Map;
 
 import javax.swing.*;
+import Models.*;
 
 
 public class ClientGamePanel extends JPanel {

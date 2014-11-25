@@ -1,3 +1,5 @@
+package Models;
+
 import java.util.ArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -14,25 +16,25 @@ public class PlayerModel extends AbstractObjectModel
 	static final String WEAPON[] = {"still/","animated/"};
 	static final String DIRECTION[] = {"facing_backwards.png","facing_right.png","facing_forwards.png","facing_left.png"};
 	
-	int playerID;
-	String playerName;
-	int playerCurrentHealth;
-	int playerTotalHealth;
-	int playerArmorPoints; // reduces damage taken by certain %
-	int playerExperiencePoints;
-	int playerExperienceLevel; // i.e. Level 3
-	int playerLocationX;
-	int playerLocationY;
-	int playerLocationQuarter;
-	int playerTeam;// 1 or 2
-	ArrayList<ItemModel> playerInventory;
+	public int playerID;
+	public String playerName;
+	public int playerCurrentHealth;
+	public int playerTotalHealth;
+	public int playerArmorPoints; // reduces damage taken by certain %
+	public int playerExperiencePoints;
+	public int playerExperienceLevel; // i.e. Level 3
+	public int playerLocationX;
+	public int playerLocationY;
+	public int playerLocationQuarter;
+	public int playerTeam;// 1 or 2
+	public ArrayList<ItemModel> playerInventory;
 	//ArrayList<String> playerSprite; // image path for animation
-	String playerSprite[]; //0->skeleton 1->color 2->armor 3->arms
-	
-	int playerDirection;//0-up  1-right  2-down  3-left
+	public String playerSprite[]; //0->skeleton 1->color 2->armor 3->arms
+	public int playerDirection;//0-up  1-right  2-down  3-left
 	
 	//lock on this object for the server
-	Lock lock = new ReentrantLock();
+	public Lock lock = new ReentrantLock();
+
 	public PlayerModel(int playerID, String playerName, int playerTeam)
 	{
 		this.playerID = playerID;

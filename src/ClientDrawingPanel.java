@@ -6,7 +6,7 @@ import java.io.*;
 import java.awt.image.*; 
 
 import javax.imageio.*; 
-
+import Models.*;
 
 class ClientDrawingPanel extends JPanel {
 	public static BufferedImage image; 
