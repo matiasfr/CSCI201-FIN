@@ -18,14 +18,14 @@ public class ClientLobbyPanel extends JPanel {
 	private JTextArea usersTextArea;
 	private static final String PLAYERS_IN_LOBBY_STRING = "Players in Lobby:\n\n";
 	private ArrayList<String> usersList;
-
+	private ClientApplication clientApp;
 	//// Constructor ////
-	public ClientLobbyPanel() {
+	public ClientLobbyPanel(ClientApplication clientApp) {
 		//// Initial GUI setup ////
 		setLayout(null);
 		setSize(1000, 800);
 		setBackground(Color.white);
-		
+		this.clientApp = clientApp;
 		//// Countdown Setup ////
 		countdownLabel = new JLabel(TIME_UNTIL_START_STRING + countdownNum);
 		Dimension countdownLabelDimensions = countdownLabel.getPreferredSize();
@@ -94,6 +94,10 @@ public class ClientLobbyPanel extends JPanel {
 	private void updateCountdown() {
 		if(countdownNum > 0) {
 			countdownLabel.setText(TIME_UNTIL_START_STRING + countdownNum);
+		}
+		else{
+			//if the counter is zero then we want to send the message : STATUS:START
+			clientApp.sendServerMessage("STATUS:READY");
 		}
 	} // end public void updateCountdown
 } // end class ClientLobbyPanel

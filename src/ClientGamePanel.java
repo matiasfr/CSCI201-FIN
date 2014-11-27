@@ -21,12 +21,12 @@ public class ClientGamePanel extends JPanel {
 	ClientDrawingPanel drawingPanel;
 	ClientChatPanel chatPanel;
 	JPanel statsPanel;
-	
+	private ClientApplication myApp;
 
-	public ClientGamePanel( GridMapModel gridMap, PrintWriter pw){
+	public ClientGamePanel( GridMapModel gridMap, PrintWriter pw, ClientApplication myApp){
 		
 		this.gridMap= gridMap;
-		
+		this.myApp = myApp;
 		this.pw=pw;
 		//Sets up the entire view for the game. Main panel will include:
 		// 1.) ClientDrawingpanel (CENTER) 
@@ -38,26 +38,26 @@ public class ClientGamePanel extends JPanel {
 		
 		//set up chat panel
 		//Map<Integer, PlayerModel> players, PrintWriter pw, BufferedReader br
-		chatPanel = new ClientChatPanel( gridMap.getPlayers(),pw, br );
+		//chatPanel = new ClientChatPanel( gridMap.getPlayers(),pw, br );
 
-		statsPanel = new ClientStatsPanel();
-		statsPanel.setSize(200,600);
+		//statsPanel = new ClientStatsPanel();
+		//statsPanel.setSize(200,600);
 		
 		//set up drawing panel
-		drawingPanel = new ClientDrawingPanel(gridMap);
+		drawingPanel = new ClientDrawingPanel(gridMap, myApp);
 		drawingPanel.setSize(600,600);
 		drawingPanel.setLayout(null);
 		
 		
 		mainPanel.add(drawingPanel);
 		drawingPanel.setLocation(200, 0);
-		mainPanel.add(statsPanel);
+		//mainPanel.add(statsPanel);
 		//mainPanel.add(chatPanel);
 		//chatPanel.setLocation(800, 0);
 		add(mainPanel);
 		//add(chatPanel);
 		//mainPanel.setPreferredSize(new Dimension(600, 600));
-		mainPanel.setVisible(true);
+		//mainPanel.setVisible(true);
 		
 		
 		

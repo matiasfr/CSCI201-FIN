@@ -31,12 +31,13 @@ public class ClientPlayer extends JPanel implements Runnable{
 	BufferedImage left[]=new BufferedImage[4];
 	BufferedImage right[]=new BufferedImage[4];
 	BufferedImage down[]=new BufferedImage[4];
-
+	private ClientApplication myApp;
 	int xpos;
 	int ypos;
 	int quadrant=9;
 	int direction=2;
-	public ClientPlayer(){
+	public ClientPlayer(ClientApplication myApp){
+		this.myApp = myApp;
 		DrawKeyListener ls = new DrawKeyListener();
 		addKeyListener(ls);
 		setVisible(true);
@@ -118,20 +119,29 @@ public class ClientPlayer extends JPanel implements Runnable{
 		public void keyPressed(KeyEvent e){
 			if (e.getKeyCode() == KeyEvent.VK_RIGHT ) {
 	            //Right arrow key code
+				//SEND THE SERVER THE MESSAGE R
+				myApp.sendServerMessage("R:");
 				direction = 1;
 				xpos+=5;
 			} else if (e.getKeyCode() == KeyEvent.VK_LEFT ) {
 	            //Left arrow key code
+				myApp.sendServerMessage("L:");
 				direction = 3;
 				xpos-=5;
 			} else if (e.getKeyCode() == KeyEvent.VK_UP) {
+				myApp.sendServerMessage("U:");
 	            //Up arrow key code
 				direction = 0;
 				ypos-=5;
 			} else if (e.getKeyCode() == KeyEvent.VK_DOWN ) {
+				myApp.sendServerMessage("D:");
 	            //Down arrow key code
 				direction = 2;
 				ypos+=5;
+			} else if (e.getKeyCode() == KeyEvent.VK_A ) {
+				//ATTACK
+				myApp.sendServerMessage("A:");
+
 			}
 		}
 		

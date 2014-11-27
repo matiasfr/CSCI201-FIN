@@ -14,15 +14,17 @@ class ClientDrawingPanel extends JPanel {
 	private int currentQuadrant=0;
 	private String playerName="";
 	private Boolean firstDrawDone=false;
-	
+	private ClientPlayer thisPlayer;
+	private ClientApplication myApp;
 	//IMAGES
 	BufferedImage imgArmor = null;
 	BufferedImage imgSword = null;
 	BufferedImage imgHealth = null;
 	
 	
-	public ClientDrawingPanel(GridMapModel gmm){
+	public ClientDrawingPanel(GridMapModel gmm, ClientApplication myApp){
 		this.gmm = gmm;	
+		this.myApp = myApp;
 		try{
 			imgArmor = ImageIO.read(new File("image stuff/playerSkeleton/facing_forward.png"));
 			imgSword = ImageIO.read(new File("image stuff/playerSkeleton/facing_forward.png"));
@@ -64,20 +66,20 @@ class ClientDrawingPanel extends JPanel {
 						//, and  playerImage image icon 
 						//go through the players image icons 
 						for(int k=0; k<4; k++){
-							g.drawImage(tile, i*45, j*45,null);
+						//	g.drawImage(tile, i*45, j*45,null);
 						}
 					}
-					else if (firstDrawDone){
+					else if (!firstDrawDone){
 						//draw our own player
 						//but we should also start up the other player model to get the position of the player. 
 						PlayerModel gammaPlayer=(PlayerModel) gmm.allModels[currentQuadrant][i][j];
 						//also we should probably update the stats with this. 
-						ClientPlayer anotherPlayer = new ClientPlayer();
-						anotherPlayer.xpos= gammaPlayer.playerLocationX;
-						anotherPlayer.ypos= gammaPlayer.playerLocationY;
-						anotherPlayer.direction= gammaPlayer.playerDirection;
+						thisPlayer = new ClientPlayer(myApp);
+						thisPlayer.xpos= gammaPlayer.playerLocationX;
+						thisPlayer.ypos= gammaPlayer.playerLocationY;
+						thisPlayer.direction= gammaPlayer.playerDirection;
 						firstDrawDone=true;
-						new Thread(anotherPlayer).start();
+						new Thread(thisPlayer).start();
 					}else{
 						//dont draw this player. 
 					}

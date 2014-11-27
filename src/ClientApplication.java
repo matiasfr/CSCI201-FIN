@@ -19,8 +19,8 @@ import javax.swing.*;
 public class ClientApplication extends JFrame implements Runnable{
 
 		ClientDrawingPanel drawingPanel;
-		//private static ClientLoginPanel login;
-		//private static ClientLobbyPanel lobby;
+		private static ClientLoginPanel logIn;
+		private static ClientLobbyPanel lobby;
 		
 		private JPanel cardsPanel;
 		private CardLayout cl;
@@ -36,7 +36,7 @@ public class ClientApplication extends JFrame implements Runnable{
 		private static ClientGamePanel myGame;
 		private Boolean needToLogin = true;
 		private Boolean inLobby = true;
-		
+		private int timerTest=1;
 	
 		
 		
@@ -47,7 +47,7 @@ public class ClientApplication extends JFrame implements Runnable{
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			setMinimumSize(new Dimension(1000,600));
 			setLocationRelativeTo(null);
-			setVisible(true);
+			
 			
 			
 			try{
@@ -66,15 +66,17 @@ public class ClientApplication extends JFrame implements Runnable{
 			cl = new CardLayout();
 			cardsPanel = new JPanel(cl);
 						
-			myGame = new ClientGamePanel( myGridMap,pw);
-			//logIn = new ClientLoginPanel( pw);
-			//lobby = new ClientLobbyPanel( myGridMap,pw);
+			myGame = new ClientGamePanel( myGridMap,pw, this);
+			logIn = new ClientLoginPanel( pw);
+			lobby = new ClientLobbyPanel(this);
 			
 			cardsPanel.add(myGame, "GamePanel");
-			//cardsPanel.add(logIn, "LoginScreen");
-			//cardsPanel.add(lobby, "Lobby");
-	
+			cardsPanel.add(logIn, "LoginScreen");
+			cardsPanel.add(lobby, "Lobby");
+			add(cardsPanel);
+			setVisible(true);
 			cl.show(cardsPanel, "LoginScreen");
+			
 			
 			new Thread(this).start();
 
@@ -84,10 +86,27 @@ public class ClientApplication extends JFrame implements Runnable{
 		public void run(){
 			while(true){
 				try {
-					Thread.sleep(1);
+					Thread.sleep(5000);
 					
+					//BEGIN TESTING CODE 
+					//hide loginPanel and show lobbyPanel (loggedIn())
+					myGame.drawingPanel.setName("apple");
+					cl.show(cardsPanel, "Lobby");
+					 if (timerTest ==1){
+						 lobby.setCountdown(20);
+						lobby.startCountdown();
+						timerTest--;
+					 }
+					//END TESTING CODE
+					 
 					//reading from the buffered reader.
 					String msg= br.readLine();
+					//MESSAGE PREFIX: TIMER
+					if(msg.equals("TIMER")){
+						lobby.setCountdown(20);
+						lobby.startCountdown();
+					}
+					
 					String serverMessage[] = msg.split(":");
 					String prefix = serverMessage[0];
 					String content = serverMessage[1];
@@ -100,19 +119,18 @@ public class ClientApplication extends JFrame implements Runnable{
 					//MESSAGE PREFIX: USERNAME
 					if(prefix.equals("USERNAME")){
 						//hide loginPanel and show lobbyPanel (loggedIn())
-						//myGame.drawingPanel.setName("apple");
-						//cl.show(cardsPanel, "Lobby");
+						myGame.drawingPanel.setName(content);
+						cl.show(cardsPanel, "Lobby");
 					}
 					
 					//MESSAGE PREFIX: STATUS
 					if(prefix.equals("STATUS")){
 						//when status is go, hide lobbyPanel and show gamePanel
-						//gamePanel shows the 3
+						if(content.equals("STATUS:START")){
+							cl.show(cardsPanel,"GamePanel");
+						}
 					}
-					//MESSAGE PREFIX: TIMER
-					if(prefix.equals("TIMER")){
-					//Object reading in check. 
-					}
+					
 					//constantly calling getFromServer() so that way we can always be reading in an object;
 					
 					
@@ -170,6 +188,10 @@ public class ClientApplication extends JFrame implements Runnable{
 			
 			
 		
+		}
+		
+		public void sendServerMessage(String s){
+			pw.println(s);
 		}
 
 		public void addChatMessage(String s) {
