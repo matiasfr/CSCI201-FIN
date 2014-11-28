@@ -2,19 +2,16 @@ import javax.swing.*;
 
 import java.awt.Dimension;
 import java.awt.event.*;
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 
-//import Models.PlayerModel;
+import Models.PlayerModel;
 
 public class ClientChatPanel extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 8301904130678673097L;
 	
 	private Map<Integer, PlayerModel> players;
 	private PrintWriter pw;
-	private BufferedReader br;
 	
 	private JCheckBox global, team1, team2;
 	private ArrayList<JCheckBox> team1_list, team2_list;
@@ -25,10 +22,9 @@ public class ClientChatPanel extends JPanel implements ActionListener {
 	private JScrollPane outputPane;
 	private JTextField input;
 	
-	public ClientChatPanel (Map<Integer, PlayerModel> players, PrintWriter pw, BufferedReader br) {
+	public ClientChatPanel (Map<Integer, PlayerModel> players, PrintWriter pw) {
 		this.players = players;
 		this.pw = pw;
-		this.br = br;
 		
 		team1_list = new ArrayList<JCheckBox>();
 		team2_list = new ArrayList<JCheckBox>();
@@ -73,11 +69,32 @@ public class ClientChatPanel extends JPanel implements ActionListener {
 		setSize(200, 600);
 	}
 	
+	public void writeChatMessage (String s) {
+		output.setText(output.getText() + "\n" + s);
+	}
+	
+	private String getSelectedPlayerIDs () {
+		ArrayList<String> playerNames = new ArrayList<String>();
+		for (JCheckBox box : team1_list)
+			if (box.isSelected()) playerNames.add(box.getText());
+		for (JCheckBox box : team2_list)
+			if (box.isSelected()) playerNames.add(box.getText());
+		
+		String s = "CHAT:";
+		for (Map.Entry<Integer, PlayerModel> player : players.entrySet())
+			for (String playerName : playerNames)
+				if (player.getValue().playerName.equals(playerName))
+					s += (player.getKey()) + ",";
+		
+		return s.substring(0, s.length() - 1) + ":";
+	}
+	
 	public void actionPerformed (ActionEvent e) {
-		if (e.getSource() == input) {
-			//writeChatMessage(input.getText());
+		if (e.getSource() == input && !getSelectedPlayerIDs().equals("CHAT:") && !input.getText().equals("")) {
+		//send "CHAT:playerID1,playerID2,etc:message" only if at least 1 recipient is selected, and message is not empty
 			pw.println(getSelectedPlayerIDs() + input.getText());
 			pw.flush();
+			//System.out.println(getSelectedPlayerIDs() + input.getText());
 			input.setText("");
 		}
 		else if (e.getSource() == global) {
@@ -121,23 +138,5 @@ public class ClientChatPanel extends JPanel implements ActionListener {
 			team2.setSelected(true);
 			if (team1.isSelected() && team2.isSelected()) global.setSelected(true);
 		}
-	}
-	
-	public void writeChatMessage (String s) {
-		output.setText(output.getText() + "\n" + s);
-	}
-	
-	private String getSelectedPlayerIDs () {
-		ArrayList<String> playerNames = new ArrayList<String>();
-		for (JCheckBox box : team1_list)
-			if (box.isSelected()) playerNames.add(box.getText());
-		
-		String s = "CHAT:";
-		for (Map.Entry<Integer, PlayerModel> player : players.entrySet())
-			for (String playerName : playerNames)
-				if (player.getValue().playerName.equals(playerName))
-					s += (player.getKey()) + ",";
-		
-		return s.substring(0, s.length() - 1) + ":";
 	}
 }
