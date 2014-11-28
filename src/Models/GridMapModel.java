@@ -29,4 +29,8 @@ public class GridMapModel implements Serializable
 		allModels[level1][sx][sy] = null;
 		lock.unlock();
 	}
+	public Map<Integer, PlayerModel> getPlayers()
+	{
+		return playerLookup;
+	}
 }
