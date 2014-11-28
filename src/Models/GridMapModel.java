@@ -10,12 +10,12 @@ import javax.swing.ImageIcon;
 
 public class GridMapModel implements Serializable
 {
-	AbstractObjectModel[][][] allModels;
+	public AbstractObjectModel[][][] allModels;
 	
-	//for quick lookup of id to player
+	//for quick lookup of id to player, has a getter method
 	Map<Integer, PlayerModel> playerLookup;
 	
-	ImageIcon[] backgrounds = new ImageIcon[4];
+	public ImageIcon[] backgrounds = new ImageIcon[4];
 	
 	Lock lock = new ReentrantLock();
 	public GridMapModel()
