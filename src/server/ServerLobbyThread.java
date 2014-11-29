@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-import Models.PlayerModel;
+//import Models.PlayerModel;
 
 
 public class ServerLobbyThread extends Thread{
@@ -80,9 +80,16 @@ public class ServerLobbyThread extends Thread{
 					if(status.equals("STATUS:READY") && !parent.gameStart) {
 						parent.readyState[id] = true;
 						if(allClientsReady()) {
-							parent.gameState[0] = false;
-							parent.gameState[1] = true;
-							parent.gameStart = true;
+							
+							////make thread safe method//
+							//parent.gameState[0] = false;
+							//parent.gameState[1] = true;
+							//parent.gameStart = true;
+							/////////////////////////////
+							/////alternative/////////////
+							parent.changeState(0, 1);
+							/////////////////////////////
+							
 							for(int i =0; i<parent.allClientWriters.size();i++) {
 								parent.allClientWriters.get(i).println("STATUS:START");
 								parent.allClientWriters.get(i).flush();

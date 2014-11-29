@@ -8,35 +8,30 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 
-public class ServerGameThread extends Thread
-{
+public class ServerGameThread extends Thread{
 	int id;
 	Socket s;
 	GameServer server;
 	BufferedReader br;
 	boolean threadActive;
 	
-	public ServerGameThread(Socket s, int id, GameServer server) 
-	{
-		this.s = s;
-		this.id = id;
-		this.server = server;
-		threadActive = true;
-		
-		try
-		{
+	public ServerGameThread(Socket s, int id, GameServer server) {	
+		try{
+			this.s = s;
+			this.id = id;
+			this.server = server;
+			threadActive = true;
 			br= new BufferedReader( new InputStreamReader(s.getInputStream() ) );
 		} 
 		catch (IOException e) {}
 		
-		if(!server.gridMapInit)
-		{
+		//only generates map for the first thread to run
+		if(!server.gridMapInit){
 			generateGameMap();
 		}
 	}
 	
-	public void generateGameMap() 
-	{
+	public void generateGameMap() {
 		server.isGridMapInit();
 		
 		//creates the GridMapModel object using the two sets of playerModels (team1, team2)
@@ -47,13 +42,11 @@ public class ServerGameThread extends Thread
 		Iterator<PlayerModel> teamTwoIt = server.team2.iterator();
 		
 		//setting up map
-		while(teamOneIt.hasNext())
-		{
+		while(teamOneIt.hasNext()){
 			PlayerModel pm = teamOneIt.next();
 			playerLookup.put(pm.playerID, pm);
 		}
-		while(teamTwoIt.hasNext())
-		{
+		while(teamTwoIt.hasNext()){
 			PlayerModel pm = teamTwoIt.next();
 			playerLookup.put(pm.playerID, pm);
 		}
@@ -61,16 +54,11 @@ public class ServerGameThread extends Thread
 		teamTwoIt = server.team2.iterator();
 		
 		//iterate through and populate
-		for(int i=0;i<4;i++)
-		{
-			for(int j=0;j<10;j++)
-			{
-				for(int k=0;k<10;k++)
-				{
-					if(i==0)//first quarter
-					{
-						if(teamOneIt.hasNext())
-						{
+		for(int i=0;i<4;i++){
+			for(int j=0;j<10;j++){
+				for(int k=0;k<10;k++){
+					if(i==0){//first quarter
+						if(teamOneIt.hasNext()){
 							PlayerModel pm = teamOneIt.next();
 							pm.setPostion(j, k);
 							pm.playerLocationQuarter = i;
@@ -78,33 +66,26 @@ public class ServerGameThread extends Thread
 						}
 						else{allModels[i][j][k] = null;}
 					}
-					else if(i==1 || i==2)//second and third quarter
-					{
+					else if(i==1 || i==2){//second and third quarter
 						int randGen = (int)(Math.random()*10);
-						if(randGen == 0)//10% chance
-						{
+						if(randGen == 0){//10% chance
 							ItemModel item = null;
 							randGen = (int)(Math.random()*3);
-							if(randGen == 0)//health
-							{
+							if(randGen == 0){//health
 								item = new HealthRefilModel((int)(Math.random()*10));
 							}
-							else if(randGen == 1)//armor
-							{
+							else if(randGen == 1){//armor
 								item = new ArmorModel((int)(Math.random()*3));
 							}
-							else//sword
-							{
+							else{//sword
 								item = new SwordModel((int)(Math.random()*20), (int)(Math.random()*3));
 							}
 							allModels[i][j][k] = item;
 						}
 						else{allModels[i][j][k] = null;}
 					}
-					else if(i==3)//fourth quarter
-					{
-						if(teamTwoIt.hasNext())
-						{
+					else if(i==3){//fourth quarter
+						if(teamTwoIt.hasNext()){
 							PlayerModel pm = teamTwoIt.next();
 							pm.setPostion(j, k);
 							pm.playerLocationQuarter = i;
@@ -121,18 +102,16 @@ public class ServerGameThread extends Thread
 		//Also generates random items to place around the map
 	}
 	
-	public void run() 
-	{
-		while(true)
-		{
-			if(threadActive)
-			{
-				if(server.gameStart)
-				{
+	
+	
+	public void run() {
+		while(true){
+			if(threadActive){
+				if(server.gameStart){
+					
 					//listens for incoming messages from the client
 					String message = "";
-					try 
-					{
+					try {
 						message = br.readLine();
 					} 
 					catch (IOException e) {}
@@ -149,8 +128,7 @@ public class ServerGameThread extends Thread
 					  
 					String distance;
 					//client attacked another client
-					if(typeMessage.equals("A")) 
-					{
+					if(typeMessage.equals("A")) {
 						//value of attack (strength)
 						String attack = messages[1];
 						
@@ -160,43 +138,36 @@ public class ServerGameThread extends Thread
 						int direction = server.gmm.playerLookup.get(this.id).playerDirection;
 						
 						//check if anyone was hit
-						if(direction == 0 && server.gmm.playerLookup.get(this.id).playerLocationY != 0)
-						{
+						if(direction == 0 && server.gmm.playerLookup.get(this.id).playerLocationY != 0){
 							AbstractObjectModel destination = server.gmm.allModels[quarterPos][xpos][ypos-1];
-							if(destination instanceof PlayerModel)
-							{
+							if(destination instanceof PlayerModel){
 								((PlayerModel) destination).setHealth(-1*Integer.parseInt(attack));
 							}
 						}
-						else if(direction == 1 && server.gmm.playerLookup.get(this.id).playerLocationX != 9)
-						{
+						else if(direction == 1 && server.gmm.playerLookup.get(this.id).playerLocationX != 9){
 							AbstractObjectModel destination = server.gmm.allModels[quarterPos][xpos+1][ypos];
-							if(destination instanceof PlayerModel)
-							{
+							if(destination instanceof PlayerModel){
 								((PlayerModel) destination).setHealth(-1*Integer.parseInt(attack));
 							}
 						}
 						else if(direction == 2 && server.gmm.playerLookup.get(this.id).playerLocationY != 9)
 						{
 							AbstractObjectModel destination = server.gmm.allModels[quarterPos][xpos][ypos+1];
-							if(destination instanceof PlayerModel)
-							{
+							if(destination instanceof PlayerModel){
 								((PlayerModel) destination).setHealth(-1*Integer.parseInt(attack));
 							}
 						}
 						else if(server.gmm.playerLookup.get(this.id).playerLocationX != 0) //direction == 3
 						{
 							AbstractObjectModel destination = server.gmm.allModels[quarterPos][xpos-1][ypos];
-							if(destination instanceof PlayerModel)
-							{
+							if(destination instanceof PlayerModel){
 								((PlayerModel) destination).setHealth(-1*Integer.parseInt(attack));
 							}
 						}
 					}
 					
 					//client moved
-					else if(typeMessage.equals("U")) 
-					{ 
+					else if(typeMessage.equals("U")) { 
 						distance = messages[1];
 						server.gmm.playerLookup.get(this.id).setDirection(0);
 						boolean isMoveable = true;
@@ -206,40 +177,30 @@ public class ServerGameThread extends Thread
 						int quarterPos = server.gmm.playerLookup.get(this.id).playerLocationQuarter;
 						
 						if(distance.equals("0")){}
-						else
-						{
-							if(server.gmm.playerLookup.get(this.id).playerLocationY==0)
-							{
-								if(quarterPos==0||quarterPos==1)
-								{
+						else{
+							if(server.gmm.playerLookup.get(this.id).playerLocationY==0){
+								if(quarterPos==0||quarterPos==1){
 									isMoveable=false;
 								}
 								else{movingQuarter=true;}
 							}
 							
-							if(isMoveable)
-							{
-								if(movingQuarter)
-								{
-									if(quarterPos==2)
-									{
+							//the player can move 
+							if(isMoveable){
+								if(movingQuarter){
+									if(quarterPos==2){
 										AbstractObjectModel destination = server.gmm.allModels[0][xpos][9];
-										if(destination instanceof PlayerModel)
-										{
+										if(destination instanceof PlayerModel){
 											//another player so we cant move
 										}
-										else if(destination instanceof ItemModel)
-										{
-											if(destination instanceof HealthRefilModel)
-											{
+										else if(destination instanceof ItemModel){
+											if(destination instanceof HealthRefilModel){
 												server.gmm.playerLookup.get(this.id).setHealth(((HealthRefilModel) destination).healthPoints);
 											}
-											else if(destination instanceof ArmorModel)
-											{
+											else if(destination instanceof ArmorModel){
 												server.gmm.playerLookup.get(this.id).setArmor(((ArmorModel) destination).armorPoints);
 											}
-											else if(destination instanceof SwordModel)
-											{
+											else if(destination instanceof SwordModel){
 												//adding sword is all that is needed
 											}
 											
@@ -252,8 +213,7 @@ public class ServerGameThread extends Thread
 											//update the GridMapModel
 											server.gmm.moveObjects(quarterPos, xpos, ypos,0, xpos, 9);
 										}
-										else 
-										{
+										else {
 											//nothing there
 											//update PlayerModel
 											server.gmm.playerLookup.get(this.id).setPostion(0, 9);		
@@ -265,22 +225,17 @@ public class ServerGameThread extends Thread
 									else//quarterPos==3
 									{
 										AbstractObjectModel destination = server.gmm.allModels[1][xpos][9];
-										if(destination instanceof PlayerModel)
-										{
+										if(destination instanceof PlayerModel){
 											//another player so we can't move
 										}
-										else if(destination instanceof ItemModel)
-										{
-											if(destination instanceof HealthRefilModel)
-											{
+										else if(destination instanceof ItemModel){
+											if(destination instanceof HealthRefilModel){
 												server.gmm.playerLookup.get(this.id).setHealth(((HealthRefilModel) destination).healthPoints);
 											}
-											else if(destination instanceof ArmorModel)
-											{
+											else if(destination instanceof ArmorModel){
 												server.gmm.playerLookup.get(this.id).setArmor(((ArmorModel) destination).armorPoints);
 											}
-											else if(destination instanceof SwordModel)
-											{
+											else if(destination instanceof SwordModel){
 												//adding sword is all that is needed
 											}
 											
@@ -293,8 +248,7 @@ public class ServerGameThread extends Thread
 											//update the GridMapModel
 											server.gmm.moveObjects(quarterPos, xpos, ypos,1, xpos, 9);
 										}
-										else 
-										{
+										else {
 											//nothing there
 											//update PlayerModel
 											server.gmm.playerLookup.get(this.id).setPostion(0, 9);		
@@ -307,22 +261,17 @@ public class ServerGameThread extends Thread
 								else
 								{
 									AbstractObjectModel destination = server.gmm.allModels[quarterPos][xpos][ypos-1];
-									if(destination instanceof PlayerModel)
-									{
+									if(destination instanceof PlayerModel){
 										//another player so we cant move
 									}
-									else if(destination instanceof ItemModel)
-									{
-										if(destination instanceof HealthRefilModel)
-										{
+									else if(destination instanceof ItemModel){
+										if(destination instanceof HealthRefilModel){
 											server.gmm.playerLookup.get(this.id).setHealth(((HealthRefilModel) destination).healthPoints);
 										}
-										else if(destination instanceof ArmorModel)
-										{
+										else if(destination instanceof ArmorModel){
 											server.gmm.playerLookup.get(this.id).setArmor(((ArmorModel) destination).armorPoints);
 										}
-										else if(destination instanceof SwordModel)
-										{
+										else if(destination instanceof SwordModel){
 											//adding sword is all that is needed
 										}
 										
@@ -333,12 +282,9 @@ public class ServerGameThread extends Thread
 										server.gmm.playerLookup.get(this.id).setPostion(0, -1);
 										
 										//update the GridMapModel
-										server.gmm.moveObjects(quarterPos, xpos, ypos,quarterPos, xpos, ypos-1);
-										
-										
+										server.gmm.moveObjects(quarterPos, xpos, ypos,quarterPos, xpos, ypos-1);													
 									}
-									else 
-									{
+									else {
 										//nothing there
 										//update PlayerModel
 										server.gmm.playerLookup.get(this.id).setPostion(0, -1);		
@@ -350,8 +296,7 @@ public class ServerGameThread extends Thread
 							}
 						}
 					}
-					else if(typeMessage.equals("D")) 
-					{ 
+					else if(typeMessage.equals("D")){ 
 						distance = messages[1];
 						server.gmm.playerLookup.get(this.id).setDirection(2);
 						boolean isMoveable = true;
@@ -361,40 +306,29 @@ public class ServerGameThread extends Thread
 						int quarterPos = server.gmm.playerLookup.get(this.id).playerLocationQuarter;
 	
 						if(distance.equals("0")){}
-						else
-						{
-							if(server.gmm.playerLookup.get(this.id).playerLocationY==9)
-							{
-								if(quarterPos==2||quarterPos==3)
-								{
+						else{
+							if(server.gmm.playerLookup.get(this.id).playerLocationY==9){
+								if(quarterPos==2||quarterPos==3){
 									isMoveable=false;
 								}
 								else{movingQuarter=true;}
 							}
 							
-							if(isMoveable)
-							{
-								if(movingQuarter)
-								{
-									if(quarterPos==0)
-									{
+							if(isMoveable){
+								if(movingQuarter){
+									if(quarterPos==0){
 										AbstractObjectModel destination = server.gmm.allModels[2][xpos][0];
-										if(destination instanceof PlayerModel)
-										{
+										if(destination instanceof PlayerModel){
 											//another player so we cant move
 										}
-										else if(destination instanceof ItemModel)
-										{
-											if(destination instanceof HealthRefilModel)
-											{
+										else if(destination instanceof ItemModel){
+											if(destination instanceof HealthRefilModel){
 												server.gmm.playerLookup.get(this.id).setHealth(((HealthRefilModel) destination).healthPoints);
 											}
-											else if(destination instanceof ArmorModel)
-											{
+											else if(destination instanceof ArmorModel){
 												server.gmm.playerLookup.get(this.id).setArmor(((ArmorModel) destination).armorPoints);
 											}
-											else if(destination instanceof SwordModel)
-											{
+											else if(destination instanceof SwordModel){
 												//adding sword is all that is needed
 											}
 											
@@ -407,8 +341,7 @@ public class ServerGameThread extends Thread
 											//update the GridMapModel
 											server.gmm.moveObjects(quarterPos, xpos, ypos,2, xpos, 0);
 										}
-										else 
-										{
+										else {
 											//nothing there
 											//update PlayerModel
 											server.gmm.playerLookup.get(this.id).setPostion(0, -9);
@@ -417,25 +350,19 @@ public class ServerGameThread extends Thread
 											server.gmm.moveObjects(quarterPos, xpos, ypos,2, xpos, 0);
 										}
 									}
-									else//quarterPos == 1
-									{
+									else{//quarterPos == 1
 										AbstractObjectModel destination = server.gmm.allModels[3][xpos][0];
-										if(destination instanceof PlayerModel)
-										{
+										if(destination instanceof PlayerModel){
 											//another player so we cant move
 										}
-										else if(destination instanceof ItemModel)
-										{
-											if(destination instanceof HealthRefilModel)
-											{
+										else if(destination instanceof ItemModel){
+											if(destination instanceof HealthRefilModel){
 												server.gmm.playerLookup.get(this.id).setHealth(((HealthRefilModel) destination).healthPoints);
 											}
-											else if(destination instanceof ArmorModel)
-											{
+											else if(destination instanceof ArmorModel){
 												server.gmm.playerLookup.get(this.id).setArmor(((ArmorModel) destination).armorPoints);
 											}
-											else if(destination instanceof SwordModel)
-											{
+											else if(destination instanceof SwordModel){
 												//adding sword is all that is needed
 											}
 											
@@ -448,8 +375,7 @@ public class ServerGameThread extends Thread
 											//update the GridMapModel
 											server.gmm.moveObjects(quarterPos, xpos, ypos,3, xpos, 9);
 										}
-										else 
-										{
+										else {
 											//nothing there
 											//update PlayerModel
 											server.gmm.playerLookup.get(this.id).setPostion(0, 9);
@@ -462,22 +388,17 @@ public class ServerGameThread extends Thread
 								else
 								{
 									AbstractObjectModel destination = server.gmm.allModels[quarterPos][xpos][ypos+1];
-									if(destination instanceof PlayerModel)
-									{
+									if(destination instanceof PlayerModel){
 										//another player so we cant move
 									}
-									else if(destination instanceof ItemModel)
-									{
-										if(destination instanceof HealthRefilModel)
-										{
+									else if(destination instanceof ItemModel){
+										if(destination instanceof HealthRefilModel){
 											server.gmm.playerLookup.get(this.id).setHealth(((HealthRefilModel) destination).healthPoints);
 										}
-										else if(destination instanceof ArmorModel)
-										{
+										else if(destination instanceof ArmorModel){
 											server.gmm.playerLookup.get(this.id).setArmor(((ArmorModel) destination).armorPoints);
 										}
-										else if(destination instanceof SwordModel)
-										{
+										else if(destination instanceof SwordModel){
 											//adding sword is all that is needed
 										}
 										
@@ -514,40 +435,29 @@ public class ServerGameThread extends Thread
 						int quarterPos = server.gmm.playerLookup.get(this.id).playerLocationQuarter;
 						
 						if(distance.equals("0")){}
-						else
-						{
-							if(server.gmm.playerLookup.get(this.id).playerLocationX==0)
-							{
-								if(quarterPos==0||quarterPos==2)
-								{
+						else{
+							if(server.gmm.playerLookup.get(this.id).playerLocationX==0){
+								if(quarterPos==0||quarterPos==2){
 									isMoveable=false;
 								}
 								else{movingQuarter=true;}
 							}
 							
-							if(isMoveable)
-							{
-								if(movingQuarter)
-								{
-									if(quarterPos==1)
-									{
+							if(isMoveable){
+								if(movingQuarter){
+									if(quarterPos==1){
 										AbstractObjectModel destination = server.gmm.allModels[0][9][ypos];
-										if(destination instanceof PlayerModel)
-										{
+										if(destination instanceof PlayerModel){
 											//another player so we cant move
 										}
-										else if(destination instanceof ItemModel)
-										{
-											if(destination instanceof HealthRefilModel)
-											{
+										else if(destination instanceof ItemModel){
+											if(destination instanceof HealthRefilModel){
 												server.gmm.playerLookup.get(this.id).setHealth(((HealthRefilModel) destination).healthPoints);
 											}
-											else if(destination instanceof ArmorModel)
-											{
+											else if(destination instanceof ArmorModel){
 												server.gmm.playerLookup.get(this.id).setArmor(((ArmorModel) destination).armorPoints);
 											}
-											else if(destination instanceof SwordModel)
-											{
+											else if(destination instanceof SwordModel){
 												//adding sword is all that is needed
 											}
 											
@@ -560,8 +470,7 @@ public class ServerGameThread extends Thread
 											//update the GridMapModel
 											server.gmm.moveObjects(quarterPos, xpos, ypos,0, 9, ypos);
 										}
-										else 
-										{
+										else {
 											//nothing there
 											//update PlayerModel
 											server.gmm.playerLookup.get(this.id).setPostion(-1, 0);
@@ -573,22 +482,17 @@ public class ServerGameThread extends Thread
 									else//quarterPos==3
 									{
 										AbstractObjectModel destination = server.gmm.allModels[2][9][ypos];
-										if(destination instanceof PlayerModel)
-										{
+										if(destination instanceof PlayerModel){
 											//another player so we cant move
 										}
-										else if(destination instanceof ItemModel)
-										{
-											if(destination instanceof HealthRefilModel)
-											{
+										else if(destination instanceof ItemModel){
+											if(destination instanceof HealthRefilModel){
 												server.gmm.playerLookup.get(this.id).setHealth(((HealthRefilModel) destination).healthPoints);
 											}
-											else if(destination instanceof ArmorModel)
-											{
+											else if(destination instanceof ArmorModel){
 												server.gmm.playerLookup.get(this.id).setArmor(((ArmorModel) destination).armorPoints);
 											}
-											else if(destination instanceof SwordModel)
-											{
+											else if(destination instanceof SwordModel){
 												//adding sword is all that is needed
 											}
 											
@@ -601,8 +505,7 @@ public class ServerGameThread extends Thread
 											//update the GridMapModel
 											server.gmm.moveObjects(quarterPos, xpos, ypos,2, 9, ypos);
 										}
-										else 
-										{
+										else {
 											//nothing there
 											//update PlayerModel
 											server.gmm.playerLookup.get(this.id).setPostion(-1, 0);
@@ -615,22 +518,17 @@ public class ServerGameThread extends Thread
 								else
 								{
 									AbstractObjectModel destination = server.gmm.allModels[quarterPos][xpos-1][ypos];
-									if(destination instanceof PlayerModel)
-									{
+									if(destination instanceof PlayerModel){
 										//another player so we cant move
 									}
-									else if(destination instanceof ItemModel)
-									{
-										if(destination instanceof HealthRefilModel)
-										{
+									else if(destination instanceof ItemModel){
+										if(destination instanceof HealthRefilModel){
 											server.gmm.playerLookup.get(this.id).setHealth(((HealthRefilModel) destination).healthPoints);
 										}
-										else if(destination instanceof ArmorModel)
-										{
+										else if(destination instanceof ArmorModel){
 											server.gmm.playerLookup.get(this.id).setArmor(((ArmorModel) destination).armorPoints);
 										}
-										else if(destination instanceof SwordModel)
-										{
+										else if(destination instanceof SwordModel){
 											//adding sword is all that is needed
 										}
 										
@@ -643,8 +541,7 @@ public class ServerGameThread extends Thread
 										//update the GridMapModel
 										server.gmm.moveObjects(quarterPos, xpos, ypos,quarterPos, xpos-1, ypos);
 									}
-									else 
-									{
+									else {
 										//nothing there
 										//update PlayerModel
 										server.gmm.playerLookup.get(this.id).setPostion(-1, 0);
@@ -656,8 +553,7 @@ public class ServerGameThread extends Thread
 							}				
 						}
 					}
-					else if(typeMessage.equals("R")) 
-					{ 
+					else if(typeMessage.equals("R")) { 
 						distance = messages[1];
 						server.gmm.playerLookup.get(this.id).setDirection(1);
 						boolean isMoveable = true;
@@ -667,39 +563,28 @@ public class ServerGameThread extends Thread
 						int quarterPos = server.gmm.playerLookup.get(this.id).playerLocationQuarter;
 	
 						if(distance.equals("0")){}
-						else
-						{
-							if(server.gmm.playerLookup.get(this.id).playerLocationX==9)
-							{
-								if(quarterPos==1||quarterPos==3)
-								{
+						else{
+							if(server.gmm.playerLookup.get(this.id).playerLocationX==9){
+								if(quarterPos==1||quarterPos==3){
 									isMoveable=false;
 								}
 								else{movingQuarter=true;}
 							}
-							if(isMoveable)
-							{
-								if(movingQuarter)
-								{
-									if(quarterPos==0)
-									{
+							if(isMoveable){
+								if(movingQuarter){
+									if(quarterPos==0){
 										AbstractObjectModel destination = server.gmm.allModels[1][0][ypos];
-										if(destination instanceof PlayerModel)
-										{
+										if(destination instanceof PlayerModel){
 											//another player so we cant move
 										}
-										else if(destination instanceof ItemModel)
-										{
-											if(destination instanceof HealthRefilModel)
-											{
+										else if(destination instanceof ItemModel){
+											if(destination instanceof HealthRefilModel){
 												server.gmm.playerLookup.get(this.id).setHealth(((HealthRefilModel) destination).healthPoints);
 											}
-											else if(destination instanceof ArmorModel)
-											{
+											else if(destination instanceof ArmorModel){
 												server.gmm.playerLookup.get(this.id).setArmor(((ArmorModel) destination).armorPoints);
 											}
-											else if(destination instanceof SwordModel)
-											{
+											else if(destination instanceof SwordModel){
 												//adding sword is all that is needed
 											}
 											
@@ -712,8 +597,7 @@ public class ServerGameThread extends Thread
 											//update the GridMapModel
 											server.gmm.moveObjects(quarterPos, xpos, ypos,1, 0, ypos);
 										}
-										else 
-										{
+										else {
 											//nothing there
 											//update PlayerModel
 											server.gmm.playerLookup.get(this.id).setPostion(-9, 0);
@@ -722,25 +606,19 @@ public class ServerGameThread extends Thread
 											server.gmm.moveObjects(quarterPos, xpos, ypos,1, 0, ypos);
 										}
 									}
-									else//quarterPos ==2
-									{
+									else{//quarterPos ==2
 										AbstractObjectModel destination = server.gmm.allModels[3][0][ypos];
-										if(destination instanceof PlayerModel)
-										{
+										if(destination instanceof PlayerModel){
 											//another player so we cant move
 										}
-										else if(destination instanceof ItemModel)
-										{
-											if(destination instanceof HealthRefilModel)
-											{
+										else if(destination instanceof ItemModel){
+											if(destination instanceof HealthRefilModel){
 												server.gmm.playerLookup.get(this.id).setHealth(((HealthRefilModel) destination).healthPoints);
 											}
-											else if(destination instanceof ArmorModel)
-											{
+											else if(destination instanceof ArmorModel){
 												server.gmm.playerLookup.get(this.id).setArmor(((ArmorModel) destination).armorPoints);
 											}
-											else if(destination instanceof SwordModel)
-											{
+											else if(destination instanceof SwordModel){
 												//adding sword is all that is needed
 											}
 											
@@ -753,8 +631,7 @@ public class ServerGameThread extends Thread
 											//update the GridMapModel
 											server.gmm.moveObjects(quarterPos, xpos, ypos,3, 0, ypos);
 										}
-										else 
-										{
+										else {
 											//nothing there
 											//update PlayerModel
 											server.gmm.playerLookup.get(this.id).setPostion(-9, 0);
@@ -764,25 +641,19 @@ public class ServerGameThread extends Thread
 										}
 									}
 								}
-								else
-								{
+								else{
 									AbstractObjectModel destination = server.gmm.allModels[quarterPos][xpos+1][ypos];
-									if(destination instanceof PlayerModel)
-									{
+									if(destination instanceof PlayerModel){
 										//another player so we cant move
 									}
-									else if(destination instanceof ItemModel)
-									{
-										if(destination instanceof HealthRefilModel)
-										{
+									else if(destination instanceof ItemModel){
+										if(destination instanceof HealthRefilModel){
 											server.gmm.playerLookup.get(this.id).setHealth(((HealthRefilModel) destination).healthPoints);
 										}
-										else if(destination instanceof ArmorModel)
-										{
+										else if(destination instanceof ArmorModel){
 											server.gmm.playerLookup.get(this.id).setArmor(((ArmorModel) destination).armorPoints);
 										}
-										else if(destination instanceof SwordModel)
-										{
+										else if(destination instanceof SwordModel){
 											//adding sword is all that is needed
 										}
 										
@@ -809,8 +680,7 @@ public class ServerGameThread extends Thread
 						}
 					}
 				}
-				else
-				{
+				else{
 					//don’t listen anymore the game is over
 					break;
 				}
@@ -828,8 +698,7 @@ public class ServerGameThread extends Thread
 		}
 	}
 
-	public void killThread()
-	{
+	public void killThread(){
 		threadActive = false;
 	}
 }

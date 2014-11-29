@@ -8,10 +8,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import Models.GridMapModel;
-import Models.PlayerModel;
+//import Models.GridMapModel;
+//import Models.PlayerModel;
 
 /*				CLIENT-SERVER Communication Nomenclature
  * 				Standard policy: all caps, delimited by colons, no spaces.
@@ -24,9 +25,9 @@ import Models.PlayerModel;
  * 
  * 						ADD YOUR OWN SO EVERYONE CAN STAY IN SYNC
  */
-public class GameServer 
-{
-	//shared data
+
+public class GameServer {
+	////////////////////////////////////ALL SHARED DATA////////////////////////////////////
 	boolean gameState[] = {true, false, false}; //0: joining game  1:game play  2:game over
 	GridMapModel gmm;
 	Map<Integer, PrintWriter> allClientWriters;
@@ -38,91 +39,100 @@ public class GameServer
 	boolean gameStart = false;
 	boolean gridMapInit = false;
 	boolean readyState[] = {false, false, false, false}; //fixed at player cap
+	///////////////////////////////////////////////////////////////////////////////////////
+	
+	//////////////LOCKS///////////////////////////
 	ReentrantLock queryLock = new ReentrantLock();
+	Lock stateLock = new ReentrantLock();
+	//////////////////////////////////////////////
 
 	//Threads
 	ArrayList<ServerLobbyThread> lobbyThreads;
 	ArrayList<ServerGameThread> gameThreads;
 	ArrayList<ServerUpdateClientThread> updateClientThreads; 
 
-	public GameServer() 
+	//////////////////CONNECT TO SERVER///////////////////////////
+	public GameServer(){	
+		try{
+			ServerSocket ss= new ServerSocket(5001);
+			while(true) {
+				//now listening
+				new ServerThread(ss.accept(), ++id, this).start();			
+			}
+		} 
+		catch (IOException ioe) {}
+	}
+	/////////////////////////////////////////////////////////////
+	
+	public void isGridMapInit(){
+		stateLock.lock();
+		gridMapInit = true;
+		stateLock .unlock();
+	}
+	
+	public void changeState(int current, int next){
+		stateLock.lock();
+		gameState[current] = false;
+		gameState[next] = true;
+		stateLock.unlock();
+	}
+	
+	///////////////STARTING SERVER///////////
+	public static void main(String[] args) {
+		GameServer s = new GameServer();
+	}
+	/////////////////////////////////////////
+	
+	
+	////////////////////INITIAL SERVER THREAD////////////////////
+	/*	created for each instance of a connection
+	 *	controls flow of game-play
+	 * 	creates additional threads
+	 */
+	public class ServerThread extends Thread
 	{
-		while(true) 
-		{
-			//initialize server socket ss
-			ServerSocket ss = null;
+		Socket s;
+		int id;
+		GameServer gs;
+		PrintWriter pw = null;
+		ObjectOutputStream oos = null;
+		
+		public ServerThread(Socket s, int id, GameServer gs){
 			try {
-				ss = new ServerSocket(5001);
-			} catch (IOException e) {}
-			//initialize other varables as needed
-			
-			while(gameState[0] && !gameStart) 
-			{
-				//accept connections from clients
-				Socket s = null;
-				PrintWriter pw = null;
-				ObjectOutputStream oos = null;
-				try 
-				{
-					s = ss.accept();
-					pw = new PrintWriter(s.getOutputStream());
-					oos = new ObjectOutputStream(s.getOutputStream());
-				} 
-				catch (IOException e) {}
-				
-				
+				this.s = s;
+				this.id = id;
+				this.gs = gs; 
+				pw = new PrintWriter(s.getOutputStream());
+				oos = new ObjectOutputStream(s.getOutputStream());
 				allClientWriters.put(id, pw);
 				allClientObjectWriters.put(id, oos);
-				
-				ServerLobbyThread slt = new ServerLobbyThread(s, id, this);
-				lobbyThreads.add(slt);
-				gameThreads.add(new ServerGameThread(s, id, this));
-				updateClientThreads.add(new ServerUpdateClientThread(s, id, this));
-				
-				id++;
-				slt.start();
-			}
+			} 
+			catch (IOException e) {}
 			
-			while(gameState[1] && gameStart) 
-			{
-				//kill all ServerLobbyThread threads
+			//start the login/lobby
+			ServerLobbyThread slt = new ServerLobbyThread(s, id, gs);
+			lobbyThreads.add(slt);
+			slt.start();
+		}
+		
+		public void run(){
+			while(gameState[0] && !gameStart) {
+				//still in lobby, do nothing
+			}
+			while(gameState[1] && gameStart) {
+				//kill all ServerLobbyThread threads (should be dead)
 				
 				//start all ServerGameThread threads
-				Iterator<ServerGameThread> itGame = gameThreads.iterator();
-				while(itGame.hasNext())
-				{
-					itGame.next().start();
-				}
-				
-				
+				gameThreads.add(new ServerGameThread(s, id, gs));
+					
 				//start all ServerUpdateClientThread threads
-				Iterator<ServerUpdateClientThread> itUpdate = updateClientThreads.iterator();
-				while(itUpdate.hasNext())
-				{
-					itUpdate.next().start();
-				}
+				updateClientThreads.add(new ServerUpdateClientThread(s, id, gs));				
 			}
-			while(gameState[2]) 
-			{
-			//kill all ServerGameThread threads
-			Iterator<ServerGameThread> itGame = gameThreads.iterator();
-			while(itGame.hasNext())
-			{
-				itGame.next().killThread();
-			}
-			//kill all ServerChatThread threads
-			//kill all ServerUpdateClientThread threads
+			while(gameState[2]){
+				//kill all ServerGameThread/ServerUpdateClientThreads threads (should be dead)
+				//the game is finished
 			}
 		}
 	}
-	public void isGridMapInit()
-	{
-		gridMapInit = true;
-	}
-	public static void main(String[] args) 
-	{
-		GameServer s = new GameServer();
-	}
-
 
 }
