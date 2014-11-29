@@ -165,7 +165,7 @@ public class ClientApplication extends JFrame implements Runnable{
 		
 		public void launchGame(){
 			//hide lobby panel and show game panel.
-			inLobby=false;
+			inLobby=false; 
 		}
 		
 		public void sendToServer(GridMapModel gridMapObject){

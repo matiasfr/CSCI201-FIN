@@ -32,7 +32,7 @@ public class ClientPlayer extends JPanel implements Runnable{
 	BufferedImage right[]=new BufferedImage[4];
 	BufferedImage down[]=new BufferedImage[4];
 	private ClientApplication myApp;
-	
+	private ClientDrawingPanel drawPanel;
 	private int xSquare;
 	private int ySquare;
 	private int xPixel;
@@ -42,8 +42,9 @@ public class ClientPlayer extends JPanel implements Runnable{
 	private int currentQuadrant=9;
 	private String teamColor;
 	
-	public ClientPlayer(ClientApplication myApp, String teamColor){
+	public ClientPlayer(ClientApplication myApp, String teamColor, ClientDrawingPanel drawPanel){
 		this.myApp = myApp;
+		this.drawPanel = drawPanel;
 		this.teamColor= teamColor;
 		DrawKeyListener ls = new DrawKeyListener();
 		addKeyListener(ls);
@@ -87,6 +88,40 @@ public class ClientPlayer extends JPanel implements Runnable{
 			}
 			repaint();
 		}
+	}
+	
+	public void setPlayerChange(String armorType, String weaponType ){
+		try{
+			/*forward[2]  = ImageIO.read(new File("images/armor/"+armorType+"/facing_forward.png"));
+			forward[3] = ImageIO.read(new File("images/arms/"+weaponType+"/still/facing_forward.png"));
+			
+			left[2] = ImageIO.read(new File("images/armor/"+armorType+"/facing_left.png"));
+			left[3] = ImageIO.read(new File("images/arms/"+weaponType+"/still/facing_left.png"));
+			
+			right[2] = ImageIO.read(new File("images/armor/"+armorType+"/facing_right.png"));
+			right[3] = ImageIO.read(new File("images/arms/"+weaponType+"/still/facing_right.png"));
+			
+			
+			down[2] = ImageIO.read(new File("images/armor/"+armorType+"/facing_backwards.png"));
+			down[3] = ImageIO.read(new File("images/arms/"+weaponType+"/still/facing_backwards.png"));*/
+			
+			forward[2]  = ImageIO.read(new File(armorType));
+			forward[3] = ImageIO.read(new File(weaponType));
+			
+			left[2] = ImageIO.read(new File(armorType));
+			left[3] = ImageIO.read(new File(weaponType));
+			
+			right[2] = ImageIO.read(new File(armorType));
+			right[3] = ImageIO.read(new File(weaponType));
+			
+			
+			down[2] = ImageIO.read(new File(armorType));
+			down[3] = ImageIO.read(new File(weaponType));
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
 	}
 	
 	public void setX(int x){
@@ -161,7 +196,7 @@ public class ClientPlayer extends JPanel implements Runnable{
 					//DO NOTHING, too close to the right border.
 				}else if( (((225-xPixel) < 6 ) && currentQuadrant == 0) || (((225-xPixel) < 6 ) && currentQuadrant == 2)){
 					myApp.sendServerMessage("R:");
-					
+					drawPanel.drawQuadChange = true;
 				}
 		
 				else{
@@ -231,7 +266,8 @@ public class ClientPlayer extends JPanel implements Runnable{
 						myApp.sendServerMessage("D:");
 			            //Up arrow key code
 						direction = 2;
-						yPixel+=5;					
+						yPixel+=5;	
+						//ySquare = (yPixel+22.5)/45;
 					}else{
 						direction = 2;
 						yPixel+=5;	
@@ -244,63 +280,6 @@ public class ClientPlayer extends JPanel implements Runnable{
 
 			}
 		}
-		
-		public void verifyMove(){
-			if(currentQuadrant == 3 ){
-				if (yPixel+22.5 <230){
-					//change quadrant
-					currentQuadrant = 1;
-					xSquare= xPixel/45;
-					ySquare= yPixel/45;
-				}
-				else if (xPixel+22.5 < 230){
-					//change quadrant
-					currentQuadrant = 2;
-					xSquare= xPixel/45;
-					ySquare= yPixel/45;
-				}
-			}
-			
-			else if(currentQuadrant == 2 ){
-				if (yPixel+22.5 <230){
-					//change quadrant
-					currentQuadrant = 0;
-					xSquare= xPixel/45;
-					ySquare= yPixel/45;
-				}
-				else if (xPixel+22.5 > 220){
-					//change quadrant
-					currentQuadrant = 3;
-					xSquare= xPixel/45;
-					ySquare= yPixel/45;
-				}
-			}
-			
-			else if(currentQuadrant == 1 ){
-				if (yPixel+22.5 <230){
-					//change quadrant
-					currentQuadrant = 1;
-				}
-				else if (xPixel+22.5 < 230){
-					//change quadrant
-					currentQuadrant = 2;
-				}
-			}
-			
-			else if(currentQuadrant == 0 ){
-				if (yPixel+22.5 <230){
-					//change quadrant
-					currentQuadrant = 1;
-				}
-				else if (xPixel+22.5 < 230){
-					//change quadrant
-					currentQuadrant = 2;
-				}
-			}
-			
-			
-		}
-		
 		
 	}
 }

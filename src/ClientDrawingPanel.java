@@ -14,17 +14,20 @@ class ClientDrawingPanel extends JPanel {
 	private int currentQuadrant=0;
 	private String playerName="";
 	private Boolean firstDrawDone=false;
+	public Boolean drawQuadChange=false;
 	private ClientPlayer thisPlayer;
 	private ClientApplication myApp;
+	private ClientGamePanel theGame;
 	//IMAGES
 	BufferedImage imgArmor = null;
 	BufferedImage imgSword = null;
 	BufferedImage imgHealth = null;
 	BufferedImage backgroundImage[]=new BufferedImage[4];
 	
-	public ClientDrawingPanel(GridMapModel gmm, ClientApplication myApp){
+	public ClientDrawingPanel(GridMapModel gmm, ClientApplication myApp, ClientGamePanel theGame){
 		this.gmm = gmm;	
 		this.myApp = myApp;
+		this.theGame = theGame;
 		try{
 			//When we start these are the defaults. 
 			imgArmor = ImageIO.read(new File("images/playerSkeleton/facing_forward.png"));
@@ -89,7 +92,7 @@ class ClientDrawingPanel extends JPanel {
 						}
 						
 						//also we should probably update the stats with this. 
-						thisPlayer = new ClientPlayer(myApp, teamColor);
+						thisPlayer = new ClientPlayer(myApp, teamColor, this);
 						thisPlayer.setX(gammaPlayer.playerLocationX);
 						thisPlayer.setY(gammaPlayer.playerLocationY);
 						thisPlayer.setXSq(i);
@@ -99,7 +102,18 @@ class ClientDrawingPanel extends JPanel {
 						// GO through player sprite and draw the images. 
 						firstDrawDone=true;
 						new Thread(thisPlayer).start();
+					}else if(drawQuadChange){
+						PlayerModel gammaPlayer=(PlayerModel) gmm.allModels[currentQuadrant][i][j];
+						thisPlayer.setX(gammaPlayer.playerLocationX);
+						thisPlayer.setY(gammaPlayer.playerLocationY);
+						thisPlayer.setXSq(i);
+						thisPlayer.setYSq(j);
+						thisPlayer.setDirection(gammaPlayer.playerDirection);
+						thisPlayer.setQuadrant(currentQuadrant);
+						thisPlayer.setPlayerChange(gammaPlayer.playerSprite[2], gammaPlayer.playerSprite[3]);
+						drawQuadChange=false;
 					}else{
+					
 						//dont draw this player. 
 					}
 					

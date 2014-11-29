@@ -50,7 +50,7 @@ public class ClientGamePanel extends JPanel {
 		//statsPanel.setSize(200,600);
 		
 		//set up drawing panel
-		drawingPanel = new ClientDrawingPanel(gridMap, myApp);
+		drawingPanel = new ClientDrawingPanel(gridMap, myApp, this);
 		drawingPanel.setSize(600,600);
 		drawingPanel.setLayout(null);
 		
