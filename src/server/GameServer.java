@@ -11,8 +11,8 @@ import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-//import Models.GridMapModel;
-//import Models.PlayerModel;
+import Models.GridMapModel;
+import Models.PlayerModel;
 
 /*				CLIENT-SERVER Communication Nomenclature
  * 				Standard policy: all caps, delimited by colons, no spaces.
@@ -77,6 +77,13 @@ public class GameServer {
 		stateLock.unlock();
 	}
 	
+	public void setGameStart()
+	{
+		stateLock.lock();
+		gameStart = true;
+		stateLock.unlock();
+	}
+	
 	///////////////STARTING SERVER///////////
 	public static void main(String[] args) {
 		GameServer s = new GameServer();
@@ -116,17 +123,21 @@ public class GameServer {
 		}
 		
 		public void run(){
-			while(gameState[0] && !gameStart) {
-				//still in lobby, do nothing
+			while(gameState[0]) {
+				//still in lobby, do nothing until all threads end
 			}
-			while(gameState[1] && gameStart) {
+			while(gameState[1]) {
 				//kill all ServerLobbyThread threads (should be dead)
 				
-				//start all ServerGameThread threads
-				gameThreads.add(new ServerGameThread(s, id, gs));
-					
-				//start all ServerUpdateClientThread threads
-				updateClientThreads.add(new ServerUpdateClientThread(s, id, gs));				
+				//this code will only run once
+				if(!gameStart){
+					//start all ServerGameThread threads
+					gameThreads.add(new ServerGameThread(s, id, gs));
+						
+					//start all ServerUpdateClientThread threads
+					updateClientThreads.add(new ServerUpdateClientThread(s, id, gs));
+					setGameStart();
+				}
 			}
 			while(gameState[2]){
 				//kill all ServerGameThread/ServerUpdateClientThreads threads (should be dead)

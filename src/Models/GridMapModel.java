@@ -13,7 +13,7 @@ public class GridMapModel implements Serializable
 	public AbstractObjectModel[][][] allModels;
 	
 	//for quick lookup of id to player, has a getter method
-	Map<Integer, PlayerModel> playerLookup;
+	public Map<Integer, PlayerModel> playerLookup;
 	
 	public ImageIcon[] backgrounds = new ImageIcon[4];
 	
