@@ -1,1 +1,6 @@
-/ClientStatsPanel.class
+/ClientApplication.class
+/ClientChatPanel.class
+/ClientDrawingPanel.class
+/ClientGamePanel.class
+/ClientPlayer$DrawKeyListener.class
+/ClientPlayer.class

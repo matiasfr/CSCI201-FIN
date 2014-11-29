@@ -195,7 +195,7 @@ public class ClientPlayer extends JPanel implements Runnable{
 				if( (((450-xPixel) < 6) && currentQuadrant == 3) || (((450-xPixel) < 6) && currentQuadrant == 1)){
 					//DO NOTHING, too close to the right border.
 				}else if( (((225-xPixel) < 6 ) && currentQuadrant == 0) || (((225-xPixel) < 6 ) && currentQuadrant == 2)){
-					myApp.sendServerMessage("R:");
+					myApp.sendServerMessage("R:5");
 					drawPanel.drawQuadChange = true;
 				}
 		
@@ -203,7 +203,7 @@ public class ClientPlayer extends JPanel implements Runnable{
 					  //Right arrow key code
 					//SEND THE SERVER THE MESSAGE R	
 					if( ((xPixel+22.5+5)/45) != xSquare){
-						myApp.sendServerMessage("R:");
+						myApp.sendServerMessage("R:5");
 			            //Up arrow key code
 						direction = 1;
 						xPixel+=5;					
@@ -217,12 +217,12 @@ public class ClientPlayer extends JPanel implements Runnable{
 				if( ((xPixel < 6) && currentQuadrant == 0) || ((xPixel < 6) && currentQuadrant == 2) ){
 					//DO NOTHING, too close to the right border.
 				}else if( (( (xPixel-225) < 6) && currentQuadrant==1) || (((xPixel-225) < 6) && currentQuadrant==3)  ){
-					myApp.sendServerMessage("L:");
+					myApp.sendServerMessage("L:5");
 				}
 				
 				else{
 					if( ((xPixel+22.5+5)/45) != xSquare){
-						myApp.sendServerMessage("L:");
+						myApp.sendServerMessage("L:5");
 			            //Up arrow key code
 						direction = 3;
 						xPixel-=5;					
@@ -237,12 +237,12 @@ public class ClientPlayer extends JPanel implements Runnable{
 				if( ((yPixel < 6) && currentQuadrant == 0) || ((yPixel < 6) && currentQuadrant == 1) ){
 					//do nothing 
 				}else if( (( (yPixel-225) < 6) && currentQuadrant==2) || (((yPixel-225) < 6) && currentQuadrant==3)  ){
-					myApp.sendServerMessage("U:");
+					myApp.sendServerMessage("U:5");
 				}
 				
 				else{
 					if( ((yPixel+22.5+5)/45) != ySquare){
-						myApp.sendServerMessage("U:");
+						myApp.sendServerMessage("U:5");
 			            //Up arrow key code
 						direction = 0;
 						yPixel-=5;					
@@ -258,12 +258,12 @@ public class ClientPlayer extends JPanel implements Runnable{
 				if( (((450-yPixel) < 6) && currentQuadrant == 2) || (((450-yPixel) < 6) && currentQuadrant == 3)){
 					//DO NOTHING, too close to the right border.
 				}else if( (( (225-yPixel) < 6) && currentQuadrant==0) || (((225-yPixel) < 6) && currentQuadrant==1)  ){
-					myApp.sendServerMessage("D:");
+					myApp.sendServerMessage("D:5");
 				}
 				
 				else{
 					if( ((yPixel+22.5+5)/45) != ySquare){
-						myApp.sendServerMessage("D:");
+						myApp.sendServerMessage("D:5");
 			            //Up arrow key code
 						direction = 2;
 						yPixel+=5;	
@@ -276,7 +276,7 @@ public class ClientPlayer extends JPanel implements Runnable{
 				
 			} else if (e.getKeyCode() == KeyEvent.VK_A ) {
 				//ATTACK
-				myApp.sendServerMessage("A:");
+				myApp.sendServerMessage("A:10");
 
 			}
 		}
