@@ -20,15 +20,21 @@ class ClientDrawingPanel extends JPanel {
 	BufferedImage imgArmor = null;
 	BufferedImage imgSword = null;
 	BufferedImage imgHealth = null;
-	
+	BufferedImage backgroundImage[]=new BufferedImage[4];
 	
 	public ClientDrawingPanel(GridMapModel gmm, ClientApplication myApp){
 		this.gmm = gmm;	
 		this.myApp = myApp;
 		try{
-			imgArmor = ImageIO.read(new File("image stuff/playerSkeleton/facing_forward.png"));
-			imgSword = ImageIO.read(new File("image stuff/playerSkeleton/facing_forward.png"));
-			imgHealth = ImageIO.read(new File("image stuff/playerSkeleton/facing_forward.png"));
+			//When we start these are the defaults. 
+			imgArmor = ImageIO.read(new File("images/playerSkeleton/facing_forward.png"));
+			imgSword = ImageIO.read(new File("images/playerSkeleton/facing_forward.png"));
+			imgHealth = ImageIO.read(new File("images/playerSkeleton/facing_forward.png"));
+			
+			backgroundImage[0] = ImageIO.read(new File("images/quad1.png"));
+			backgroundImage[1] = ImageIO.read(new File("images/quad2.png"));
+			backgroundImage[2] = ImageIO.read(new File("images/quad3.png"));
+			backgroundImage[3] = ImageIO.read(new File("images/quad4.png"));
 		}catch (IOException e) {}
 		
 	}
@@ -51,6 +57,8 @@ class ClientDrawingPanel extends JPanel {
 	
 		super.paintComponent(g);
 
+		//draw the background for the current quadrant. 
+		g.drawImage(backgroundImage[currentQuadrant],0,0,null);
 		for(int i=0; i<10; i++){
 			for( int j= 0; j<10; j++){
 				
@@ -73,11 +81,22 @@ class ClientDrawingPanel extends JPanel {
 						//draw our own player
 						//but we should also start up the other player model to get the position of the player. 
 						PlayerModel gammaPlayer=(PlayerModel) gmm.allModels[currentQuadrant][i][j];
+						String teamColor = "";
+						if(gammaPlayer.playerTeam == 1){
+							teamColor = "red";
+						}else{
+							teamColor = "green";
+						}
+						
 						//also we should probably update the stats with this. 
-						thisPlayer = new ClientPlayer(myApp);
-						thisPlayer.xpos= gammaPlayer.playerLocationX;
-						thisPlayer.ypos= gammaPlayer.playerLocationY;
-						thisPlayer.direction= gammaPlayer.playerDirection;
+						thisPlayer = new ClientPlayer(myApp, teamColor);
+						thisPlayer.setX(gammaPlayer.playerLocationX);
+						thisPlayer.setY(gammaPlayer.playerLocationY);
+						thisPlayer.setXSq(i);
+						thisPlayer.setYSq(j);
+						thisPlayer.setDirection(gammaPlayer.playerDirection);
+						thisPlayer.setQuadrant(currentQuadrant);
+						// GO through player sprite and draw the images. 
 						firstDrawDone=true;
 						new Thread(thisPlayer).start();
 					}else{

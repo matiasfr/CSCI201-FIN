@@ -52,7 +52,7 @@ public class ClientApplication extends JFrame implements Runnable{
 			
 			try{
 					String hostname = "127.0.0.1";
-					int port = 1392;
+					int port = 5001;
 					mySocket = new Socket(hostname, port);
 					br =new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
 					pw =new PrintWriter(new OutputStreamWriter(mySocket.getOutputStream()));
@@ -66,11 +66,11 @@ public class ClientApplication extends JFrame implements Runnable{
 			cl = new CardLayout();
 			cardsPanel = new JPanel(cl);
 						
-			myGame = new ClientGamePanel( myGridMap,pw, this);
+			//myGame = new ClientGamePanel( myGridMap,pw, this);
 			logIn = new ClientLoginPanel( pw);
 			lobby = new ClientLobbyPanel(this);
 			
-			cardsPanel.add(myGame, "GamePanel");
+			//cardsPanel.add(myGame, "GamePanel");
 			cardsPanel.add(logIn, "LoginScreen");
 			cardsPanel.add(lobby, "Lobby");
 			add(cardsPanel);
@@ -86,63 +86,71 @@ public class ClientApplication extends JFrame implements Runnable{
 		public void run(){
 			while(true){
 				try {
-					Thread.sleep(5000);
+					Thread.sleep(100);
 					
 					//BEGIN TESTING CODE 
 					//hide loginPanel and show lobbyPanel (loggedIn())
-					myGame.drawingPanel.setName("apple");
+					
 					cl.show(cardsPanel, "Lobby");
 					 if (timerTest ==1){
-						 lobby.setCountdown(20);
+						 myGame.drawingPanel.setName("apple");
+						 lobby.setCountdown(5);
 						lobby.startCountdown();
+						cl.show(cardsPanel,"GamePanel");
 						timerTest--;
 					 }
 					//END TESTING CODE
 					 
 					//reading from the buffered reader.
-					String msg= br.readLine();
-					//MESSAGE PREFIX: TIMER
-					if(msg.equals("TIMER")){
-						lobby.setCountdown(20);
-						lobby.startCountdown();
-					}
-					
-					String serverMessage[] = msg.split(":");
-					String prefix = serverMessage[0];
-					String content = serverMessage[1];
-					
-					//MESSAGE PREFIX: CHAT 
-					if(prefix.equals("CHAT")){
-						myGame.chatPanel.writeChatMessage(content);
-					}
+					String readString="";
+					if( (readString = br.readLine()) != null){
+						
+						String msg = readString;
+						//MESSAGE PREFIX: TIMER
+						if(msg.equals("TIMER")){
+							lobby.setCountdown(20);
+							lobby.startCountdown();
+						}else{
+							String serverMessage[] = msg.split(":");
+							String prefix ="";
+							String content="";
+							 
+							
+							//MESSAGE PREFIX: CHAT 
+							if(prefix.equals("CHAT")){
+								System.out.println("CHAT:"+content);
+								myGame.chatPanel.writeChatMessage(content);
+							}
 
-					//MESSAGE PREFIX: USERNAME
-					if(prefix.equals("USERNAME")){
-						//hide loginPanel and show lobbyPanel (loggedIn())
-						myGame.drawingPanel.setName(content);
-						cl.show(cardsPanel, "Lobby");
-					}
-					
-					//MESSAGE PREFIX: STATUS
-					if(prefix.equals("STATUS")){
-						//when status is go, hide lobbyPanel and show gamePanel
-						if(content.equals("STATUS:START")){
-							cl.show(cardsPanel,"GamePanel");
+							//MESSAGE PREFIX: USERNAME
+							if(prefix.equals("USERNAME")){
+								//hide loginPanel and show lobbyPanel (loggedIn())
+								//we get the username from the server and set it here so we know who we are. 
+								System.out.println("in the username execute");
+								myGame.drawingPanel.setName(content);
+								cl.show(cardsPanel, "Lobby");
+							}
+							
+							//MESSAGE PREFIX: STATUS
+							if(prefix.equals("STATUS")){
+								//when status is go, hide lobbyPanel and show gamePanel
+								if(content.equals("START")){
+									cl.show(cardsPanel,"GamePanel");
+								}
+							}
 						}
-					}
-					
-					//constantly calling getFromServer() so that way we can always be reading in an object;
-					
-					
+					} 
+					//String msg= br.readLine();
+					getFromServer();
 					
 				} catch (InterruptedException e) {
 					
 					e.printStackTrace();
 				}
-					catch (Exception e) {
-					
-					e.printStackTrace();
-				}
+				
+				 catch (IOException e) {
+					   System.err.println("Error: " + e);
+					 }
 				//refreshAll();
 			}
 			//We need to wait for the server to start sending something to us.

@@ -10,32 +10,28 @@ import javax.swing.ImageIcon;
 
 public class GridMapModel implements Serializable
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5209465409547936302L;
-
 	public AbstractObjectModel[][][] allModels;
 	
 	//for quick lookup of id to player
 	public Map<Integer, PlayerModel> playerLookup;
 	
-	public ImageIcon[] backgrounds = new ImageIcon[4];
+	ImageIcon[] backgrounds = new ImageIcon[4];
 	
-	public Lock lock = new ReentrantLock();
+	Lock lock = new ReentrantLock();
 	public GridMapModel()
 	{
 		allModels = new AbstractObjectModel[4][10][10];
 		playerLookup = new HashMap<Integer, PlayerModel>();
 	}
-	public void moveObjects(int level, int sx, int sy, int dx,int dy)
+	public void moveObjects(int level1, int sx, int sy, int level2,int dx,int dy)
 	{
 		lock.lock();
-		PlayerModel pm = (PlayerModel) allModels[level][sx][sy];
-		allModels[level][dx][dy] = pm;
-		allModels[level][sx][sy] = null;
+		PlayerModel pm = (PlayerModel) allModels[level1][sx][sy];
+		allModels[level2][dx][dy] = pm;
+		allModels[level1][sx][sy] = null;
 		lock.unlock();
 	}
+
 	public Map<Integer, PlayerModel> getPlayers()
 	{
 		return playerLookup;

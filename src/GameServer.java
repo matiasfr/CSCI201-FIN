@@ -6,7 +6,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -39,7 +39,9 @@ public class GameServer
 	boolean gridMapInit = false;
 	boolean readyState[] = {false, false, false, false}; //fixed at player cap
 	ReentrantLock queryLock = new ReentrantLock();
-
+	Socket s = null;
+	PrintWriter pw = null;
+	ObjectOutputStream oos = null;
 	//Threads
 	ArrayList<ServerLobbyThread> lobbyThreads;
 	ArrayList<ServerGameThread> gameThreads;
@@ -47,30 +49,45 @@ public class GameServer
 
 	public GameServer() 
 	{
+		
+		allClientWriters = new HashMap<Integer, PrintWriter>();
+		allClientObjectWriters = new HashMap<Integer, ObjectOutputStream>();
+		lobbyThreads = new ArrayList<ServerLobbyThread>();
+		gameThreads = new ArrayList<ServerGameThread>();
+		updateClientThreads = new ArrayList<ServerUpdateClientThread>();
+		team1 = new HashSet<PlayerModel>();
+		team2 = new HashSet<PlayerModel>();
+		//initialize server socket ss
+		
+		
+		
 		while(true) 
 		{
-			//initialize server socket ss
 			ServerSocket ss = null;
 			try {
 				ss = new ServerSocket(5001);
 			} catch (IOException e) {}
-			//initialize other varables as needed
 			
 			while(gameState[0] && !gameStart) 
 			{
+				//System.out.println("hello im in server");
 				//accept connections from clients
+				//initialize other varables as needed
+				//accept connections from clients
+				
 				Socket s = null;
 				PrintWriter pw = null;
 				ObjectOutputStream oos = null;
+				
 				try 
 				{
 					s = ss.accept();
-					pw = new PrintWriter(s.getOutputStream());
-					oos = new ObjectOutputStream(s.getOutputStream());
+					pw = new PrintWriter(this.s.getOutputStream());
+					oos = new ObjectOutputStream(this.s.getOutputStream());
 				} 
 				catch (IOException e) {}
 				
-				
+
 				allClientWriters.put(id, pw);
 				allClientObjectWriters.put(id, oos);
 				

@@ -29,22 +29,22 @@ public class ServerLobbyThread extends Thread{
 	
 	public void run() {
 				//sql testinfo
-				int port =9999;
+				int port =5001;
 				String hostname = "localhost";
 				
 				String originalName = null;
 				PrintWriter pw = parent.allClientWriters.get(id);
 				try {originalName = br.readLine();} catch (IOException e) {} 
 				//USERNAME:USERNAME_HERE
-				//System.out.println( "Line received from client " + s.getInetAddress() + ": " + line );
+				System.out.println( "Line received from client " + s.getInetAddress() + ": " + originalName );
 				
 				//listens for the username they want to have
 				//lookup in mysql database of existing names
 				//if the username is unique, the player is confirmed
 				//send result to client (unique/not unique)	
-				//SQLCommand c = new SQLCommand(parent.queryLock, this, originalName);
-				//c.run();
-				finalUsername = "Matias#95";
+				SQLCommand c = new SQLCommand(parent.queryLock, this, originalName);
+				c.run();
+				//finalUsername = "Matias#95";
 				pw.println( "USERNAME:" + finalUsername);
 				pw.flush();
 				if(team1 == true) {

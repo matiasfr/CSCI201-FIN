@@ -13,7 +13,7 @@ public class SQLCommand implements Runnable{
 		public static final String DB_NAME = "lab11";
 		public static final String DRIVER = "com.mysql.jdbc.Driver";
 		public static final String USER = "root";
-		public static final String PASSWORD = "password";
+		public static final String PASSWORD = "";
 		
 		protected ReentrantLock queryLock;
 		String originalName = null;

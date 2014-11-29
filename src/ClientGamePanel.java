@@ -2,11 +2,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Map;
 
 import javax.swing.*;
+
 import Models.*;
 
 
@@ -20,7 +22,8 @@ public class ClientGamePanel extends JPanel {
 	JPanel mainPanel;
 	ClientDrawingPanel drawingPanel;
 	ClientChatPanel chatPanel;
-	JPanel statsPanel;
+	//ClientStatsPanel statsPanel;
+	//JPanel statsPanel;
 	private ClientApplication myApp;
 
 	public ClientGamePanel( GridMapModel gridMap, PrintWriter pw, ClientApplication myApp){
@@ -33,13 +36,16 @@ public class ClientGamePanel extends JPanel {
 		// 2.) ChatPanel        (EAST)
 		// 3.) stats panel      (WEST)
 		mainPanel = new JPanel();
-		mainPanel.setLayout(null);
+		mainPanel.setLayout(new BorderLayout());
 		mainPanel.setSize(1000,600);
 		
 		//set up chat panel
 		//Map<Integer, PlayerModel> players, PrintWriter pw, BufferedReader br
-		//chatPanel = new ClientChatPanel( gridMap.getPlayers(),pw, br );
-
+		/*try{
+		chatPanel = new ClientChatPanel( gridMap.getPlayers(),pw, br );
+		}catch(Exception e){
+			e.printStackTrace();
+		}*/
 		//statsPanel = new ClientStatsPanel();
 		//statsPanel.setSize(200,600);
 		
@@ -49,10 +55,10 @@ public class ClientGamePanel extends JPanel {
 		drawingPanel.setLayout(null);
 		
 		
-		mainPanel.add(drawingPanel);
-		drawingPanel.setLocation(200, 0);
+		mainPanel.add(drawingPanel, BorderLayout.CENTER);
+	//	drawingPanel.setLocation(200, 0);
 		//mainPanel.add(statsPanel);
-		//mainPanel.add(chatPanel);
+		//mainPanel.add(chatPanel, BorderLayout.EAST);
 		//chatPanel.setLocation(800, 0);
 		add(mainPanel);
 		//add(chatPanel);

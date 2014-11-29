@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import Models.*;
 
-
 public class ServerGameThread extends Thread
 {
 	int id;
