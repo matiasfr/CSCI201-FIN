@@ -39,8 +39,8 @@ public class GameServer {
 	Set<PlayerModel> team2 = new HashSet<PlayerModel>();
 	int timeLeftInLobby = 30;
 	int id = 0;
-	boolean gameStart = false;
 	boolean allPlayersReady = false;
+	boolean updateThreadMade = false;
 	boolean gridMapInit = false;
 	boolean readyState[] = {false, false, false, false}; //fixed at player cap
 	///////////////////////////////////////////////////////////////////////////////////////
@@ -81,17 +81,17 @@ public class GameServer {
 		stateLock.unlock();
 	}
 	
-	public void setGameStart()
-	{
-		stateLock.lock();
-		gameStart = true;
-		stateLock.unlock();
-	}
-	
 	public void setPlayersReady()
 	{
 		stateLock.lock();
 		allPlayersReady = true;
+		stateLock.unlock();
+	}
+	
+	public void setUpdateThread()
+	{
+		stateLock.lock();
+		updateThreadMade = true;
 		stateLock.unlock();
 	}
 	
@@ -114,6 +114,7 @@ public class GameServer {
 		GameServer gs;
 		PrintWriter pw = null;
 		ObjectOutputStream oos = null;
+		boolean gameStart = false;
 		
 		public ServerThread(Socket s, int id, GameServer gs){
 			try {
@@ -153,10 +154,12 @@ public class GameServer {
 						sgt.start();
 							
 						//start all ServerUpdateClientThread threads
-						ServerUpdateClientThread suc = new ServerUpdateClientThread(s, id, gs);
-						updateClientThreads.add(suc);
-						suc.start();
-						setGameStart();
+						if(!updateThreadMade){
+							ServerUpdateClientThread suc = new ServerUpdateClientThread(s, id, gs);
+							updateClientThreads.add(suc);
+							suc.start();
+						}
+						gameStart = true;
 					}
 				}
 				else if(gameState[2]){

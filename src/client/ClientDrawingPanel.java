@@ -66,73 +66,77 @@ class ClientDrawingPanel extends JPanel {
 			for( int j= 0; j<10; j++){
 				
 				//need to check what kind of model is in the current index. 
-				
-				//if it is a player model, check the id, if not our own then 
-				if(gmm.allModels[currentQuadrant][i][j] instanceof PlayerModel){
-					PlayerModel myPlayer=(PlayerModel) gmm.allModels[currentQuadrant][i][j];
-					//if the player names are not the same then we can draw them. 
-					if(! ((myPlayer.playerName).equals(this.playerName)) ){
-						//go into the player model and get the player direction so we know which images to get
-						int playerDirection = myPlayer.playerDirection;
-						//, and  playerImage image icon 
-						//go through the players image icons 
-						for(int k=0; k<4; k++){
-						//	g.drawImage(tile, i*45, j*45,null);
+				if(gmm.allModels[currentQuadrant][i][j]!=null){
+					//if it is a player model, check the id, if not our own then 
+					if(gmm.allModels[currentQuadrant][i][j] instanceof PlayerModel){
+						PlayerModel myPlayer=(PlayerModel) gmm.allModels[currentQuadrant][i][j];
+						//if the player names are not the same then we can draw them. 
+						if(! ((myPlayer.playerName).equals(this.playerName)) ){
+							//go into the player model and get the player direction so we know which images to get
+							int playerDirection = myPlayer.playerDirection;
+							//, and  playerImage image icon 
+							//go through the players image icons 
+							for(int k=0; k<4; k++){
+							//	g.drawImage(tile, i*45, j*45,null);
+							}
 						}
-					}
-					else if (!firstDrawDone){
-						//draw our own player
-						//but we should also start up the other player model to get the position of the player. 
-						PlayerModel gammaPlayer=(PlayerModel) gmm.allModels[currentQuadrant][i][j];
-						String teamColor = "";
-						if(gammaPlayer.playerTeam == 1){
-							teamColor = "red";
+						else if (!firstDrawDone){
+							//draw our own player
+							//but we should also start up the other player model to get the position of the player. 
+							PlayerModel gammaPlayer=(PlayerModel) gmm.allModels[currentQuadrant][i][j];
+							String teamColor = "";
+							if(gammaPlayer.playerTeam == 1){
+								teamColor = "red";
+							}else{
+								teamColor = "green";
+							}
+							
+							//also we should probably update the stats with this. 
+							thisPlayer = new ClientPlayer(myApp, teamColor, this);
+							thisPlayer.setX(gammaPlayer.playerLocationX);
+							thisPlayer.setY(gammaPlayer.playerLocationY);
+							thisPlayer.setXSq(i);
+							thisPlayer.setYSq(j);
+							thisPlayer.setDirection(gammaPlayer.playerDirection);
+							thisPlayer.setQuadrant(currentQuadrant);
+							// GO through player sprite and draw the images. 
+							firstDrawDone=true;
+							new Thread(thisPlayer).start();
+						}else if(drawQuadChange){
+							PlayerModel gammaPlayer=(PlayerModel) gmm.allModels[currentQuadrant][i][j];
+							thisPlayer.setX(gammaPlayer.playerLocationX);
+							thisPlayer.setY(gammaPlayer.playerLocationY);
+							thisPlayer.setXSq(i);
+							thisPlayer.setYSq(j);
+							thisPlayer.setDirection(gammaPlayer.playerDirection);
+							thisPlayer.setQuadrant(currentQuadrant);
+							thisPlayer.setPlayerChange(gammaPlayer.playerSprite[2], gammaPlayer.playerSprite[3]);
+							drawQuadChange=false;
 						}else{
-							teamColor = "green";
+						
+							//dont draw this player. 
 						}
 						
-						//also we should probably update the stats with this. 
-						thisPlayer = new ClientPlayer(myApp, teamColor, this);
-						thisPlayer.setX(gammaPlayer.playerLocationX);
-						thisPlayer.setY(gammaPlayer.playerLocationY);
-						thisPlayer.setXSq(i);
-						thisPlayer.setYSq(j);
-						thisPlayer.setDirection(gammaPlayer.playerDirection);
-						thisPlayer.setQuadrant(currentQuadrant);
-						// GO through player sprite and draw the images. 
-						firstDrawDone=true;
-						new Thread(thisPlayer).start();
-					}else if(drawQuadChange){
-						PlayerModel gammaPlayer=(PlayerModel) gmm.allModels[currentQuadrant][i][j];
-						thisPlayer.setX(gammaPlayer.playerLocationX);
-						thisPlayer.setY(gammaPlayer.playerLocationY);
-						thisPlayer.setXSq(i);
-						thisPlayer.setYSq(j);
-						thisPlayer.setDirection(gammaPlayer.playerDirection);
-						thisPlayer.setQuadrant(currentQuadrant);
-						thisPlayer.setPlayerChange(gammaPlayer.playerSprite[2], gammaPlayer.playerSprite[3]);
-						drawQuadChange=false;
-					}else{
-					
-						//dont draw this player. 
+						
 					}
-					
-					
-				}
-				//draw all of that player's images. 
+					//draw all of that player's images. 
 				
-				//if it is a sword model, show an image of a sword
-				if(gmm.allModels[currentQuadrant][i][j] instanceof SwordModel){
-					g.drawImage(imgSword, i*45, j*45,null);
+					//if it is a sword model, show an image of a sword
+					else if(gmm.allModels[currentQuadrant][i][j] instanceof SwordModel){
+						g.drawImage(imgSword, i*45, j*45,null);
+					}
+					//if it is a armor model, show an image of a armor
+					else if(gmm.allModels[currentQuadrant][i][j] instanceof ArmorModel){
+						g.drawImage(imgArmor, i*45, j*45,null);
+					}
+					//if it is a health model, show an image of a health
+					else if(gmm.allModels[currentQuadrant][i][j] instanceof HealthRefillModel){
+						g.drawImage(imgHealth, i*45, j*45,null);
+					}
+					else{
+						
+					}
 				}
-				//if it is a armor model, show an image of a armor
-				if(gmm.allModels[currentQuadrant][i][j] instanceof ArmorModel){
-					g.drawImage(imgArmor, i*45, j*45,null);
-				}
-				//if it is a health model, show an image of a health
-				if(gmm.allModels[currentQuadrant][i][j] instanceof HealthRefillModel){
-					g.drawImage(imgHealth, i*45, j*45,null);
-				}	
 				
 				//BufferedImage tile=ImageIO.read(new File(gmm[currentQuadrant][i][j]));
 				//g.drawImage(tile, i*45, j*45,null);
