@@ -1,7 +1,8 @@
-package server;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Iterator;
@@ -15,7 +16,8 @@ public class ServerLobbyThread extends Thread{
 	private Socket s;
 	int id;
 	GameServer parent;
-	BufferedReader br;
+	//BufferedReader br;
+	ObjectInputStream  ois;
 	boolean team1 = true;
 	int team = 1;
 	String finalUsername = null;
@@ -26,20 +28,28 @@ public class ServerLobbyThread extends Thread{
 		this.parent = parent;
 		
 		try {
-			br = new BufferedReader( new InputStreamReader(s.getInputStream() ) );
+			//br = new BufferedReader( new InputStreamReader(s.getInputStream() ) );
+			ois = new ObjectInputStream(s.getInputStream());
 		} catch (IOException e) {e.printStackTrace();}
 	}
 	
 	public void run() {
 				//sql testinfo
-				int port =9999;
-				String hostname = "localhost";
+				//int port =9999;
+				//String hostname = "localhost";
 				
 				String originalName = null;
-				PrintWriter pw = parent.allClientWriters.get(id);
-				try {originalName = br.readLine();} catch (IOException e) {} 
+				ObjectOutputStream oos = parent.allClientObjectWriters.get(id);
+				try {
+					originalName = (String)ois.readObject();
+					
+				} 
+				catch (IOException e) {} 
+				catch (ClassNotFoundException e) {e.printStackTrace();}
+				
 				//USERNAME:USERNAME_HERE
 				//System.out.println( "Line received from client " + s.getInetAddress() + ": " + line );
+ 
 				
 				//listens for the username they want to have
 				//lookup in mysql database of existing names
@@ -49,8 +59,14 @@ public class ServerLobbyThread extends Thread{
 				c.run();
 				//finalUsername = "Matias#95";
 				String msg = "USERNAME:" + finalUsername;
-				pw.println(msg);
-				pw.flush();
+				try {
+					oos.writeObject(msg);
+					//oos.flush();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 				if(team1 == true) {
 					team = 1;
 				} else {
@@ -70,15 +86,18 @@ public class ServerLobbyThread extends Thread{
 					//broadcast the time left in Lobby = 30
 					String announcement = "CHAT:Broadcast:"+finalUsername;
 					String timerPush = "TIMER";
-					Set<Integer> pwSet = parent.allClientWriters.keySet();
+					Set<Integer> pwSet = parent.allClientObjectWriters.keySet();
 					Iterator<Integer> itPrint = pwSet.iterator();
 					while(itPrint.hasNext())
 					{
 						int nextKey = itPrint.next();
-						parent.allClientWriters.get(nextKey).println(announcement);
-						parent.allClientWriters.get(nextKey).flush();
-						parent.allClientWriters.get(nextKey).println(timerPush);
-						parent.allClientWriters.get(nextKey).flush();
+						try {
+							parent.allClientObjectWriters.get(nextKey).writeObject(announcement);
+							parent.allClientObjectWriters.get(nextKey).writeObject(timerPush);
+
+						} catch (IOException e) {e.printStackTrace();}
+						//parent.allClientWriters.get(nextKey).flush();
+						//parent.allClientWriters.get(nextKey).flush();
 					}
 					/*
 					for(int i =0; i<parent.allClientWriters.size();i++) {
@@ -91,7 +110,12 @@ public class ServerLobbyThread extends Thread{
 					//status:ready
 					//Listen for player starting game confirmation
 					String status = null;
-					try {status = br.readLine();} catch (IOException e) {e.printStackTrace();} 
+					try {
+						status = (String) ois.readObject();
+					}
+					catch (ClassNotFoundException e) {e.printStackTrace();} 
+					catch (IOException e) {e.printStackTrace();} 
+				
 					System.out.println(status);
 					if(status.contains("STATUS:READY") && !parent.allPlayersReady) {
 						parent.readyState[id] = true;
@@ -111,13 +135,17 @@ public class ServerLobbyThread extends Thread{
 								parent.allClientWriters.get(i).println("STATUS:START");
 								parent.allClientWriters.get(i).flush();
 							}*/
-							pwSet = parent.allClientWriters.keySet();
+							pwSet = parent.allClientObjectWriters.keySet();
 							itPrint = pwSet.iterator();
 							while(itPrint.hasNext())
 							{
 								int nextKey = itPrint.next();
-								parent.allClientWriters.get(nextKey).println("STATUS:START");
-								parent.allClientWriters.get(nextKey).flush();
+								try {
+									parent.allClientObjectWriters.get(nextKey).writeObject("STATUS:START");
+								} 
+								catch (IOException e) {e.printStackTrace();}
+								
+								//parent.allClientObjectWriters.get(nextKey).flush();
 							}
 						}
 						
