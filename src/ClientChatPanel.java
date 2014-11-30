@@ -24,7 +24,7 @@ public class ClientChatPanel extends JPanel implements ActionListener {
 	private JTextField input;
 	
 	///////NEW
-	private GridMapModel gmm;
+	private ClientApplication myClient;
 	///////
 	
 	public ClientChatPanel (Map<Integer, PlayerModel> players, PrintWriter pw) {
@@ -75,9 +75,9 @@ public class ClientChatPanel extends JPanel implements ActionListener {
 	}
 	
 	//////////NEW CONSTRUCTOR////////////
-	public ClientChatPanel (GridMapModel gmm, PrintWriter pw) {
+	public ClientChatPanel (ClientApplication myClient, PrintWriter pw) {
 		//this.players = players;
-		this.gmm = gmm;
+		this.myClient = myClient;
 		this.pw = pw;
 		
 		team1_list = new ArrayList<JCheckBox>();
@@ -127,7 +127,7 @@ public class ClientChatPanel extends JPanel implements ActionListener {
 	//////////////NEW////////////////////
 	public void initPlayers()
 	{
-		this.players = gmm.getPlayers();
+		this.players = myClient.myGridMap.getPlayers();
 		
 		for (Map.Entry<Integer, PlayerModel> playerEntry : players.entrySet()) {
 			PlayerModel player = playerEntry.getValue();

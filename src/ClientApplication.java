@@ -17,7 +17,7 @@ import Models.*;
 import javax.swing.*;
 
 public class ClientApplication extends JFrame implements Runnable{
-
+	private static final long serialVersionUID = 2466254954333927929L;
 		ClientDrawingPanel drawingPanel;
 		private static ClientLoginPanel logIn;
 		private static ClientLobbyPanel lobby;
@@ -32,7 +32,7 @@ public class ClientApplication extends JFrame implements Runnable{
 		private BufferedReader br;	
 		private static Socket mySocket;
 		
-		private static GridMapModel myGridMap = null;
+		public static GridMapModel myGridMap = null;
 		private static ClientGamePanel myGame;
 		private Boolean needToLogin = true;
 		private Boolean inLobby = true;
@@ -66,7 +66,7 @@ public class ClientApplication extends JFrame implements Runnable{
 			cardsPanel = new JPanel(cl);
 					
 			
-			myGame = new ClientGamePanel(myGridMap,pw, this);
+			myGame = new ClientGamePanel(pw, this);
 			logIn = new ClientLoginPanel(pw);
 			lobby = new ClientLobbyPanel(this);
 			
@@ -101,10 +101,18 @@ public class ClientApplication extends JFrame implements Runnable{
 					//END TESTING CODE
 					 
 					//reading from the buffered reader.
-					String readString="";
+					Object readString="";
+					
 					if( (readString = br.readLine()) != null){
+						String msg = "";
 						
-						String msg = readString;
+						if(readString instanceof String) {
+							msg = (String)readString;
+							System.out.println("string");
+						} else {
+							System.out.println("not string");
+						}
+						
 						System.out.println("\n"+msg);
 						//MESSAGE PREFIX: TIMER
 						if(msg.equals("TIMER")){
@@ -145,7 +153,8 @@ public class ClientApplication extends JFrame implements Runnable{
 								if(content.equals("START")){
 									getFromServer();
 									cl.show(cardsPanel,"GamePanel");
-									System.out.println("GamePanel has been set");
+//									System.out.println("GamePanel has been set");
+									myGame.chatPanel.initPlayers();
 								}
 							}
 							
@@ -213,7 +222,7 @@ public class ClientApplication extends JFrame implements Runnable{
 				myGridMap = (GridMapModel)inFromServer.readObject();
 				System.out.println(myGridMap.playerLookup.size());
 				System.out.println(myGridMap.allModels.length);				
-				myGame.drawingPanel.refreshMap(myGridMap);
+				myGame.drawingPanel.refreshMap();
 				//update gridmapModel on our side. 
 				
 			}catch (Exception e) {

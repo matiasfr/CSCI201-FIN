@@ -1,3 +1,4 @@
+package server;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -16,30 +17,30 @@ import Models.SwordModel;
 
 
 public class ServerUpdateClientThread extends Thread{
-	
+
 	private Socket s;
 	int id;
 	GameServer parent;
 	public boolean running = true;
-	
-	public ServerUpdateClientThread(Socket s, int id, GameServer parent) 
+
+	public ServerUpdateClientThread(Socket s, int id, GameServer parent)
 	{
 		this.s = s;
 		this.id = id;
 		this.parent = parent;
 		generateGameMap();
 	}
-	
+
 	public void generateGameMap() {
 		parent.isGridMapInit();
-		
+
 		//creates the GridMapModel object using the two sets of playerModels (team1, team2)
 		GridMapModel gmm = new GridMapModel();
 		AbstractObjectModel[][][] allModels = new AbstractObjectModel[4][10][10];
 		Map<Integer, PlayerModel> playerLookup = new HashMap<Integer, PlayerModel>();
 		Iterator<PlayerModel> teamOneIt = parent.team1.iterator();
 		Iterator<PlayerModel> teamTwoIt = parent.team2.iterator();
-		
+
 		//setting up map
 		while(teamOneIt.hasNext()){
 			PlayerModel pm = teamOneIt.next();
@@ -51,7 +52,7 @@ public class ServerUpdateClientThread extends Thread{
 		}
 		teamOneIt = parent.team1.iterator();
 		teamTwoIt = parent.team2.iterator();
-		
+
 		//iterate through and populate
 		for(int i=0;i<4;i++){
 			for(int j=0;j<10;j++){
@@ -95,17 +96,19 @@ public class ServerUpdateClientThread extends Thread{
 				}
 			}
 		}
-		
+
 		gmm.allModels = allModels;
 		gmm.playerLookup = playerLookup;
+		
+		parent.gmm = gmm;
 		//Also generates random items to place around the map
 	}
-	
+
 	public void run() {
 		while(running) {
 		try {sleep(50);} catch (InterruptedException e) {e.printStackTrace();}
 		//Broadcast GridMapModel to allClientsObjectWriters
-			
+
 			Set<Integer> pwSet = parent.allClientObjectWriters.keySet();
 			Iterator<Integer> itPrint = pwSet.iterator();
 			while(itPrint.hasNext())
@@ -114,10 +117,10 @@ public class ServerUpdateClientThread extends Thread{
 				try {
 					parent.allClientObjectWriters.get(nextKey).writeObject(parent.gmm);
 					//parent.allClientObjectWriters.get(nextKey).flush();
-				} 
+				}
 				catch (IOException e) {e.printStackTrace();}
 			}
 		}
 	}
-	
+
 }

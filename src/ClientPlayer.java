@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class ClientPlayer extends JPanel implements Runnable{
+	private static final long serialVersionUID = -3929233179764541207L;
 	BufferedImage imgPlayerSkeletonF = null;
 	BufferedImage imgPlayerColorF = null;
 	BufferedImage imgPlayerArmorF = null;

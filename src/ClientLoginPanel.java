@@ -19,6 +19,7 @@ import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
 public class ClientLoginPanel extends JPanel {
+	private static final long serialVersionUID = -5826597878789842372L;
 	JLabel usernameLabel;
 	JLabel passwordLabel;
 	JTextField usernameInput;
