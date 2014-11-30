@@ -29,8 +29,8 @@ class ClientDrawingPanel extends JPanel {
 		this.theGame = theGame;
 		try {
 			//When we start these are the defaults.
-			imgArmor = ImageIO.read(new File("images/playerSkeleton/facing_forward.png"));
-			imgSword = ImageIO.read(new File("images/playerSkeleton/facing_forward.png"));
+			imgArmor = ImageIO.read(new File("images/items/awesome_sword.jpg"));
+			imgSword = ImageIO.read(new File("images/items/awesome_sword.jpg"));
 			imgHealth = ImageIO.read(new File("images/playerSkeleton/facing_forward.png"));
 
 			backgroundImage[0] = ImageIO.read(new File("images/quad1.png"));
@@ -124,6 +124,7 @@ class ClientDrawingPanel extends JPanel {
 
 					//if it is a sword model, show an image of a sword
 					else if(myApp.myGridMap.allModels[currentQuadrant][i][j] instanceof SwordModel) {
+						System.out.println("THERE SHOULD BE A SHARP POINTY THING");
 						g.drawImage(imgSword, i * 45, j * 45, null);
 					}
 					//if it is a armor model, show an image of a armor

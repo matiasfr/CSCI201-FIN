@@ -49,6 +49,8 @@ public class ClientPlayer extends JPanel implements Runnable {
 		this.teamColor= teamColor;
 		DrawKeyListener ls = new DrawKeyListener();
 		myApp.addKeyListener(ls);
+		myApp.setFocusable(true);
+//		addKeyListener(ls);
 		setVisible(true);
 		setLayout(null);
 		setLocation(0,0);
@@ -87,12 +89,12 @@ public class ClientPlayer extends JPanel implements Runnable {
 			//grid map model. FOr instance, if a player is in the bounds x 
 			try {
 				Thread.sleep(1);
+				repaint();
 			} catch(InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			repaint();
-		}
+		} // end while(true)
 	} // end public void run
 	
 	public void setPlayerChange(String armorType, String weaponType) {
@@ -178,24 +180,35 @@ public class ClientPlayer extends JPanel implements Runnable {
 	
 	class DrawKeyListener extends KeyAdapter {
 		public void keyPressed(KeyEvent e) {
+//			System.out.println("pressed something");
+		}
+		public void keyReleased(KeyEvent e) {
 			//Check the potential new position. If it is in a different square
 			//
 			//if the new potential position is within 5 of a border, then check. Set quad change boolean to true; 
 			if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
+				// If in two right quadrants of map and within 5/6 pixels of right border don't move
 				if((((450-xPixel) < 6) && currentQuadrant == 3) || (((450-xPixel) < 6) && currentQuadrant == 1)) {
+					System.out.println("here1");
 					//DO NOTHING, too close to the right border.
 				} else if((((225-xPixel) < 6 ) && currentQuadrant == 0) || (((225-xPixel) < 6 ) && currentQuadrant == 2)) {
-					myApp.sendServerMessage("R:5");
+					System.out.println("here2");
+					// If changing from quadrants 0 or 2 to 1 or 3
+					myApp.sendServerMessage("R:1");
 					drawPanel.drawQuadChange = true;
 				}
 				else {
-					//Right arrow key code
-					//SEND THE SERVER THE MESSAGE R	
-					if(((xPixel + 22.5 + 5) / 45) != xSquare) {
-						myApp.sendServerMessage("R:5");
+					
+					//Right arrow key code --> SEND THE SERVER THE MESSAGE R	
+					// If moving into a new square
+					int temp = (int)(xPixel + 22.5 + 5);
+					System.out.println("xSquare: " + xSquare + ", temp: " + temp);
+					if((temp / 45) != xSquare) {
+						myApp.sendServerMessage("R:1");
 			            //Up arrow key code
 						direction = 1;
-						xPixel += 5;					
+						xPixel += 5;	
+						xSquare++;
 					} else {
 						direction = 1;
 						xPixel += 5;	
@@ -205,11 +218,11 @@ public class ClientPlayer extends JPanel implements Runnable {
 				if(((xPixel < 6) && currentQuadrant == 0) || ((xPixel < 6) && currentQuadrant == 2)) {
 					//DO NOTHING, too close to the right border.
 				} else if((((xPixel-225) < 6) && currentQuadrant==1) || (((xPixel-225) < 6) && currentQuadrant==3)) {
-					myApp.sendServerMessage("L:5");
+					myApp.sendServerMessage("L:1");
 				}
 				else {
 					if(((xPixel + 22.5 + 5) / 45) != xSquare) {
-						myApp.sendServerMessage("L:5");
+						myApp.sendServerMessage("L:1");
 			            //Up arrow key code
 						direction = 3;
 						xPixel-= 5;					
@@ -222,11 +235,11 @@ public class ClientPlayer extends JPanel implements Runnable {
 				if(((yPixel < 6) && currentQuadrant == 0) || ((yPixel < 6) && currentQuadrant == 1)) {
 					//do nothing 
 				} else if((((yPixel-225) < 6) && currentQuadrant==2) || (((yPixel-225) < 6) && currentQuadrant==3)) {
-					myApp.sendServerMessage("U:5");
+					myApp.sendServerMessage("U:1");
 				}
 				else {
 					if(((yPixel + 22.5 + 5) / 45) != ySquare) {
-						myApp.sendServerMessage("U:5");
+						myApp.sendServerMessage("U:1");
 			            //Up arrow key code
 						direction = 0;
 						yPixel-= 5;					
@@ -239,11 +252,11 @@ public class ClientPlayer extends JPanel implements Runnable {
 				if((((450-yPixel) < 6) && currentQuadrant == 2) || (((450-yPixel) < 6) && currentQuadrant == 3)) {
 					//DO NOTHING, too close to the right border.
 				} else if((((225-yPixel) < 6) && currentQuadrant==0) || (((225-yPixel) < 6) && currentQuadrant==1)) {
-					myApp.sendServerMessage("D:5");
+					myApp.sendServerMessage("D:1");
 				}
 				else {
 					if(((yPixel + 22.5 + 5) / 45) != ySquare) {
-						myApp.sendServerMessage("D:5");
+						myApp.sendServerMessage("D:1");
 			            //Up arrow key code
 						direction = 2;
 						yPixel += 5;	

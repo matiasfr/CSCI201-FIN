@@ -1,3 +1,4 @@
+package server;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -37,8 +38,8 @@ public class ServerGameThread extends Thread
 						String typeMessage = messages[0];
 					    if(messages[0] == "CHAT") {
 					    	processMessage(messages);
-					    }
-						  
+					    } else {
+						System.out.println("received stuff"); 
 						String distance;
 						//client attacked another client
 						if(typeMessage.equals("A")) {
@@ -592,6 +593,7 @@ public class ServerGameThread extends Thread
 								}			
 							}
 						}
+					    }
 					} 
 					catch (IOException e) {} 
 					catch (ClassNotFoundException e) {e.printStackTrace();}
