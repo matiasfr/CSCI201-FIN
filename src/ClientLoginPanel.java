@@ -7,6 +7,8 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 
 import javax.swing.JButton;
@@ -26,13 +28,14 @@ public class ClientLoginPanel extends JPanel {
 	JTextField passwordInput;
 	JButton loginButton;
 	JButton createAccountButton;
-	BufferedReader br;
-	PrintWriter pw;
+	//BufferedReader br;
+	//PrintWriter pw;
+	ObjectOutputStream oos;
 	Container frame;
-	public ClientLoginPanel(final PrintWriter pw){
+	public ClientLoginPanel(final ObjectOutputStream oos){
 		
 		frame=this.getParent();
-		this.pw=pw;
+		this.oos=oos;
 		JPanel centerPane= new JPanel();
 		this.setLayout(new BorderLayout());
 		
@@ -78,8 +81,13 @@ public class ClientLoginPanel extends JPanel {
 	            	while(true){
 	            		if((!str.equals("")) || str.length()<=3)
 	            		{
-	            			pw.println(str);
-	            			pw.flush();
+	            			try {
+								oos.writeObject(str);
+							} catch (IOException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+	            			//pw.flush();
 	            			break;
 	            		}
 	            		else{

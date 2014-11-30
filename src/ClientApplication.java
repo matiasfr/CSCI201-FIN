@@ -28,7 +28,7 @@ public class ClientApplication extends JFrame implements Runnable{
 		//Model
 		private ObjectOutputStream outToServer;
 		private ObjectInputStream inFromServer;
-		private PrintWriter pw;
+		//private PrintWriter pw;
 		private static Socket mySocket;
 		
 		public static GridMapModel myGridMap = null;
@@ -48,7 +48,7 @@ public class ClientApplication extends JFrame implements Runnable{
 				String hostname = "127.0.0.1";
 				int port = 5001;
 				mySocket = new Socket(hostname, port);
-				pw = new PrintWriter(new OutputStreamWriter(mySocket.getOutputStream()));
+				//pw = new PrintWriter(new OutputStreamWriter(mySocket.getOutputStream()));
 				inFromServer = new ObjectInputStream(mySocket.getInputStream());
 			}
 			catch(IOException ioe) {
@@ -58,8 +58,8 @@ public class ClientApplication extends JFrame implements Runnable{
 			cl = new CardLayout();
 			cardsPanel = new JPanel(cl);
 			
-			myGame = new ClientGamePanel(pw, this);
-			logIn = new ClientLoginPanel(pw);
+			myGame = new ClientGamePanel(outToServer, this);
+			logIn = new ClientLoginPanel(outToServer);
 			lobby = new ClientLobbyPanel(this);
 			
 			cardsPanel.add(myGame, "GamePanel");
@@ -116,8 +116,10 @@ public class ClientApplication extends JFrame implements Runnable{
 		} // end public void run
 		
 		public void sendReadySignal() {
-			pw.println("STATUS:READY");
-			pw.flush();
+			try {
+				outToServer.writeObject("STATUS:READY");
+			} catch (IOException e) {e.printStackTrace();}
+			
 		} // end public void sendReadySignal
 		
 	 	public void loggedIn() {
@@ -217,7 +219,12 @@ public class ClientApplication extends JFrame implements Runnable{
 		} // end public void readServerMessage(String)
 		
 		public void sendServerMessage(String s) {
-			pw.println(s);
+			try {
+				outToServer.writeObject(s);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} // end public void sendServerMessage(String)
 
 		public void addChatMessage(String s) {
