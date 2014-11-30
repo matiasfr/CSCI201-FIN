@@ -7,12 +7,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import Models.GridMapModel;
-import Models.PlayerModel;
-import Models.HealthRefillModel;
-import Models.ArmorModel;
-import Models.SwordModel;
-import Models.AbstractObjectModel;
 import Models.*;
 
 public class ServerGameThread extends Thread
@@ -20,35 +14,24 @@ public class ServerGameThread extends Thread
 	int id;
 	Socket s;
 	GameServer server;
-	BufferedReader br;
 	boolean threadActive;
 	
 	public ServerGameThread(Socket s, int id, GameServer server) {	
-		try{
-			this.s = s;
-			this.id = id;
-			this.server = server;
-			threadActive = true;
-			br= new BufferedReader( new InputStreamReader(s.getInputStream() ) );
-		} 
-		catch (IOException e) {}
-		
-		//only generates map for the first thread to run
+		this.s = s;
+		this.id = id;
+		this.server = server;
+		threadActive = true;
 	}
-	
 	
 	public void run() {
 		while(true){
 			if(threadActive){
 				
-					
 					//listens for incoming messages from the client
 					String message = "";
 					try {
-						message = br.readLine();
+						message = (String) server.allClientObjectReaders.get(id).readObject();
 						//parses the incoming string
-						//StringTokenizer st = new StringTokenizer(message," :");
-						//String typeMessage = st.nextToken();
 						
 						String messages[] = message.split(":");
 						String typeMessage = messages[0];
@@ -610,7 +593,8 @@ public class ServerGameThread extends Thread
 							}
 						}
 					} 
-					catch (IOException e) {}
+					catch (IOException e) {} 
+					catch (ClassNotFoundException e) {e.printStackTrace();}
 					
 					
 			}

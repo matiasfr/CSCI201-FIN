@@ -13,24 +13,16 @@ import Models.PlayerModel;
 
 public class ServerLobbyThread extends Thread{
 	boolean running = true;
-	private Socket s;
 	int id;
 	GameServer parent;
-	//BufferedReader br;
-	ObjectInputStream  ois;
 	boolean team1 = true;
 	int team = 1;
 	String finalUsername = null;
 	
-	public ServerLobbyThread(Socket s, int id, GameServer parent) {
-		this.s = s;
+	public ServerLobbyThread(int id, GameServer parent) {
+		//this.s = s;
 		this.id = id;
 		this.parent = parent;
-		
-		try {
-			//br = new BufferedReader( new InputStreamReader(s.getInputStream() ) );
-			ois = new ObjectInputStream(s.getInputStream());
-		} catch (IOException e) {e.printStackTrace();}
 	}
 	
 	public void run() {
@@ -41,7 +33,7 @@ public class ServerLobbyThread extends Thread{
 				String originalName = null;
 				ObjectOutputStream oos = parent.allClientObjectWriters.get(id);
 				try {
-					originalName = (String)ois.readObject();
+					originalName = (String)parent.allClientObjectReaders.get(id).readObject();
 					
 				} 
 				catch (IOException e) {} 
@@ -111,7 +103,7 @@ public class ServerLobbyThread extends Thread{
 					//Listen for player starting game confirmation
 					String status = null;
 					try {
-						status = (String) ois.readObject();
+						status = (String) parent.allClientObjectReaders.get(id).readObject();
 					}
 					catch (ClassNotFoundException e) {e.printStackTrace();} 
 					catch (IOException e) {e.printStackTrace();} 
