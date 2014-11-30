@@ -1,8 +1,10 @@
 package Models;
 
+import java.io.Serializable;
+
 import javax.swing.ImageIcon;
 
-public class HealthRefillModel extends ItemModel
+public class HealthRefillModel extends ItemModel implements Serializable
 {
 	/**
 	 * 

@@ -10,10 +10,10 @@ public class SQLCommand implements Runnable{
 		//TODO: pull this data from gameServer
 		//TODO: make sure to import driver from lab into project directory
 		public static final String DB_ADDRESS = "jdbc:mysql://localhost/";
-		public static final String DB_NAME = "lab11";
+		public static final String DB_NAME = "finalProject";
 		public static final String DRIVER = "com.mysql.jdbc.Driver";
 		public static final String USER = "root";
-		public static final String PASSWORD = "password";
+		public static final String PASSWORD = "";
 		
 		protected ReentrantLock queryLock;
 		String originalName = null;
@@ -39,7 +39,7 @@ public class SQLCommand implements Runnable{
 				Class.forName("com.mysql.jdbc.Driver");
 				conn = DriverManager.getConnection(DB_ADDRESS+DB_NAME, USER, PASSWORD);
 			Statement stmp = conn.createStatement();
-			ResultSet rs = stmp.executeQuery("select name from names");
+			ResultSet rs = stmp.executeQuery("SELECT name FROM names");
 			String record;
 			boolean clear = false;
 			while(!clear) {
@@ -47,23 +47,30 @@ public class SQLCommand implements Runnable{
 					record = rs.getString("name");
 					if(record.equals(name)) {
 						clear = true;
+						
 						//create entry
-						PreparedStatement stmt = conn.prepareStatement("INSERT INTO names VALUES (?) ");
+						int randomNum = 0 + (int)(Math.random()*99);//0-99 
+						name += "#" + randomNum;
+						PreparedStatement stmt = conn.prepareStatement("INSERT INTO names (name) VALUES (?) ");
 						stmt.setString(1, name);
 						stmt.execute();
 						break;
 					}
-					System.out.println(record);
 				}
 				rs.beforeFirst();//reset resultSet
 				if(clear == false) {
-					int randomNum = 0 + (int)(Math.random()*99);//0-99 
-					name += "#" + randomNum;
-				}
-				
+
+					//create entry
+					PreparedStatement stmt = conn.prepareStatement("INSERT INTO names (name) VALUES (?) ");
+					stmt.setString(1, name);
+					stmt.execute();
+					
+					clear = true;
+				}	
 			}
 				
-			} catch (SQLException e) {} catch (ClassNotFoundException e) {}
+			} catch (SQLException e) {
+			} catch (ClassNotFoundException e) {}
 			parent.finalUsername = name;
 		}
 		

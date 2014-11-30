@@ -1,10 +1,13 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -30,13 +33,14 @@ public class GameServer {
 	////////////////////////////////////ALL SHARED DATA////////////////////////////////////
 	boolean gameState[] = {true, false, false}; //0: joining game  1:game play  2:game over
 	GridMapModel gmm;
-	Map<Integer, PrintWriter> allClientWriters;
-	Map<Integer, ObjectOutputStream> allClientObjectWriters;
-	Set<PlayerModel> team1;
-	Set<PlayerModel> team2;
+	Map<Integer, PrintWriter> allClientWriters = new HashMap<Integer, PrintWriter>();
+	Map<Integer, ObjectOutputStream> allClientObjectWriters = new HashMap<Integer, ObjectOutputStream>();
+	Set<PlayerModel> team1 = new HashSet<PlayerModel>();
+	Set<PlayerModel> team2 = new HashSet<PlayerModel>();
 	int timeLeftInLobby = 30;
 	int id = 0;
 	boolean gameStart = false;
+	boolean allPlayersReady = false;
 	boolean gridMapInit = false;
 	boolean readyState[] = {false, false, false, false}; //fixed at player cap
 	///////////////////////////////////////////////////////////////////////////////////////
@@ -47,9 +51,9 @@ public class GameServer {
 	//////////////////////////////////////////////
 
 	//Threads
-	ArrayList<ServerLobbyThread> lobbyThreads;
-	ArrayList<ServerGameThread> gameThreads;
-	ArrayList<ServerUpdateClientThread> updateClientThreads; 
+	ArrayList<ServerLobbyThread> lobbyThreads = new ArrayList<ServerLobbyThread>();
+	ArrayList<ServerGameThread> gameThreads = new ArrayList<ServerGameThread>();
+	ArrayList<ServerUpdateClientThread> updateClientThreads = new ArrayList<ServerUpdateClientThread>(); 
 
 	//////////////////CONNECT TO SERVER///////////////////////////
 	public GameServer(){	
@@ -72,8 +76,8 @@ public class GameServer {
 	
 	public void changeState(int current, int next){
 		stateLock.lock();
-		gameState[current] = false;
 		gameState[next] = true;
+		gameState[current] = false;	
 		stateLock.unlock();
 	}
 	
@@ -81,6 +85,13 @@ public class GameServer {
 	{
 		stateLock.lock();
 		gameStart = true;
+		stateLock.unlock();
+	}
+	
+	public void setPlayersReady()
+	{
+		stateLock.lock();
+		allPlayersReady = true;
 		stateLock.unlock();
 	}
 	
@@ -123,25 +134,38 @@ public class GameServer {
 		}
 		
 		public void run(){
-			while(gameState[0]) {
-				//still in lobby, do nothing until all threads end
-			}
-			while(gameState[1]) {
-				//kill all ServerLobbyThread threads (should be dead)
-				
-				//this code will only run once
-				if(!gameStart){
-					//start all ServerGameThread threads
-					gameThreads.add(new ServerGameThread(s, id, gs));
-						
-					//start all ServerUpdateClientThread threads
-					updateClientThreads.add(new ServerUpdateClientThread(s, id, gs));
-					setGameStart();
+			while(true){
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {}
+				System.out.println("tities");
+				if(gameState[0]) {
+					//still in lobby, do nothing until all threads end
+					System.out.println("0");
 				}
-			}
-			while(gameState[2]){
-				//kill all ServerGameThread/ServerUpdateClientThreads threads (should be dead)
-				//the game is finished
+				else if(gameState[1]) {
+					//kill all ServerLobbyThread threads (should be dead)
+					//this code will only run once
+					System.out.println("1 asdfsdf");
+	
+					if(!gameStart){
+						System.out.println("init 1111");
+						//start all ServerGameThread threads
+						ServerGameThread sgt = new ServerGameThread(s, id, gs);
+						gameThreads.add(sgt);
+						sgt.start();
+							
+						//start all ServerUpdateClientThread threads
+						ServerUpdateClientThread suc = new ServerUpdateClientThread(s, id, gs);
+						updateClientThreads.add(suc);
+						suc.start();
+						setGameStart();
+					}
+				}
+				else if(gameState[2]){
+					//kill all ServerGameThread/ServerUpdateClientThreads threads (should be dead)
+					//the game is finished
+				}
 			}
 		}
 	}

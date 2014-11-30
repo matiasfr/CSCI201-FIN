@@ -1,14 +1,17 @@
 package Models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import javax.swing.ImageIcon;
 
-
-public class PlayerModel extends AbstractObjectModel 
+public class PlayerModel extends AbstractObjectModel implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1122915319597978830L;
 	static final String FOLDERS[] = {"armor/","arms/","playerSkeleton/","teamColor/"};
 	static final String ARMOR[] = {"basic/","bronze/","platinum/"};
 	static final String ARMS[] = {"withWeapon/","withoutWeapon/"};

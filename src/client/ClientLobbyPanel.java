@@ -58,6 +58,7 @@ public class ClientLobbyPanel extends JPanel {
 
 	//// Player List Methods ////
 	public void addPlayers(Map<Integer, PlayerModel> players) {
+		usersList.clear();
 		for(Map.Entry<Integer, PlayerModel> entry : players.entrySet()) {
 			PlayerModel player = entry.getValue();
 			usersList.add("Player: " + player.playerName + " - Team: " + player.playerID);
@@ -65,6 +66,11 @@ public class ClientLobbyPanel extends JPanel {
 		}
 	} // end public void addPlayers(Map<Integer, PlayerModel>)
 
+	public void addPlayer(String newPlayer) {
+		usersList.add("Player: " + newPlayer);
+		updatePlayers();
+	} // end public void addPlayer(String)
+	
 	private void updatePlayers() {
 		usersTextArea.setText(PLAYERS_IN_LOBBY_STRING);
 		for(String username : usersList) {
@@ -99,6 +105,9 @@ public class ClientLobbyPanel extends JPanel {
 	private void updateCountdown() {
 		if(countdownNum > 0) {
 			countdownLabel.setText(TIME_UNTIL_START_STRING + countdownNum);
+		}else { 
+			myClient.sendReadySignal();
+			countdownTimer.stop();
 		}
 	} // end public void updateCountdown
 } // end class ClientLobbyPanel

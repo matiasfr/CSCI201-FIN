@@ -107,7 +107,7 @@ public class ClientApplication extends JFrame implements Runnable{
 						System.out.println("\n"+msg);
 						//MESSAGE PREFIX: TIMER
 						if(msg.equals("TIMER")){
-							lobby.setCountdown(20);
+							lobby.setCountdown(4);
 							lobby.startCountdown();
 						}else{
 							String serverMessage[] = msg.split(":");
@@ -115,10 +115,17 @@ public class ClientApplication extends JFrame implements Runnable{
 							String content=serverMessage[1];
 							 
 							
+							
 							//MESSAGE PREFIX: CHAT 
 							if(prefix.equals("CHAT")){
-								System.out.println("CHAT:"+content);
-								myGame.chatPanel.writeChatMessage(content);
+								if(content.equals("BROADCAST")){
+									String playerFinalName = serverMessage[2];
+									lobby.addPlayer(playerFinalName);
+								}else{
+									System.out.println("CHAT:"+content);
+									myGame.chatPanel.writeChatMessage(content);
+								}
+								
 							}
 
 							//MESSAGE PREFIX: USERNAME
@@ -135,7 +142,9 @@ public class ClientApplication extends JFrame implements Runnable{
 							else if(prefix.equals("STATUS")){
 								//when status is go, hide lobbyPanel and show gamePanel
 								if(content.equals("START")){
+									getFromServer();
 									cl.show(cardsPanel,"GamePanel");
+									System.out.println("GamePanel has been set");
 								}
 							}
 							
@@ -169,6 +178,12 @@ public class ClientApplication extends JFrame implements Runnable{
 			
 		}
 		
+		public void sendReadySignal()
+		{
+			pw.println("STATUS:READY");
+			pw.flush();
+		}
+		
 	 	public void loggedIn(){
 			//hide login panel and show lobby panel 
 			needToLogin=false;
@@ -196,6 +211,7 @@ public class ClientApplication extends JFrame implements Runnable{
 				inFromServer = new ObjectInputStream(mySocket.getInputStream());
 				myGridMap = (GridMapModel)inFromServer.readObject();
 				myGame.drawingPanel.refreshMap(myGridMap);
+				inFromServer.close();
 				//update gridmapModel on our side. 
 				
 			}catch (Exception e) {
@@ -203,10 +219,7 @@ public class ClientApplication extends JFrame implements Runnable{
 				System.err.println("Client Error: " + e.getMessage());
 		        System.err.println("Localized: " + e.getLocalizedMessage());
 		        System.err.println("Stack Trace: " + e.getStackTrace());
-		    }
-			
-			
-		
+		    }	
 		}
 		
 		public void sendServerMessage(String s){

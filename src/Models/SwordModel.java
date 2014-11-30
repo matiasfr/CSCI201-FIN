@@ -1,8 +1,10 @@
 package Models;
 
+import java.io.Serializable;
+
 import javax.swing.ImageIcon;
 
-public class SwordModel extends ItemModel
+public class SwordModel extends ItemModel implements Serializable
 {
 	/**
 	 * 

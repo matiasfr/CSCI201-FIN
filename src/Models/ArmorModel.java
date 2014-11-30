@@ -1,8 +1,10 @@
 package Models;
 
+import java.io.Serializable;
+
 import javax.swing.ImageIcon;
 
-public class ArmorModel extends ItemModel
+public class ArmorModel extends ItemModel implements Serializable
 {
 	/**
 	 * 

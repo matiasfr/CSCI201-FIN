@@ -1,7 +1,9 @@
 package Models;
 
+import java.io.Serializable;
 
-abstract public class ItemModel extends AbstractObjectModel 
+
+abstract public class ItemModel extends AbstractObjectModel implements Serializable
 {
 
 	/**
