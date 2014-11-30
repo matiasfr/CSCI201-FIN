@@ -1,6 +1,7 @@
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -36,6 +37,7 @@ public class GameServer {
 	GridMapModel gmm;
 	//Map<Integer, PrintWriter> allClientWriters = new HashMap<Integer, PrintWriter>();
 	Map<Integer, ObjectOutputStream> allClientObjectWriters = new HashMap<Integer, ObjectOutputStream>();
+	Map<Integer, ObjectInputStream> allClientObjectReaders = new HashMap<Integer, ObjectInputStream>();
 	Set<PlayerModel> team1 = new HashSet<PlayerModel>();
 	Set<PlayerModel> team2 = new HashSet<PlayerModel>();
 	int timeLeftInLobby = 30;
@@ -113,7 +115,8 @@ public class GameServer {
 		Socket s;
 		int id;
 		GameServer gs;
-		PrintWriter pw = null;
+		//PrintWriter pw = null;
+		ObjectInputStream ois = null;
 		ObjectOutputStream oos = null;
 		boolean gameStart = false;
 		
@@ -122,15 +125,17 @@ public class GameServer {
 				this.s = s;
 				this.id = id;
 				this.gs = gs; 
-				pw = new PrintWriter(s.getOutputStream());
+				//pw = new PrintWriter(s.getOutputStream());
 				oos = new ObjectOutputStream(s.getOutputStream());
+				ois = new ObjectInputStream(s.getInputStream());
 				//allClientWriters.put(id, pw);
 				allClientObjectWriters.put(id, oos);
+				allClientObjectReaders.put(id, ois);
 			} 
 			catch (IOException e) {}
 			
 			//start the login/lobby
-			ServerLobbyThread slt = new ServerLobbyThread(s, id, gs);
+			ServerLobbyThread slt = new ServerLobbyThread(id, gs);
 			lobbyThreads.add(slt);
 			slt.start();
 		}
