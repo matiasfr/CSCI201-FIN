@@ -17,7 +17,6 @@ public class ClientGamePanel extends JPanel {
 	private BufferedReader br;	
 	private static Socket mySocket;
 	private GridMapModel gridMap;
-	JPanel mainPanel;
 	ClientDrawingPanel drawingPanel;
 	ClientChatPanel chatPanel;
 	//ClientStatsPanel statsPanel;
@@ -25,16 +24,17 @@ public class ClientGamePanel extends JPanel {
 	private ClientApplication myApp;
 
 	public ClientGamePanel(ObjectOutputStream oos, ClientApplication myApp) {
-		this.gridMap= myApp.myGridMap;
+		// Initial GUI Setup
+		setLayout(new BorderLayout());
+		setSize(1000, 600);
+		
+		this.gridMap = myApp.myGridMap;
 		this.myApp = myApp;
 		this.oos = oos;
 		//Sets up the entire view for the game. Main panel will include:
 		// 1.) ClientDrawingpanel (CENTER) 
 		// 2.) ChatPanel        (EAST)
 		// 3.) stats panel      (WEST)
-		mainPanel = new JPanel();
-		mainPanel.setLayout(new BorderLayout());
-		mainPanel.setSize(1000,600);
 		
 		//set up chat panel
 		//Map<Integer, PlayerModel> players, PrintWriter pw, BufferedReader br
@@ -44,23 +44,20 @@ public class ClientGamePanel extends JPanel {
 			e.printStackTrace();
 		}
 		
+		// Set up stats panel
 		//statsPanel = new ClientStatsPanel();
 		//statsPanel.setSize(200,600);
 		
 		//set up drawing panel
 		drawingPanel = new ClientDrawingPanel(myApp, this);
-		drawingPanel.setSize(600,600);
-		drawingPanel.setLayout(null);
 		
-		mainPanel.add(drawingPanel, BorderLayout.CENTER);
-		//drawingPanel.setLocation(200, 0);
-		//mainPanel.add(statsPanel);
-		mainPanel.add(chatPanel, BorderLayout.EAST);
-		chatPanel.setLocation(800, 0);
-		add(mainPanel);
-		add(chatPanel);
-		mainPanel.setPreferredSize(new Dimension(600, 600));
-		mainPanel.setVisible(true);	
+		// Add panels
+		add(drawingPanel, BorderLayout.CENTER);
+		add(chatPanel, BorderLayout.EAST);
+		
+		// Final GUI Setup
+//		setPreferredSize(new Dimension(600, 600));
+		setVisible(true);	
 	} // end public ClientGamePanel(ObjectOutputStream, ClientApplication) constructor
 
 	//we got a new gridmapmodel so let everyone know. 

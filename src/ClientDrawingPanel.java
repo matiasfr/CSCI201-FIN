@@ -34,12 +34,15 @@ class ClientDrawingPanel extends JPanel {
 			imgHealth = ImageIO.read(new File("images/playerSkeleton/facing_forward.png"));
 
 			backgroundImage[0] = ImageIO.read(new File("images/quad1.png"));
-			backgroundImage[1] = ImageIO.read(new File("images/quad2.png"));
+			backgroundImage[1] = ImageIO.read(new File("images/quad2.jpg"));
 			backgroundImage[2] = ImageIO.read(new File("images/quad3.png"));
 			backgroundImage[3] = ImageIO.read(new File("images/quad4.png"));
 		} catch(IOException e) {
 			System.out.println(e.getStackTrace());
 		}
+		
+		setSize(450,450);
+		setLayout(null);
 	} // end public ClientDrawingPanel(ClientApplication, ClientGamePanel) constructor
 
 	public void setName(String playerName) {
@@ -98,6 +101,11 @@ class ClientDrawingPanel extends JPanel {
 							// GO through player sprite and draw the images.
 							firstDrawDone = true;
 							new Thread(thisPlayer).start();
+
+							// Add player
+							//Dimension playerDimension = new Dimension(45, 45);
+							//thisPlayer.setBounds(gammaPlayer.playerLocationX, gammaPlayer.playerLocationY, 45, 45);
+							add(thisPlayer);
 						} else if(drawQuadChange) {
 							PlayerModel gammaPlayer = (PlayerModel)myApp.myGridMap.allModels[currentQuadrant][i][j];
 							thisPlayer.setX(gammaPlayer.playerLocationX);

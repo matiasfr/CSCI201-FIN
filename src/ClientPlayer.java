@@ -29,9 +29,9 @@ public class ClientPlayer extends JPanel implements Runnable {
 	BufferedImage imgPlayerArmD = null;
 	
 	BufferedImage forward[] = new BufferedImage[4];
-	BufferedImage left[]=new BufferedImage[4];
-	BufferedImage right[]=new BufferedImage[4];
-	BufferedImage down[]=new BufferedImage[4];
+	BufferedImage left[] = new BufferedImage[4];
+	BufferedImage right[] = new BufferedImage[4];
+	BufferedImage down[] = new BufferedImage[4];
 	private ClientApplication myApp;
 	private ClientDrawingPanel drawPanel;
 	private int xSquare;
@@ -39,8 +39,8 @@ public class ClientPlayer extends JPanel implements Runnable {
 	private int xPixel;
 	private int yPixel;
 	//private int quadrant=9;
-	private int direction=2;
-	private int currentQuadrant=9;
+	private int direction = 2;
+	private int currentQuadrant = 9;
 	private String teamColor;
 	
 	public ClientPlayer(ClientApplication myApp, String teamColor, ClientDrawingPanel drawPanel) {
@@ -51,6 +51,9 @@ public class ClientPlayer extends JPanel implements Runnable {
 		myApp.addKeyListener(ls);
 		setVisible(true);
 		setLayout(null);
+		setLocation(0,0);
+		setSize(450,450);
+		setOpaque(false);
 		
 		xPixel = 0;
 		yPixel = 0;
@@ -59,14 +62,14 @@ public class ClientPlayer extends JPanel implements Runnable {
 		try {
 			forward[0] = ImageIO.read(new File("images/playerSkeleton/facing_forward.png"));
 			forward[1] = ImageIO.read(new File("images/teamColor/"+teamColor+"/facing_forward.png"));
-			forward[2]  = ImageIO.read(new File("images/armor/basic/facing_forward.png"));
+			forward[2] = ImageIO.read(new File("images/armor/basic/facing_forward.png"));
 			forward[3] = ImageIO.read(new File("images/arms/withoutWeapon/still/facing_forward.png"));
 			left[0] = ImageIO.read(new File("images/playerSkeleton/facing_left.png"));
 			left[1] = ImageIO.read(new File("images/teamColor/"+teamColor+"/facing_left.png"));
 			left[2] = ImageIO.read(new File("images/armor/basic/facing_left.png"));
 			left[3] = ImageIO.read(new File("images/arms/withoutWeapon/still/facing_left.png"));
 			right[0] = ImageIO.read(new File("images/playerSkeleton/facing_right.png"));
-			right[1]= ImageIO.read(new File("images/teamColor/"+teamColor+"/facing_right.png"));
+			right[1] = ImageIO.read(new File("images/teamColor/"+teamColor+"/facing_right.png"));
 			right[2] = ImageIO.read(new File("images/armor/basic/facing_right.png"));
 			right[3] = ImageIO.read(new File("images/arms/withoutWeapon/still/facing_right.png"));
 			down[0] = ImageIO.read(new File("images/playerSkeleton/facing_backwards.png"));
@@ -107,7 +110,7 @@ public class ClientPlayer extends JPanel implements Runnable {
 			down[2] = ImageIO.read(new File("images/armor/"+armorType+"/facing_backwards.png"));
 			down[3] = ImageIO.read(new File("images/arms/"+weaponType+"/still/facing_backwards.png"));*/
 			
-			forward[2]  = ImageIO.read(new File(armorType));
+			forward[2] = ImageIO.read(new File(armorType));
 			forward[3] = ImageIO.read(new File(weaponType));
 			
 			left[2] = ImageIO.read(new File(armorType));
@@ -119,7 +122,6 @@ public class ClientPlayer extends JPanel implements Runnable {
 			
 			down[2] = ImageIO.read(new File(armorType));
 			down[3] = ImageIO.read(new File(weaponType));
-			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
