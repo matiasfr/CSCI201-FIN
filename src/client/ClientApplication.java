@@ -47,9 +47,7 @@ public class ClientApplication extends JFrame implements Runnable{
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			setMinimumSize(new Dimension(1000,600));
 			setLocationRelativeTo(null);
-			
-			
-			
+
 			try{
 					String hostname = "127.0.0.1";
 					int port = 5001;
@@ -57,9 +55,8 @@ public class ClientApplication extends JFrame implements Runnable{
 					br =new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
 					pw =new PrintWriter(new OutputStreamWriter(mySocket.getOutputStream()));
 					
-					//
 					inFromServer = new ObjectInputStream(mySocket.getInputStream());
-					//
+
 				}
 				catch(IOException ioe){
 					System.out.println("not connected");
@@ -67,7 +64,8 @@ public class ClientApplication extends JFrame implements Runnable{
 			 
 			cl = new CardLayout();
 			cardsPanel = new JPanel(cl);
-						
+					
+			
 			myGame = new ClientGamePanel(myGridMap,pw, this);
 			logIn = new ClientLoginPanel(pw);
 			lobby = new ClientLobbyPanel(this);
@@ -209,10 +207,12 @@ public class ClientApplication extends JFrame implements Runnable{
 	    }
 		}
 		public void getFromServer(){
-			//GridMapModel gridMapModel = null;
+			//GridMapModel gridMapModel = new GridMapModel();
 			
 			try{
 				myGridMap = (GridMapModel)inFromServer.readObject();
+				System.out.println(myGridMap.playerLookup.size());
+				System.out.println(myGridMap.allModels.length);				
 				myGame.drawingPanel.refreshMap(myGridMap);
 				//update gridmapModel on our side. 
 				
