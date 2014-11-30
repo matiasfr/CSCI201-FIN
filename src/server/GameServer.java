@@ -1,4 +1,4 @@
-package server;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -34,7 +34,7 @@ public class GameServer {
 	////////////////////////////////////ALL SHARED DATA////////////////////////////////////
 	boolean gameState[] = {true, false, false}; //0: joining game  1:game play  2:game over
 	GridMapModel gmm;
-	Map<Integer, PrintWriter> allClientWriters = new HashMap<Integer, PrintWriter>();
+	//Map<Integer, PrintWriter> allClientWriters = new HashMap<Integer, PrintWriter>();
 	Map<Integer, ObjectOutputStream> allClientObjectWriters = new HashMap<Integer, ObjectOutputStream>();
 	Set<PlayerModel> team1 = new HashSet<PlayerModel>();
 	Set<PlayerModel> team2 = new HashSet<PlayerModel>();
@@ -124,7 +124,7 @@ public class GameServer {
 				this.gs = gs; 
 				pw = new PrintWriter(s.getOutputStream());
 				oos = new ObjectOutputStream(s.getOutputStream());
-				allClientWriters.put(id, pw);
+				//allClientWriters.put(id, pw);
 				allClientObjectWriters.put(id, oos);
 			} 
 			catch (IOException e) {}

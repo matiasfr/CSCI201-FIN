@@ -1,4 +1,3 @@
-package server;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -626,8 +625,12 @@ public class ServerGameThread extends Thread
 		//boradcast
 		for(int i=0; i<recipients.length;i++) {
 			String str = "CHAT:"+server.gmm.playerLookup.get(recipients[i]).playerName+ ":"+content;
-			server.allClientWriters.get(recipients[i]).println(str);
-			server.allClientWriters.get(recipients[i]).flush();
+			
+			try {
+				server.allClientObjectWriters.get(recipients[i]).writeObject(str);
+			}
+			catch (IOException e) {e.printStackTrace();}
+			//server.allClientWriters.get(recipients[i]).flush();
 		}
 	}
 
