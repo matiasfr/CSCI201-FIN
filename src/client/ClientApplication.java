@@ -57,6 +57,9 @@ public class ClientApplication extends JFrame implements Runnable{
 					br =new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
 					pw =new PrintWriter(new OutputStreamWriter(mySocket.getOutputStream()));
 					
+					//
+					inFromServer = new ObjectInputStream(mySocket.getInputStream());
+					//
 				}
 				catch(IOException ioe){
 					System.out.println("not connected");
@@ -207,11 +210,10 @@ public class ClientApplication extends JFrame implements Runnable{
 		}
 		public void getFromServer(){
 			//GridMapModel gridMapModel = null;
+			
 			try{
-				inFromServer = new ObjectInputStream(mySocket.getInputStream());
 				myGridMap = (GridMapModel)inFromServer.readObject();
 				myGame.drawingPanel.refreshMap(myGridMap);
-				inFromServer.close();
 				//update gridmapModel on our side. 
 				
 			}catch (Exception e) {

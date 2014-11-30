@@ -30,6 +30,7 @@ public class ServerUpdateClientThread extends Thread{
 				int nextKey = itPrint.next();
 				try {
 					parent.allClientObjectWriters.get(nextKey).writeObject(parent.gmm);
+					parent.allClientObjectWriters.get(nextKey).flush();
 				} 
 				catch (IOException e) {e.printStackTrace();}
 			}

@@ -138,7 +138,6 @@ public class GameServer {
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {}
-				System.out.println("tities");
 				if(gameState[0]) {
 					//still in lobby, do nothing until all threads end
 					System.out.println("0");
@@ -146,10 +145,8 @@ public class GameServer {
 				else if(gameState[1]) {
 					//kill all ServerLobbyThread threads (should be dead)
 					//this code will only run once
-					System.out.println("1 asdfsdf");
 	
 					if(!gameStart){
-						System.out.println("init 1111");
 						//start all ServerGameThread threads
 						ServerGameThread sgt = new ServerGameThread(s, id, gs);
 						gameThreads.add(sgt);
