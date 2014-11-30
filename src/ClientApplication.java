@@ -29,7 +29,6 @@ public class ClientApplication extends JFrame implements Runnable{
 		private ObjectOutputStream outToServer;
 		private ObjectInputStream inFromServer;
 		private PrintWriter pw;
-		private BufferedReader br;	
 		private static Socket mySocket;
 		
 		public static GridMapModel myGridMap = null;
@@ -37,34 +36,27 @@ public class ClientApplication extends JFrame implements Runnable{
 		private Boolean needToLogin = true;
 		private Boolean inLobby = true;
 		private int timerTest=1;
-	
-		
-		
 		
 		public ClientApplication() {
 			super("Our Game");
 			setResizable(false);
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			setMinimumSize(new Dimension(1000,600));
+			setMinimumSize(new Dimension(1000, 600));
 			setLocationRelativeTo(null);
 
-			try{
-					String hostname = "127.0.0.1";
-					int port = 5001;
-					mySocket = new Socket(hostname, port);
-					br =new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
-					pw =new PrintWriter(new OutputStreamWriter(mySocket.getOutputStream()));
-					
-					inFromServer = new ObjectInputStream(mySocket.getInputStream());
-
-				}
-				catch(IOException ioe){
-					System.out.println("not connected");
-				}
+			try {
+				String hostname = "127.0.0.1";
+				int port = 5001;
+				mySocket = new Socket(hostname, port);
+				pw = new PrintWriter(new OutputStreamWriter(mySocket.getOutputStream()));
+				inFromServer = new ObjectInputStream(mySocket.getInputStream());
+			}
+			catch(IOException ioe) {
+				System.out.println("not connected");
+			}
 			 
 			cl = new CardLayout();
 			cardsPanel = new JPanel(cl);
-					
 			
 			myGame = new ClientGamePanel(pw, this);
 			logIn = new ClientLoginPanel(pw);
@@ -77,13 +69,11 @@ public class ClientApplication extends JFrame implements Runnable{
 			setVisible(true);
 			cl.show(cardsPanel, "LoginScreen");
 			
-			
 			new Thread(this).start();
-			
 		} //end public Client constructor
 		
-		public void run(){
-			while(true){
+		public void run() {
+			while(true) {
 				try {
 					Thread.sleep(100);
 					
@@ -100,10 +90,9 @@ public class ClientApplication extends JFrame implements Runnable{
 					 }*/
 					//END TESTING CODE
 					 
-					//reading from the buffered reader.
-					Object readString="";
+					/*Object readString="";
 					
-					if( (readString = br.readLine()) != null){
+					if((readString = inFromServer.readObject()) != null){
 						String msg = "";
 						
 						if(readString instanceof String) {
@@ -112,142 +101,130 @@ public class ClientApplication extends JFrame implements Runnable{
 						} else {
 							System.out.println("not string");
 						}
-						
-						System.out.println("\n"+msg);
-						//MESSAGE PREFIX: TIMER
-						if(msg.equals("TIMER")){
-							lobby.setCountdown(4);
-							lobby.startCountdown();
-						}else{
-							String serverMessage[] = msg.split(":");
-							String prefix =serverMessage[0];
-							String content=serverMessage[1];
-							 
-							
-							
-							//MESSAGE PREFIX: CHAT 
-							if(prefix.equals("CHAT")){
-								if(content.equals("BROADCAST")){
-									String playerFinalName = serverMessage[2];
-									lobby.addPlayer(playerFinalName);
-								}else{
-									System.out.println("CHAT:"+content);
-									myGame.chatPanel.writeChatMessage(content);
-								}
-								
-							}
-
-							//MESSAGE PREFIX: USERNAME
-							
-							else if(prefix.equals("USERNAME")){
-								//hide loginPanel and show lobbyPanel (loggedIn())
-								//we get the username from the server and set it here so we know who we are. 
-								System.out.println("in the username execute");
-								myGame.drawingPanel.setName(content);
-								cl.show(cardsPanel, "Lobby");
-							}
-							
-							//MESSAGE PREFIX: STATUS
-							else if(prefix.equals("STATUS")){
-								//when status is go, hide lobbyPanel and show gamePanel
-								if(content.equals("START")){
-									getFromServer();
-									cl.show(cardsPanel,"GamePanel");
-//									System.out.println("GamePanel has been set");
-									myGame.chatPanel.initPlayers();
-								}
-							}
-							
-							else if(prefix.contains("USERNAME"))
-							{
-								//hide loginPanel and show lobbyPanel (loggedIn())
-								//we get the username from the server and set it here so we know who we are. 
-								System.out.println("in the username execute");
-								myGame.drawingPanel.setName(content);
-								cl.show(cardsPanel, "Lobby");
-							}
-						}
-					} 
-					//String msg= br.readLine();
-					//getFromServer();
+					}*/
+					
+					getFromServer();
 					repaint();
 					revalidate();
-					
-				} catch (InterruptedException e) {
-					
-					e.printStackTrace();
+				} 
+				catch(Exception e) {
+					System.out.println(e.getStackTrace());
 				}
-				
-				 catch (IOException e) {
-					   System.err.println("Error: " + e);
-					 }
-				//refreshAll();
 			}
 			//We need to wait for the server to start sending something to us.
 			//then we have to take the object that the server sends to us and deserialize it. 	
-			
-		}
+		} // end public void run
 		
-		public void sendReadySignal()
-		{
+		public void sendReadySignal() {
 			pw.println("STATUS:READY");
 			pw.flush();
-		}
+		} // end public void sendReadySignal
 		
-	 	public void loggedIn(){
+	 	public void loggedIn() {
 			//hide login panel and show lobby panel 
-			needToLogin=false;
-		}
+			needToLogin = false;
+		} // end public void loggedIn
 		
-		public void launchGame(){
+		public void launchGame() {
 			//hide lobby panel and show game panel.
-			inLobby=false; 
-		}
+			inLobby = false; 
+		} // end public void launchGame
 		
-		public void sendToServer(GridMapModel gridMapObject){
+		public void sendToServer(GridMapModel gridMapObject) {
 			try{
 				outToServer = new ObjectOutputStream(mySocket.getOutputStream());		
 				outToServer.writeObject(gridMapObject);   
 			}
-	     catch (Exception e) {
-	        System.err.println("Client Error: " + e.getMessage());
-	        System.err.println("Localized: " + e.getLocalizedMessage());
-	        System.err.println("Stack Trace: " + e.getStackTrace());
-	    }
-		}
-		public void getFromServer(){
+			catch(Exception e) {
+				System.err.println("Client Error: " + e.getMessage());
+				System.err.println("Localized: " + e.getLocalizedMessage());
+				System.err.println("Stack Trace: " + e.getStackTrace());
+			}
+		} // end public void sendToServer(GridMapModel)
+
+		public void getFromServer() {
 			//GridMapModel gridMapModel = new GridMapModel();
-			
-			try{
-				myGridMap = (GridMapModel)inFromServer.readObject();
-				System.out.println(myGridMap.playerLookup.size());
-				System.out.println(myGridMap.allModels.length);				
-				myGame.drawingPanel.refreshMap();
-				//update gridmapModel on our side. 
-				
-			}catch (Exception e) {
-		        
+			try {
+				Object serverObject = inFromServer.readObject();
+				if(serverObject instanceof GridMapModel) {
+					myGridMap = (GridMapModel)inFromServer.readObject();
+					System.out.println(myGridMap.playerLookup.size());
+					System.out.println(myGridMap.allModels.length);				
+					myGame.drawingPanel.refreshMap();
+					//update gridmapModel on our side.
+				} else {
+					String serverString = (String)serverObject;
+					readServerString(serverString);
+					
+				}
+			} catch(Exception e) {
 				System.err.println("Client Error: " + e.getMessage());
 		        System.err.println("Localized: " + e.getLocalizedMessage());
 		        System.err.println("Stack Trace: " + e.getStackTrace());
 		    }	
-		}
+		} // end public void getFromServer
 		
-		public void sendServerMessage(String s){
+		public void readServerString(String msg) {
+			System.out.println("\n" + msg);
+
+			//MESSAGE PREFIX: TIMER
+			if(msg.equals("TIMER")) {
+				lobby.setCountdown(4);
+				lobby.startCountdown();
+			} else {
+				String serverMessage[] = msg.split(":");
+				String prefix = serverMessage[0];
+				String content = serverMessage[1];
+				
+				//MESSAGE PREFIX: CHAT 
+				if(prefix.equals("CHAT")) {
+					if(content.equals("BROADCAST")) {
+						String playerFinalName = serverMessage[2];
+						lobby.addPlayer(playerFinalName);
+					} else {
+						System.out.println("CHAT:" + content);
+						myGame.chatPanel.writeChatMessage(content);
+					}
+				} // end if(prefix.equals("CHAT"))
+
+				//MESSAGE PREFIX: USERNAME
+				else if(prefix.equals("USERNAME")) {
+					//hide loginPanel and show lobbyPanel (loggedIn())
+					//we get the username from the server and set it here so we know who we are. 
+					System.out.println("in the username execute");
+					myGame.drawingPanel.setName(content);
+					cl.show(cardsPanel, "Lobby");
+				} // end if(prefix.equals("USERNAME"))
+				
+				//MESSAGE PREFIX: STATUS
+				else if(prefix.equals("STATUS")) {
+					//when status is go, hide lobbyPanel and show gamePanel
+					if(content.equals("START")) {
+						getFromServer();
+						cl.show(cardsPanel, "GamePanel");
+//						System.out.println("GamePanel has been set");
+						myGame.chatPanel.initPlayers();
+					} // end if(content.equals("START"))
+				} // end if(prefix.equals("STATUS"))
+				else if(prefix.contains("USERNAME")) {
+					//hide loginPanel and show lobbyPanel (loggedIn())
+					//we get the username from the server and set it here so we know who we are. 
+					System.out.println("in the username execute");
+					myGame.drawingPanel.setName(content);
+					cl.show(cardsPanel, "Lobby");
+				} // end if(prefix.contains("USERNAME"))
+			} // end if (!msg.equals("TIMER"))
+		} // end public void readServerMessage(String)
+		
+		public void sendServerMessage(String s) {
 			pw.println(s);
-		}
+		} // end public void sendServerMessage(String)
 
 		public void addChatMessage(String s) {
 			//chatPanel.addText(s);
-		}	
+		} // end public void addChatMessage(String)
 	
 		public static void main(String [] args){
-			
 			ClientApplication myClient = new ClientApplication();
-			 
-		}
-		
-		
-			
-		
+		} // end public static void main
 }
