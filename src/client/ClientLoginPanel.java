@@ -28,7 +28,7 @@ public class ClientLoginPanel extends JPanel {
 	BufferedReader br;
 	PrintWriter pw;
 	Container frame;
-	public ClientLoginPanel(PrintWriter pw){
+	public ClientLoginPanel(final PrintWriter pw){
 		
 		frame=this.getParent();
 		this.pw=pw;
@@ -57,7 +57,6 @@ public class ClientLoginPanel extends JPanel {
 		cs.gridy = 1;
 		cs.gridwidth = 1;
 		centerPane.add(passwordLabel, cs);
-
 		passwordInput = new JPasswordField(20);
 		cs.gridx = 1;
 		cs.gridy = 1;
@@ -99,7 +98,3 @@ public class ClientLoginPanel extends JPanel {
 	
 	
 }
-
-
-
-

@@ -12,14 +12,15 @@ import java.net.Socket;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import Models.*;
 
 import javax.swing.*;
 
 public class ClientApplication extends JFrame implements Runnable{
 
 		ClientDrawingPanel drawingPanel;
-		//private static ClientLoginPanel login;
-		//private static ClientLobbyPanel lobby;
+		private static ClientLoginPanel logIn;
+		private static ClientLobbyPanel lobby;
 		
 		private JPanel cardsPanel;
 		private CardLayout cl;
@@ -31,11 +32,11 @@ public class ClientApplication extends JFrame implements Runnable{
 		private BufferedReader br;	
 		private static Socket mySocket;
 		
-		private static GridMapModel myGridMap;
+		private static GridMapModel myGridMap = null;
 		private static ClientGamePanel myGame;
 		private Boolean needToLogin = true;
 		private Boolean inLobby = true;
-		
+		private int timerTest=1;
 	
 		
 		
@@ -46,84 +47,121 @@ public class ClientApplication extends JFrame implements Runnable{
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			setMinimumSize(new Dimension(1000,600));
 			setLocationRelativeTo(null);
-			setVisible(true);
+			
 			
 			
 			try{
 					String hostname = "127.0.0.1";
-					int port = 1392;
+					int port = 5001;
 					mySocket = new Socket(hostname, port);
 					br =new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
 					pw =new PrintWriter(new OutputStreamWriter(mySocket.getOutputStream()));
-					//NetworkThread myNT = new NetworkThread(this, br);
-					//myNT.start();
+					
 				}
 				catch(IOException ioe){
-					
+					System.out.println("not connected");
 				}
 			 
 			cl = new CardLayout();
 			cardsPanel = new JPanel(cl);
 						
-			myGame = new ClientGamePanel( myGridMap,pw);
-			//logIn = new ClientLoginPanel( pw);
-			//lobby = new ClientLobbyPanel( myGridMap,pw);
+			myGame = new ClientGamePanel(myGridMap,pw, this);
+			logIn = new ClientLoginPanel(pw);
+			lobby = new ClientLobbyPanel(this);
 			
 			cardsPanel.add(myGame, "GamePanel");
-			//cardsPanel.add(logIn, "LoginScreen");
-			//cardsPanel.add(lobby, "Lobby");
-	
+			cardsPanel.add(logIn, "LoginScreen");
+			cardsPanel.add(lobby, "Lobby");
+			add(cardsPanel);
+			setVisible(true);
 			cl.show(cardsPanel, "LoginScreen");
 			
+			
 			new Thread(this).start();
-
 			
 		} //end public Client constructor
 		
 		public void run(){
 			while(true){
 				try {
-					Thread.sleep(1);
+					Thread.sleep(100);
 					
+					//BEGIN TESTING CODE 
+					//hide loginPanel and show lobbyPanel (loggedIn())
+					
+					/*cl.show(cardsPanel, "Lobby");
+					 if (timerTest ==1){
+						 myGame.drawingPanel.setName("apple");
+						 lobby.setCountdown(5);
+						lobby.startCountdown();
+						cl.show(cardsPanel,"GamePanel");
+						timerTest--;
+					 }*/
+					//END TESTING CODE
+					 
 					//reading from the buffered reader.
-					String msg= br.readLine();
-					String serverMessage[] = msg.split(":");
-					String prefix = serverMessage[0];
-					String content = serverMessage[1];
-					
-					//MESSAGE PREFIX: CHAT 
-					if(prefix.equals("CHAT")){
-						myGame.chatPanel.writeChatMessage(content);
-					}
+					String readString="";
+					if( (readString = br.readLine()) != null){
+						
+						String msg = readString;
+						System.out.println("\n"+msg);
+						//MESSAGE PREFIX: TIMER
+						if(msg.equals("TIMER")){
+							lobby.setCountdown(20);
+							lobby.startCountdown();
+						}else{
+							String serverMessage[] = msg.split(":");
+							String prefix =serverMessage[0];
+							String content=serverMessage[1];
+							 
+							
+							//MESSAGE PREFIX: CHAT 
+							if(prefix.equals("CHAT")){
+								System.out.println("CHAT:"+content);
+								myGame.chatPanel.writeChatMessage(content);
+							}
 
-					//MESSAGE PREFIX: USERNAME
-					if(prefix.equals("USERNAME")){
-						//hide loginPanel and show lobbyPanel (loggedIn())
-						//myGame.drawingPanel.setName("apple");
-						//cl.show(cardsPanel, "Lobby");
-					}
-					
-					//MESSAGE PREFIX: STATUS
-					if(prefix.equals("STATUS")){
-						//when status is go, hide lobbyPanel and show gamePanel
-						//gamePanel shows the 3
-					}
-					//MESSAGE PREFIX: TIMER
-					if(prefix.equals("TIMER")){
-					//Object reading in check. 
-					}
-					//constantly calling getFromServer() so that way we can always be reading in an object;
-					
-					
+							//MESSAGE PREFIX: USERNAME
+							
+							else if(prefix.equals("USERNAME")){
+								//hide loginPanel and show lobbyPanel (loggedIn())
+								//we get the username from the server and set it here so we know who we are. 
+								System.out.println("in the username execute");
+								myGame.drawingPanel.setName(content);
+								cl.show(cardsPanel, "Lobby");
+							}
+							
+							//MESSAGE PREFIX: STATUS
+							else if(prefix.equals("STATUS")){
+								//when status is go, hide lobbyPanel and show gamePanel
+								if(content.equals("START")){
+									cl.show(cardsPanel,"GamePanel");
+								}
+							}
+							
+							else if(prefix.contains("USERNAME"))
+							{
+								//hide loginPanel and show lobbyPanel (loggedIn())
+								//we get the username from the server and set it here so we know who we are. 
+								System.out.println("in the username execute");
+								myGame.drawingPanel.setName(content);
+								cl.show(cardsPanel, "Lobby");
+							}
+						}
+					} 
+					//String msg= br.readLine();
+					//getFromServer();
+					repaint();
+					revalidate();
 					
 				} catch (InterruptedException e) {
 					
 					e.printStackTrace();
 				}
-					catch (Exception e) {
-					
-					e.printStackTrace();
-				}
+				
+				 catch (IOException e) {
+					   System.err.println("Error: " + e);
+					 }
 				//refreshAll();
 			}
 			//We need to wait for the server to start sending something to us.
@@ -131,14 +169,14 @@ public class ClientApplication extends JFrame implements Runnable{
 			
 		}
 		
-		public void loggedIn(){
+	 	public void loggedIn(){
 			//hide login panel and show lobby panel 
 			needToLogin=false;
 		}
 		
 		public void launchGame(){
 			//hide lobby panel and show game panel.
-			inLobby=false;
+			inLobby=false; 
 		}
 		
 		public void sendToServer(GridMapModel gridMapObject){
@@ -170,6 +208,10 @@ public class ClientApplication extends JFrame implements Runnable{
 			
 		
 		}
+		
+		public void sendServerMessage(String s){
+			pw.println(s);
+		}
 
 		public void addChatMessage(String s) {
 			//chatPanel.addText(s);
@@ -185,4 +227,3 @@ public class ClientApplication extends JFrame implements Runnable{
 			
 		
 }
-
