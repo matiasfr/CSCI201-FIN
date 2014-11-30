@@ -48,8 +48,8 @@ public class ClientApplication extends JFrame implements Runnable{
 				String hostname = "127.0.0.1";
 				int port = 5001;
 				mySocket = new Socket(hostname, port);
-				//pw = new PrintWriter(new OutputStreamWriter(mySocket.getOutputStream()));
 				inFromServer = new ObjectInputStream(mySocket.getInputStream());
+				outToServer = new ObjectOutputStream(mySocket.getOutputStream());		
 			}
 			catch(IOException ioe) {
 				System.out.println("not connected");
@@ -118,8 +118,9 @@ public class ClientApplication extends JFrame implements Runnable{
 		public void sendReadySignal() {
 			try {
 				outToServer.writeObject("STATUS:READY");
-			} catch (IOException e) {e.printStackTrace();}
-			
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
 		} // end public void sendReadySignal
 		
 	 	public void loggedIn() {
@@ -134,7 +135,6 @@ public class ClientApplication extends JFrame implements Runnable{
 		
 		public void sendToServer(GridMapModel gridMapObject) {
 			try{
-				outToServer = new ObjectOutputStream(mySocket.getOutputStream());		
 				outToServer.writeObject(gridMapObject);   
 			}
 			catch(Exception e) {

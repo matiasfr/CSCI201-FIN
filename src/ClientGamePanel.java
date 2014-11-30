@@ -3,7 +3,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Map;
 
@@ -11,10 +11,9 @@ import javax.swing.*;
 
 import Models.*;
 
-
 public class ClientGamePanel extends JPanel {
 	private static final long serialVersionUID = 3074976706165093453L;
-	private PrintWriter pw;
+	private ObjectOutputStream oos;
 	private BufferedReader br;	
 	private static Socket mySocket;
 	private GridMapModel gridMap;
@@ -25,11 +24,10 @@ public class ClientGamePanel extends JPanel {
 	//JPanel statsPanel;
 	private ClientApplication myApp;
 
-	public ClientGamePanel( PrintWriter pw, ClientApplication myApp){
-		
+	public ClientGamePanel(ObjectOutputStream oos, ClientApplication myApp){
 		this.gridMap= myApp.myGridMap;
 		this.myApp = myApp;
-		this.pw=pw;
+		this.oos = oos;
 		//Sets up the entire view for the game. Main panel will include:
 		// 1.) ClientDrawingpanel (CENTER) 
 		// 2.) ChatPanel        (EAST)
@@ -40,9 +38,9 @@ public class ClientGamePanel extends JPanel {
 		
 		//set up chat panel
 		//Map<Integer, PlayerModel> players, PrintWriter pw, BufferedReader br
-		try{
-		chatPanel = new ClientChatPanel( myApp,pw );
-		}catch(Exception e){
+		try {
+			chatPanel = new ClientChatPanel(myApp, oos);
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 		
@@ -50,10 +48,9 @@ public class ClientGamePanel extends JPanel {
 		//statsPanel.setSize(200,600);
 		
 		//set up drawing panel
-		drawingPanel = new ClientDrawingPanel( myApp, this);
+		drawingPanel = new ClientDrawingPanel(myApp, this);
 		drawingPanel.setSize(600,600);
 		drawingPanel.setLayout(null);
-		
 		
 		mainPanel.add(drawingPanel, BorderLayout.CENTER);
 		//drawingPanel.setLocation(200, 0);
@@ -65,8 +62,9 @@ public class ClientGamePanel extends JPanel {
 		mainPanel.setPreferredSize(new Dimension(600, 600));
 		mainPanel.setVisible(true);	
 	}	
+
 	//we got a new gridmapmodel so let everyone know. 
-	public void refreshAll(){
+	public void refreshAll() {
 		drawingPanel.repaint();
 	}
 }
