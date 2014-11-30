@@ -27,7 +27,7 @@ public class ClientChatPanel extends JPanel implements ActionListener {
 	private ClientApplication myClient;
 	///////
 	
-	public ClientChatPanel(Map<Integer, PlayerModel> players, ObjectOutputStream oos) {
+	/*public ClientChatPanel(Map<Integer, PlayerModel> players, ObjectOutputStream oos) {
 		this.players = players;
 		this.oos = oos;
 		
@@ -43,7 +43,7 @@ public class ClientChatPanel extends JPanel implements ActionListener {
 			JCheckBox box = new JCheckBox(player.playerName);
 			box.addActionListener(this);
 			if (player.playerTeam == 1) team1_list.add(box);
-			else /*if player.playerTeam == 2*/ team2_list.add(box);
+			else //if player.playerTeam == 2 team2_list.add(box);
 		}
 		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -72,7 +72,7 @@ public class ClientChatPanel extends JPanel implements ActionListener {
 		for (JCheckBox box : team2_list) team2_panel.add(box);
 		
 		setSize(200, 600);
-	}
+	} */
 	
 	//////////NEW CONSTRUCTOR////////////
 	public ClientChatPanel(ClientApplication myClient, ObjectOutputStream oos) {
@@ -121,12 +121,11 @@ public class ClientChatPanel extends JPanel implements ActionListener {
 		for (JCheckBox box : team2_list) team2_panel.add(box);
 		
 		setSize(200, 600);
-	}
+	} // end public ClientChatPanel(ClientApplication, ObjectOutputStream) constructor
 	/////////////////////////////////////
 	
 	//////////////NEW////////////////////
-	public void initPlayers()
-	{
+	public void initPlayers() {
 		this.players = myClient.myGridMap.getPlayers();
 		
 		for(Map.Entry<Integer, PlayerModel> playerEntry : players.entrySet()) {
@@ -136,12 +135,12 @@ public class ClientChatPanel extends JPanel implements ActionListener {
 			if (player.playerTeam == 1) team1_list.add(box);
 			else /*if player.playerTeam == 2*/ team2_list.add(box);
 		}
-	}
+	} // end public void initPlayers
 	/////////////////////////////////////
 
 	public void writeChatMessage (String s) {
 		output.setText(output.getText() + "\n" + s);
-	}
+	} // end public void writeChatMessage
 	
 	private String getSelectedPlayerIDs () {
 		ArrayList<String> playerNames = new ArrayList<String>();
@@ -157,7 +156,7 @@ public class ClientChatPanel extends JPanel implements ActionListener {
 					s += (player.getKey()) + ",";
 		
 		return s.substring(0, s.length() - 1) + ":";
-	}
+	} // end private String getSelectedPlayerIDs
 	
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == input && !getSelectedPlayerIDs().equals("CHAT:") && !input.getText().equals("")) {
@@ -175,42 +174,42 @@ public class ClientChatPanel extends JPanel implements ActionListener {
 			boolean state = global.isSelected();
 			team1.setSelected(state);
 			team2.setSelected(state);
-			for (JCheckBox box : team1_list) box.setSelected(state);
-			for (JCheckBox box : team2_list) box.setSelected(state);
+			for(JCheckBox box : team1_list) box.setSelected(state);
+			for(JCheckBox box : team2_list) box.setSelected(state);
 		}
 		else if(e.getSource() == team1) {
 			boolean state = team1.isSelected();
-			if (team1.isSelected() && team2.isSelected()) global.setSelected(true);
+			if(team1.isSelected() && team2.isSelected()) global.setSelected(true);
 			else global.setSelected(false);
-			for (JCheckBox box : team1_list) box.setSelected(state);
+			for(JCheckBox box : team1_list) box.setSelected(state);
 		}
 		else if(e.getSource() == team2) {
 			boolean state = team2.isSelected();
-			if (team1.isSelected() && team2.isSelected()) global.setSelected(true);
+			if(team1.isSelected() && team2.isSelected()) global.setSelected(true);
 			else global.setSelected(false);
-			for (JCheckBox box : team2_list) box.setSelected(state);
+			for(JCheckBox box : team2_list) box.setSelected(state);
 		}
 		
 		boolean team1_checked = true;
 		for(JCheckBox box : team1_list)
-			if (!box.isSelected()) {
+			if(!box.isSelected()) {
 				team1_checked = false;
 				team1.setSelected(false);
 			}
 		if(team1_checked) {
 			team1.setSelected(true);
-			if (team1.isSelected() && team2.isSelected()) global.setSelected(true);
+			if(team1.isSelected() && team2.isSelected()) global.setSelected(true);
 		}
 		
 		boolean team2_checked = true;
 		for(JCheckBox box : team2_list)
-			if (!box.isSelected()) {
+			if(!box.isSelected()) {
 				team2_checked = false;
 				team2.setSelected(false);
 			}
 		if(team2_checked) {
 			team2.setSelected(true);
-			if (team1.isSelected() && team2.isSelected()) global.setSelected(true);
+			if(team1.isSelected() && team2.isSelected()) global.setSelected(true);
 		}
 	}
 }

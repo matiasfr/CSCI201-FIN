@@ -28,15 +28,13 @@ public class ClientLoginPanel extends JPanel {
 	JTextField passwordInput;
 	JButton loginButton;
 	JButton createAccountButton;
-	//BufferedReader br;
-	//PrintWriter pw;
 	ObjectOutputStream oos;
 	Container frame;
-	public ClientLoginPanel(final ObjectOutputStream oos){
-		
-		frame=this.getParent();
-		this.oos=oos;
-		JPanel centerPane= new JPanel();
+
+	public ClientLoginPanel(final ObjectOutputStream oos) {
+		frame = this.getParent();
+		this.oos = oos;
+		JPanel centerPane = new JPanel();
 		this.setLayout(new BorderLayout());
 		
 		centerPane.setLayout(new GridBagLayout());
@@ -68,42 +66,31 @@ public class ClientLoginPanel extends JPanel {
 		centerPane.add(passwordInput, cs);
 		centerPane.setBorder(new LineBorder(Color.GRAY));*/
 
-		
 		loginButton = new JButton("Login/Connect");
 		
 		this.add(centerPane, BorderLayout.CENTER);
 		this.add(loginButton, BorderLayout.SOUTH);
 		
 		loginButton.addActionListener(new ActionListener() {
-			 
 	            public void actionPerformed(ActionEvent e) {
 	            	String str = usernameInput.getText();
-	            	while(true){
-	            		if((!str.equals("")) || str.length()<=3)
-	            		{
+	            	while(true) {
+	            		if((!str.equals("")) || str.length() <= 3) {
 	            			try {
 								oos.writeObject(str);
-							} catch (IOException e1) {
+							} catch(IOException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
-	            			//pw.flush();
 	            			break;
 	            		}
-	            		else{
+	            		else {
 	            			JOptionPane.showMessageDialog(frame, "Username Field can't be less than 4 characters");
 	            			usernameInput.setText("");
 	            			continue;
 	            		}
-	            	}
-	            }
-	        });
-
-	}
-
-
-
-	
-	
-	
-}
+	            	} // end while(true)
+	            } // end public void actionPerformed(ActionEvent)
+	        }); // end loginButton.addActionListener(new ActionListener))
+	} // end public ClientLoginPanel(ObjectOutputStream) constructor
+} // end public class ClientLoginPanel extends JPanel

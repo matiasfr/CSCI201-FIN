@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class ClientPlayer extends JPanel implements Runnable{
+public class ClientPlayer extends JPanel implements Runnable {
 	private static final long serialVersionUID = -3929233179764541207L;
 	BufferedImage imgPlayerSkeletonF = null;
 	BufferedImage imgPlayerColorF = null;
@@ -43,19 +43,19 @@ public class ClientPlayer extends JPanel implements Runnable{
 	private int currentQuadrant=9;
 	private String teamColor;
 	
-	public ClientPlayer(ClientApplication myApp, String teamColor, ClientDrawingPanel drawPanel){
+	public ClientPlayer(ClientApplication myApp, String teamColor, ClientDrawingPanel drawPanel) {
 		this.myApp = myApp;
 		this.drawPanel = drawPanel;
 		this.teamColor= teamColor;
 		DrawKeyListener ls = new DrawKeyListener();
-		addKeyListener(ls);
+		myApp.addKeyListener(ls);
 		setVisible(true);
 		setLayout(null);
 		
-		xPixel=0;
-		yPixel=0;
-		xSquare =0;
-		ySquare =0;
+		xPixel = 0;
+		yPixel = 0;
+		xSquare = 0;
+		ySquare = 0;
 		try {
 			forward[0] = ImageIO.read(new File("images/playerSkeleton/facing_forward.png"));
 			forward[1] = ImageIO.read(new File("images/teamColor/"+teamColor+"/facing_forward.png"));
@@ -73,26 +73,27 @@ public class ClientPlayer extends JPanel implements Runnable{
 			down[1] = ImageIO.read(new File("images/teamColor/"+teamColor+"/facing_backwards.png"));
 			down[2] = ImageIO.read(new File("images/armor/basic/facing_backwards.png"));
 			down[3] = ImageIO.read(new File("images/arms/withoutWeapon/still/facing_backwards.png"));
-		} catch (IOException e) {}
-	}
+		} catch(IOException e) {
+			System.out.println(e.getStackTrace());
+		}
+	} // end public ClientPlayer(ClientApplication, String, ClientDrawingPanel) constructor
 	
-	public void run(){
-		while(true){
-			
+	public void run() {
+		while(true) {
 			//constantly checking the x and y coordinates to be able to update the position of the character on the 
 			//grid map model. FOr instance, if a player is in the bounds x 
 			try {
 				Thread.sleep(1);
-			} catch (InterruptedException e) {
+			} catch(InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			repaint();
 		}
-	}
+	} // end public void run
 	
-	public void setPlayerChange(String armorType, String weaponType ){
-		try{
+	public void setPlayerChange(String armorType, String weaponType) {
+		try {
 			/*forward[2]  = ImageIO.read(new File("images/armor/"+armorType+"/facing_forward.png"));
 			forward[3] = ImageIO.read(new File("images/arms/"+weaponType+"/still/facing_forward.png"));
 			
@@ -119,168 +120,141 @@ public class ClientPlayer extends JPanel implements Runnable{
 			down[2] = ImageIO.read(new File(armorType));
 			down[3] = ImageIO.read(new File(weaponType));
 			
-		}catch(Exception e){
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		
-	}
+	} // end public void setPlayerChange(String, String)
 	
-	public void setX(int x){
-		this.xPixel=x;
-	}
+	public void setX(int x) {
+		this.xPixel = x;
+	} // end public void setX(int)
 	
-	public void setY(int y){
-		this.yPixel=y;
-	}
+	public void setY(int y) {
+		this.yPixel = y;
+	} // end public void setY(int)
 	
-	public void setXSq(int x){
-		this.xSquare=x;
-	}
+	public void setXSq(int x) {
+		this.xSquare = x;
+	} // end public void setXSq(int)
 	
-	public void setYSq(int y){
-		this.ySquare=y;
-	}
+	public void setYSq(int y) {
+		this.ySquare = y;
+	} // end public void setYSq(int)
 	
-	public void setQuadrant(int q){
-		this.currentQuadrant=q;
-	}
+	public void setQuadrant(int q) {
+		this.currentQuadrant = q;
+	} // end public void setQuadrant(int)
 	
-	public void setDirection(int d){
-		this.direction=d;
-	}
+	public void setDirection(int d) {
+		this.direction = d;
+	} // end public void setDirection(int)
 	
-	public void paintComponent(Graphics g){
+	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		if(direction==0)
-		{
-			for(int i=0;i<4;i++)
-			{
-				g.drawImage(down[i], xPixel, yPixel,null);
-			}
-		}
-		else if(direction==1)
-		{
-			for(int i=0;i<4;i++)
-			{
-				g.drawImage(right[i], xPixel, yPixel,null);
-			}
-		}
-		else if(direction==2)
-		{
-			for(int i=0;i<4;i++)
-			{
-				g.drawImage(forward[i], xPixel, yPixel,null);
-			}
-		}
-		else if(direction==3)
-		{
-			for(int i=0;i<4;i++)
-			{
-				g.drawImage(left[i], xPixel, yPixel,null);
-			}
-		}
-	}
-	
-	
 
-	class DrawKeyListener extends KeyAdapter{
-		
-		public void keyPressed(KeyEvent e){
-			
+		if(direction == 0) {
+			for(int i = 0; i < 4; i++) {
+				g.drawImage(down[i], xPixel, yPixel, null);
+			}
+		} // end if(direction == 0)
+		else if(direction == 1) {
+			for(int i = 0; i < 4; i++) {
+				g.drawImage(right[i], xPixel, yPixel, null);
+			}
+		} // end if(direction == 1)
+		else if(direction == 2) {
+			for(int i = 0; i < 4; i++) {
+				g.drawImage(forward[i], xPixel, yPixel, null);
+			}
+		} // end if(direction == 2)
+		else if(direction == 3) {
+			for(int i = 0; i < 4; i++) {
+				g.drawImage(left[i], xPixel, yPixel, null);
+			}
+		} // end if(direction == 3)
+	} // end public void paintComponent(Graphics)
+	
+	class DrawKeyListener extends KeyAdapter {
+		public void keyPressed(KeyEvent e) {
 			//Check the potential new position. If it is in a different square
 			//
-			
 			//if the new potential position is within 5 of a border, then check. Set quad change boolean to true; 
-			
-			if (e.getKeyCode() == KeyEvent.VK_RIGHT ) {
-				if( (((450-xPixel) < 6) && currentQuadrant == 3) || (((450-xPixel) < 6) && currentQuadrant == 1)){
+			if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
+				if((((450-xPixel) < 6) && currentQuadrant == 3) || (((450-xPixel) < 6) && currentQuadrant == 1)) {
 					//DO NOTHING, too close to the right border.
-				}else if( (((225-xPixel) < 6 ) && currentQuadrant == 0) || (((225-xPixel) < 6 ) && currentQuadrant == 2)){
+				} else if((((225-xPixel) < 6 ) && currentQuadrant == 0) || (((225-xPixel) < 6 ) && currentQuadrant == 2)) {
 					myApp.sendServerMessage("R:5");
 					drawPanel.drawQuadChange = true;
 				}
-		
-				else{
-					  //Right arrow key code
+				else {
+					//Right arrow key code
 					//SEND THE SERVER THE MESSAGE R	
-					if( ((xPixel+22.5+5)/45) != xSquare){
+					if(((xPixel + 22.5 + 5) / 45) != xSquare) {
 						myApp.sendServerMessage("R:5");
 			            //Up arrow key code
 						direction = 1;
-						xPixel+=5;					
-					}else{
+						xPixel += 5;					
+					} else {
 						direction = 1;
-						xPixel+=5;	
+						xPixel += 5;	
 					}
 				}
-	          
-			} else if (e.getKeyCode() == KeyEvent.VK_LEFT ) {
-				if( ((xPixel < 6) && currentQuadrant == 0) || ((xPixel < 6) && currentQuadrant == 2) ){
+			} else if(e.getKeyCode() == KeyEvent.VK_LEFT) {
+				if(((xPixel < 6) && currentQuadrant == 0) || ((xPixel < 6) && currentQuadrant == 2)) {
 					//DO NOTHING, too close to the right border.
-				}else if( (( (xPixel-225) < 6) && currentQuadrant==1) || (((xPixel-225) < 6) && currentQuadrant==3)  ){
+				} else if((((xPixel-225) < 6) && currentQuadrant==1) || (((xPixel-225) < 6) && currentQuadrant==3)) {
 					myApp.sendServerMessage("L:5");
 				}
-				
-				else{
-					if( ((xPixel+22.5+5)/45) != xSquare){
+				else {
+					if(((xPixel + 22.5 + 5) / 45) != xSquare) {
 						myApp.sendServerMessage("L:5");
 			            //Up arrow key code
 						direction = 3;
-						xPixel-=5;					
-					}else{
+						xPixel-= 5;					
+					} else {
 						direction = 3;
-						xPixel-=5;	
+						xPixel -= 5;	
 					}
 				}
-				
-			} else if (e.getKeyCode() == KeyEvent.VK_UP) {
-				
-				if( ((yPixel < 6) && currentQuadrant == 0) || ((yPixel < 6) && currentQuadrant == 1) ){
+			} else if(e.getKeyCode() == KeyEvent.VK_UP) {
+				if(((yPixel < 6) && currentQuadrant == 0) || ((yPixel < 6) && currentQuadrant == 1)) {
 					//do nothing 
-				}else if( (( (yPixel-225) < 6) && currentQuadrant==2) || (((yPixel-225) < 6) && currentQuadrant==3)  ){
+				} else if((((yPixel-225) < 6) && currentQuadrant==2) || (((yPixel-225) < 6) && currentQuadrant==3)) {
 					myApp.sendServerMessage("U:5");
 				}
-				
-				else{
-					if( ((yPixel+22.5+5)/45) != ySquare){
+				else {
+					if(((yPixel + 22.5 + 5) / 45) != ySquare) {
 						myApp.sendServerMessage("U:5");
 			            //Up arrow key code
 						direction = 0;
-						yPixel-=5;					
-					}else{
+						yPixel-= 5;					
+					} else {
 						direction = 0;
-						yPixel-=5;	
+						yPixel -= 5;	
 					}
 				}
-				
-				
-			} else if (e.getKeyCode() == KeyEvent.VK_DOWN ) {
-				
-				if( (((450-yPixel) < 6) && currentQuadrant == 2) || (((450-yPixel) < 6) && currentQuadrant == 3)){
+			} else if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+				if((((450-yPixel) < 6) && currentQuadrant == 2) || (((450-yPixel) < 6) && currentQuadrant == 3)) {
 					//DO NOTHING, too close to the right border.
-				}else if( (( (225-yPixel) < 6) && currentQuadrant==0) || (((225-yPixel) < 6) && currentQuadrant==1)  ){
+				} else if((((225-yPixel) < 6) && currentQuadrant==0) || (((225-yPixel) < 6) && currentQuadrant==1)) {
 					myApp.sendServerMessage("D:5");
 				}
-				
-				else{
-					if( ((yPixel+22.5+5)/45) != ySquare){
+				else {
+					if(((yPixel + 22.5 + 5) / 45) != ySquare) {
 						myApp.sendServerMessage("D:5");
 			            //Up arrow key code
 						direction = 2;
-						yPixel+=5;	
+						yPixel += 5;	
 						//ySquare = (yPixel+22.5)/45;
-					}else{
+					} else {
 						direction = 2;
-						yPixel+=5;	
+						yPixel += 5;	
 					}
 				}
-				
-			} else if (e.getKeyCode() == KeyEvent.VK_A ) {
+			} else if(e.getKeyCode() == KeyEvent.VK_A) {
 				//ATTACK
 				myApp.sendServerMessage("A:10");
-
 			}
-		}
-		
-	}
-}
+		} // end public void keyPressed(KeyEvent)
+	} // end class DrawKeyListener extends KeyAdapter
+} // end public class ClientPlayer extends JPanel implements Runnable

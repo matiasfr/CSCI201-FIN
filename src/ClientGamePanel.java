@@ -24,7 +24,7 @@ public class ClientGamePanel extends JPanel {
 	//JPanel statsPanel;
 	private ClientApplication myApp;
 
-	public ClientGamePanel(ObjectOutputStream oos, ClientApplication myApp){
+	public ClientGamePanel(ObjectOutputStream oos, ClientApplication myApp) {
 		this.gridMap= myApp.myGridMap;
 		this.myApp = myApp;
 		this.oos = oos;
@@ -61,10 +61,10 @@ public class ClientGamePanel extends JPanel {
 		add(chatPanel);
 		mainPanel.setPreferredSize(new Dimension(600, 600));
 		mainPanel.setVisible(true);	
-	}	
+	} // end public ClientGamePanel(ObjectOutputStream, ClientApplication) constructor
 
 	//we got a new gridmapmodel so let everyone know. 
 	public void refreshAll() {
 		drawingPanel.repaint();
-	}
-}
+	} // end public void refreshAll
+} // end public class ClientGamePanel extends JPanel
