@@ -42,6 +42,7 @@ public class ClientPlayer extends JPanel implements Runnable {
 	private int direction = 2;
 	private int currentQuadrant = 9;
 	private String teamColor;
+	int movementVar = 0;
 	
 	public ClientPlayer(ClientApplication myApp, String teamColor, ClientDrawingPanel drawPanel) {
 		this.myApp = myApp;
@@ -88,7 +89,25 @@ public class ClientPlayer extends JPanel implements Runnable {
 			//constantly checking the x and y coordinates to be able to update the position of the character on the 
 			//grid map model. FOr instance, if a player is in the bounds x 
 			try {
-				Thread.sleep(1);
+				Thread.sleep(5);
+				
+				//moving up 
+				if(direction == 0){
+					yPixel-= movementVar;
+				}
+				//moving right
+				else if(direction == 1){
+					xPixel+= movementVar;
+				}
+				//moving down 
+				else if(direction == 2){
+					yPixel+= movementVar;
+				}
+				//moving left
+				else if(direction == 3){
+					xPixel-= movementVar;
+				}
+				
 				repaint();
 			} catch(InterruptedException e) {
 				// TODO Auto-generated catch block
@@ -99,18 +118,6 @@ public class ClientPlayer extends JPanel implements Runnable {
 	
 	public void setPlayerChange(String armorType, String weaponType) {
 		try {
-			/*forward[2]  = ImageIO.read(new File("images/armor/"+armorType+"/facing_forward.png"));
-			forward[3] = ImageIO.read(new File("images/arms/"+weaponType+"/still/facing_forward.png"));
-			
-			left[2] = ImageIO.read(new File("images/armor/"+armorType+"/facing_left.png"));
-			left[3] = ImageIO.read(new File("images/arms/"+weaponType+"/still/facing_left.png"));
-			
-			right[2] = ImageIO.read(new File("images/armor/"+armorType+"/facing_right.png"));
-			right[3] = ImageIO.read(new File("images/arms/"+weaponType+"/still/facing_right.png"));
-			
-			
-			down[2] = ImageIO.read(new File("images/armor/"+armorType+"/facing_backwards.png"));
-			down[3] = ImageIO.read(new File("images/arms/"+weaponType+"/still/facing_backwards.png"));*/
 			
 			forward[2] = ImageIO.read(new File(armorType));
 			forward[3] = ImageIO.read(new File(weaponType));
@@ -179,10 +186,36 @@ public class ClientPlayer extends JPanel implements Runnable {
 	} // end public void paintComponent(Graphics)
 	
 	class DrawKeyListener extends KeyAdapter {
-		public void keyPressed(KeyEvent e) {
-//			System.out.println("pressed something");
-		}
 		public void keyReleased(KeyEvent e) {
+//			System.out.println("pressed something");
+			movementVar = 0;
+			//sending quadrant movement to server
+			//moving up 
+			if(direction == 0){
+				int deltaMovement = Math.abs(((int)(yPixel + 22.5) / 45)- ySquare);
+				ySquare = (int)(yPixel + 22.5) / 45;
+				myApp.sendServerMessage("U:"+deltaMovement);
+			}
+			//moving right
+			else if(direction == 1){
+				int deltaMovement = Math.abs(((int)(xPixel + 22.5) / 45)- xSquare);
+				xSquare = (int)(xPixel + 22.5) / 45;
+				myApp.sendServerMessage("R:"+deltaMovement);
+			}
+			//moving down 
+			else if(direction == 2){
+				int deltaMovement = Math.abs(((int)(yPixel + 22.5) / 45)- ySquare);
+				ySquare = (int)(yPixel + 22.5) / 45;
+				myApp.sendServerMessage("D:"+deltaMovement);
+			}
+			//moving left
+			else if(direction == 3){
+				int deltaMovement = Math.abs(((int)(xPixel + 22.5) / 45)- xSquare);
+				xSquare = (int)(xPixel + 22.5) / 45;
+				myApp.sendServerMessage("L:"+deltaMovement);
+			}
+		}
+		public void keyPressed(KeyEvent e) {
 			//Check the potential new position. If it is in a different square
 			//
 			//if the new potential position is within 5 of a border, then check. Set quad change boolean to true; 
@@ -204,11 +237,13 @@ public class ClientPlayer extends JPanel implements Runnable {
 						myApp.sendServerMessage("R:1");
 			            //Up arrow key code
 						direction = 1;
-						xPixel += 5;	
-						xSquare++;
+						//xPixel += 5;
+						movementVar = 1;
+						//xSquare++;
 					} else {
 						direction = 1;
-						xPixel += 5;	
+						//xPixel += 5;
+						movementVar = 1;
 					}
 				}
 			} else if(e.getKeyCode() == KeyEvent.VK_LEFT) {
@@ -222,11 +257,13 @@ public class ClientPlayer extends JPanel implements Runnable {
 						myApp.sendServerMessage("L:1");
 			            //Up arrow key code
 						direction = 3;
-						xPixel-= 5;	
-						xSquare--;
+						//xPixel-= 5;	
+						movementVar = 1;
+						//xSquare--;
 					} else {
 						direction = 3;
-						xPixel -= 5;	
+						//xPixel -= 5;
+						movementVar = 1;
 					}
 				}
 			} else if(e.getKeyCode() == KeyEvent.VK_UP) {
@@ -240,11 +277,13 @@ public class ClientPlayer extends JPanel implements Runnable {
 						myApp.sendServerMessage("U:1");
 			            //Up arrow key code
 						direction = 0;
-						yPixel-= 5;	
-						ySquare--;
+						//yPixel-= 5;
+						movementVar = 1;
+						//ySquare--;
 					} else {
 						direction = 0;
-						yPixel -= 5;	
+						//yPixel -= 5;
+						movementVar = 1;
 					}
 				}
 			} else if(e.getKeyCode() == KeyEvent.VK_DOWN) {
@@ -258,11 +297,13 @@ public class ClientPlayer extends JPanel implements Runnable {
 						myApp.sendServerMessage("D:1");
 			            //Up arrow key code
 						direction = 2;
-						yPixel += 5;	
-						ySquare++;
+						//yPixel += 5;	
+						movementVar = 1;
+						//ySquare++;
 					} else {
 						direction = 2;
-						yPixel += 5;	
+						//yPixel += 5;	
+						movementVar = 1;
 					}
 				}
 			} else if(e.getKeyCode() == KeyEvent.VK_A) {
@@ -270,5 +311,6 @@ public class ClientPlayer extends JPanel implements Runnable {
 				myApp.sendServerMessage("A:10");
 			}
 		} // end public void keyPressed(KeyEvent)
+		
 	} // end class DrawKeyListener extends KeyAdapter
 } // end public class ClientPlayer extends JPanel implements Runnable

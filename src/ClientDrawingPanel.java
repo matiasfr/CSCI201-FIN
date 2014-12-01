@@ -114,6 +114,8 @@ class ClientDrawingPanel extends JPanel {
 						} else if(drawQuadChange) {
 							//PlayerModel gammaPlayer = (PlayerModel)myApp.myGridMap.allModels[currentQuadrant][i][j];
 							PlayerModel gammaPlayer = myApp.myGridMap.playerLookup.get(this.playerName);
+							System.out.println(gammaPlayer.playerLocationX);
+							System.out.println(gammaPlayer.playerLocationY);
 							thisPlayer.setX(gammaPlayer.playerLocationX);
 							thisPlayer.setY(gammaPlayer.playerLocationY);
 							thisPlayer.setXSq(i);
