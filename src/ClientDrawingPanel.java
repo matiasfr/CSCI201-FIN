@@ -34,7 +34,7 @@ class ClientDrawingPanel extends JPanel {
 			imgHealth = ImageIO.read(new File("images/items/health.png"));
 
 			backgroundImage[0] = ImageIO.read(new File("images/quad1.png"));
-			backgroundImage[1] = ImageIO.read(new File("images/quad2.jpg"));
+			backgroundImage[1] = ImageIO.read(new File("images/quad2.png"));
 			backgroundImage[2] = ImageIO.read(new File("images/quad3.png"));
 			backgroundImage[3] = ImageIO.read(new File("images/quad4.png"));
 		} catch(IOException e) {
