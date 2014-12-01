@@ -1,14 +1,13 @@
 package server;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.StringTokenizer;
 
-import Models.*;
+import Models.AbstractObjectModel;
+import Models.ArmorModel;
+import Models.HealthRefillModel;
+import Models.ItemModel;
+import Models.PlayerModel;
+import Models.SwordModel;
 
 public class ServerGameThread extends Thread
 {

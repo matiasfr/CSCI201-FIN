@@ -1,12 +1,11 @@
 import java.awt.Graphics;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+
 import javax.imageio.ImageIO;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class ClientPlayer extends JPanel implements Runnable {
@@ -41,6 +40,7 @@ public class ClientPlayer extends JPanel implements Runnable {
 	//private int quadrant=9;
 	private int direction = 2;
 	private int currentQuadrant = 9;
+	@SuppressWarnings("unused")
 	private String teamColor;
 	
 	public ClientPlayer(ClientApplication myApp, String teamColor, ClientDrawingPanel drawPanel) {
@@ -50,7 +50,6 @@ public class ClientPlayer extends JPanel implements Runnable {
 		DrawKeyListener ls = new DrawKeyListener();
 		myApp.addKeyListener(ls);
 		myApp.setFocusable(true);
-//		addKeyListener(ls);
 		setVisible(true);
 		setLayout(null);
 		setLocation(0,0);
@@ -91,7 +90,6 @@ public class ClientPlayer extends JPanel implements Runnable {
 				Thread.sleep(1);
 				repaint();
 			} catch(InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} // end while(true)

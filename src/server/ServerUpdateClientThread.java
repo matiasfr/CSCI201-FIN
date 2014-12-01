@@ -1,7 +1,6 @@
 package server;
 
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,6 +18,7 @@ import Models.SwordModel;
 
 public class ServerUpdateClientThread extends Thread{
 
+	@SuppressWarnings("unused")
 	private Socket s;
 	int id;
 	GameServer parent;

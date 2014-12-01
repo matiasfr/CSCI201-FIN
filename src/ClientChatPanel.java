@@ -5,7 +5,6 @@ import java.awt.event.*;
 import java.io.ObjectOutputStream;
 import java.util.*;
 
-import Models.GridMapModel;
 import Models.PlayerModel;
 
 public class ClientChatPanel extends JPanel implements ActionListener {
@@ -24,6 +23,7 @@ public class ClientChatPanel extends JPanel implements ActionListener {
 	private JTextField input;
 	
 	///////NEW
+	@SuppressWarnings("unused")
 	private ClientApplication myClient;
 	///////
 	
@@ -126,7 +126,7 @@ public class ClientChatPanel extends JPanel implements ActionListener {
 	
 	//////////////NEW////////////////////
 	public void initPlayers() {
-		this.players = myClient.myGridMap.getPlayers();
+		this.players = ClientApplication.myGridMap.getPlayers();
 		
 		for(Map.Entry<Integer, PlayerModel> playerEntry : players.entrySet()) {
 			PlayerModel player = playerEntry.getValue();
