@@ -19,7 +19,6 @@ public class ClientApplication extends JFrame implements Runnable {
 	private JPanel cardsPanel;
 	private CardLayout cl;
 
-	//Model
 	private ObjectOutputStream outToServer;
 	private ObjectInputStream inFromServer;
 	private static Socket mySocket;
@@ -86,19 +85,6 @@ public class ClientApplication extends JFrame implements Runnable {
 				 }*/
 				//END TESTING CODE
 				 
-				/*Object readString="";
-				
-				if((readString = inFromServer.readObject()) != null){
-					String msg = "";
-					
-					if(readString instanceof String) {
-						msg = (String)readString;
-						System.out.println("string");
-					} else {
-						System.out.println("not string");
-					}
-				}*/
-				
 				getFromServer();
 				repaint();
 				revalidate();
@@ -216,9 +202,9 @@ public class ClientApplication extends JFrame implements Runnable {
 	
 	public void sendServerMessage(String s) {
 		try {
+			System.out.println("server message: " + s);
 			outToServer.writeObject(s);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	} // end public void sendServerMessage(String)

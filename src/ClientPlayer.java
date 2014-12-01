@@ -37,7 +37,6 @@ public class ClientPlayer extends JPanel implements Runnable {
 	private int ySquare;
 	private int xPixel;
 	private int yPixel;
-	//private int quadrant=9;
 	private int direction = 2;
 	private int currentQuadrant = 9;
 	@SuppressWarnings("unused")
@@ -61,6 +60,7 @@ public class ClientPlayer extends JPanel implements Runnable {
 		yPixel = 0;
 		xSquare = 0;
 		ySquare = 0;
+
 		try {
 			forward[0] = ImageIO.read(new File("images/playerSkeleton/facing_forward.png"));
 			forward[1] = ImageIO.read(new File("images/teamColor/"+teamColor+"/facing_forward.png"));
@@ -90,26 +90,58 @@ public class ClientPlayer extends JPanel implements Runnable {
 			try {
 				Thread.sleep(5);
 				
-				//moving up 
-				if(direction == 0) {
-					yPixel -= movementVar;
-				}
-				//moving right
-				else if(direction == 1) {
-					xPixel += movementVar;
-				}
-				//moving down 
-				else if(direction == 2) {
-					yPixel += movementVar;
-				}
-				//moving left
-				else if(direction == 3) {
-					xPixel -= movementVar;
-				}
+				//sending quadrant movement to server
+				if(direction == 0) { // up
+					if((currentQuadrant == 0 || currentQuadrant == 2) && yPixel <= 0) { 
+						continue;
+					} else {
+						yPixel -= movementVar;
+						int deltaMovement = Math.abs(((int)(yPixel + 22.5) / 45) - ySquare);
+						if(deltaMovement != 0) {
+							ySquare = (int)(yPixel + 22.5) / 45;
+							myApp.sendServerMessage("U:1");
+						}
+					}
+				} // end if direction is up
+				else if(direction == 1) { // right
+					if((currentQuadrant == 1 || currentQuadrant == 3) && xPixel >= 405) {
+						continue;
+					} else {
+						xPixel += movementVar;
+						int deltaMovement = Math.abs(((int)(xPixel + 22.5) / 45) - xSquare);
+						if(deltaMovement != 0) {
+							xSquare = (int)(xPixel + 22.5) / 45;
+							myApp.sendServerMessage("R:1");
+						}
+					}
+				} // end if direction is right
+				else if(direction == 2) { // down
+					if((currentQuadrant == 2 || currentQuadrant == 3) && yPixel >= 405) { 
+						continue;
+					} else {
+						yPixel += movementVar;
+						int deltaMovement = Math.abs(((int)(yPixel + 22.5) / 45) - ySquare);
+						if(deltaMovement != 0) {
+							ySquare = (int)(yPixel + 22.5) / 45;
+							myApp.sendServerMessage("D:1");
+						}
+					}
+				} // end if direction is down
+				else if(direction == 3) { // left
+					if((currentQuadrant == 0 || currentQuadrant == 2) && xPixel <= 0) { 
+						continue;
+					} else {
+						xPixel -= movementVar;
+						int deltaMovement = Math.abs(((int)(xPixel + 22.5) / 45) - xSquare);
+						if(deltaMovement != 0) {
+							xSquare = (int)(xPixel + 22.5) / 45;
+							myApp.sendServerMessage("L:1");
+						}
+					}
+				} // end if direction is left
 				
 				repaint();
 			} catch(InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} // end while(true)
@@ -125,7 +157,6 @@ public class ClientPlayer extends JPanel implements Runnable {
 			
 			right[2] = ImageIO.read(new File(armorType));
 			right[3] = ImageIO.read(new File(weaponType));
-			
 			
 			down[2] = ImageIO.read(new File(armorType));
 			down[3] = ImageIO.read(new File(weaponType));
@@ -161,22 +192,22 @@ public class ClientPlayer extends JPanel implements Runnable {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
-		if(direction == 0) {
+		if(direction == 0) { //up
 			for(int i = 0; i < 4; i++) {
 				g.drawImage(down[i], xPixel, yPixel, null);
 			}
 		} // end if(direction == 0)
-		else if(direction == 1) {
+		else if(direction == 1) { // right
 			for(int i = 0; i < 4; i++) {
 				g.drawImage(right[i], xPixel, yPixel, null);
 			}
 		} // end if(direction == 1)
-		else if(direction == 2) {
+		else if(direction == 2) { // down
 			for(int i = 0; i < 4; i++) {
 				g.drawImage(forward[i], xPixel, yPixel, null);
 			}
 		} // end if(direction == 2)
-		else if(direction == 3) {
+		else if(direction == 3) { // left
 			for(int i = 0; i < 4; i++) {
 				g.drawImage(left[i], xPixel, yPixel, null);
 			}
@@ -186,124 +217,72 @@ public class ClientPlayer extends JPanel implements Runnable {
 	class DrawKeyListener extends KeyAdapter {
 		public void keyReleased(KeyEvent e) {
 			movementVar = 0;
-			//sending quadrant movement to server
-			//moving up 
-			if(direction == 0) {
-				int deltaMovement = Math.abs(((int)(yPixel + 22.5) / 45) - ySquare);
-				ySquare = (int)(yPixel + 22.5) / 45;
-				myApp.sendServerMessage("U:" + deltaMovement);
-			}
-			//moving right
-			else if(direction == 1) {
-				int deltaMovement = Math.abs(((int)(xPixel + 22.5) / 45) - xSquare);
-				xSquare = (int)(xPixel + 22.5) / 45;
-				myApp.sendServerMessage("R:" + deltaMovement);
-			}
-			//moving down 
-			else if(direction == 2) {
-				int deltaMovement = Math.abs(((int)(yPixel + 22.5) / 45) - ySquare);
-				ySquare = (int)(yPixel + 22.5) / 45;
-				myApp.sendServerMessage("D:" + deltaMovement);
-			}
-			//moving left
-			else if(direction == 3) {
-				int deltaMovement = Math.abs(((int)(xPixel + 22.5) / 45) - xSquare);
-				xSquare = (int)(xPixel + 22.5) / 45;
-				myApp.sendServerMessage("L:" + deltaMovement);
-			}
-		}
+		} // end public void keyReleased(KeyEvent)
+		
 		public void keyPressed(KeyEvent e) {
 			//Check the potential new position. If it is in a different square
-			//
 			//if the new potential position is within 5 of a border, then check. Set quad change boolean to true; 
 			if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
-				// If in two right quadrants of map and within 5/6 pixels of right border don't move
-				if(450 < xPixel) {
-					System.out.println("here1");
-					drawPanel.drawQuadChange = true;
-					myApp.sendServerMessage("R:1");
-					//DO NOTHING, too close to the right border.
-				}
-				else {
-					//Right arrow key code --> SEND THE SERVER THE MESSAGE R	
+				if(xPixel >= 450) { // If you go past the right border
+					if(currentQuadrant == 0 || currentQuadrant == 2) { // Change to next quadrant to the right 
+						xPixel = 0;
+						currentQuadrant++;
+						drawPanel.currentQuadrant++;
+					} else { // Don't do anything
+						xPixel = 405;
+					}
+				} else {
 					// If moving into a new square
-					if(((int)(xPixel + 22.5 + 5) / 45) != xSquare) {
-						myApp.sendServerMessage("R:1");
-			            //Up arrow key code
-						direction = 1;
-						//xPixel += 5;
-						movementVar = 1;
-						//xSquare++;
-					} else {
-						direction = 1;
-						//xPixel += 5;
-						movementVar = 1;
+					direction = 1;
+					movementVar = 1;
+				} // end if not past right border
+			} // end if right key pressed
+			else if(e.getKeyCode() == KeyEvent.VK_LEFT) {
+				if(xPixel <= 0) { // If you go past left border
+					if(currentQuadrant == 1 || currentQuadrant == 3) { // Change to the next quadrant to left
+						xPixel = 405;
+						currentQuadrant--;
+						drawPanel.currentQuadrant--;
+					} else { // Don't do anything
+						xPixel = 0;
 					}
-				}
-			} else if(e.getKeyCode() == KeyEvent.VK_LEFT) {
-				if(((xPixel < 6) && currentQuadrant == 0) || ((xPixel < 6) && currentQuadrant == 2)) {
-					//DO NOTHING, too close to the right border.
-				} else if((((xPixel-225) < 6) && currentQuadrant==1) || (((xPixel-225) < 6) && currentQuadrant==3)) {
-					myApp.sendServerMessage("L:1");
-				}
-				else {
-					if(((int)(xPixel + 22.5 - 5) / 45) != xSquare) {
-						myApp.sendServerMessage("L:1");
-			            //Up arrow key code
-						direction = 3;
-						//xPixel-= 5;	
-						movementVar = 1;
-						//xSquare--;
-					} else {
-						direction = 3;
-						//xPixel -= 5;
-						movementVar = 1;
+				} else {
+					direction = 3;
+					movementVar = 1;
+				} // end if not past left border
+			} // end if left key pressed
+			else if(e.getKeyCode() == KeyEvent.VK_UP) {
+				if(yPixel <= 0) {
+					if(currentQuadrant == 2 || currentQuadrant == 3) { // Change to next quadrant up
+						yPixel = 405;
+						currentQuadrant -= 2;
+						drawPanel.currentQuadrant -= 2;
+					} else { // Don't do anything
+						yPixel = 0;
 					}
+				} else {
+					direction = 0;
+					movementVar = 1;
 				}
-			} else if(e.getKeyCode() == KeyEvent.VK_UP) {
-				if(((yPixel < 6) && currentQuadrant == 0) || ((yPixel < 6) && currentQuadrant == 1)) {
-					//do nothing 
-				} else if((((yPixel-225) < 6) && currentQuadrant==2) || (((yPixel-225) < 6) && currentQuadrant==3)) {
-					myApp.sendServerMessage("U:1");
-				}
-				else {
-					if(((int)(yPixel + 22.5 - 5) / 45) != ySquare) {
-						myApp.sendServerMessage("U:1");
-			            //Up arrow key code
-						direction = 0;
-						//yPixel-= 5;
-						movementVar = 1;
-						//ySquare--;
-					} else {
-						direction = 0;
-						//yPixel -= 5;
-						movementVar = 1;
+			} // end if up key pressed
+			else if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+				if(yPixel >= 450) {
+					if(currentQuadrant == 0 || currentQuadrant == 1) { // Change to next quadrant down
+						yPixel = 0;
+						currentQuadrant += 2;
+						drawPanel.currentQuadrant += 2;
+					} else { // Don't do anything
+						yPixel = 405;
 					}
+				} else {
+					direction = 2;
+					movementVar = 1;
 				}
-			} else if(e.getKeyCode() == KeyEvent.VK_DOWN) {
-				if((((450-yPixel) < 6) && currentQuadrant == 2) || (((450-yPixel) < 6) && currentQuadrant == 3)) {
-					//DO NOTHING, too close to the right border.
-				} else if((((225-yPixel) < 6) && currentQuadrant==0) || (((225-yPixel) < 6) && currentQuadrant==1)) {
-					myApp.sendServerMessage("D:1");
-				}
-				else {
-					if(((int)(yPixel + 22.5 + 5) / 45) != ySquare) {
-						myApp.sendServerMessage("D:1");
-			            //Up arrow key code
-						direction = 2;
-						//yPixel += 5;	
-						movementVar = 1;
-						//ySquare++;
-					} else {
-						direction = 2;
-						//yPixel += 5;	
-						movementVar = 1;
-					}
-				}
-			} else if(e.getKeyCode() == KeyEvent.VK_A) {
+			} // end if down key pressed
+			else if(e.getKeyCode() == KeyEvent.VK_A) {
 				//ATTACK
 				myApp.sendServerMessage("A:10");
-			}
+			} // end if 'A' key pressed
 		} // end public void keyPressed(KeyEvent)
 	} // end class DrawKeyListener extends KeyAdapter
 } // end public class ClientPlayer extends JPanel implements Runnable
