@@ -42,6 +42,7 @@ public class ClientPlayer extends JPanel implements Runnable {
 	@SuppressWarnings("unused")
 	private String teamColor;
 	int movementVar = 0;
+	boolean quadrantChange = false;
 	
 	public ClientPlayer(ClientApplication myApp, String teamColor, ClientDrawingPanel drawPanel) {
 		this.myApp = myApp;
@@ -228,6 +229,7 @@ public class ClientPlayer extends JPanel implements Runnable {
 						xPixel = 0;
 						currentQuadrant++;
 						drawPanel.currentQuadrant++;
+						myApp.sendServerMessage("R:1");
 					} else { // Don't do anything
 						xPixel = 405;
 					}
@@ -243,6 +245,7 @@ public class ClientPlayer extends JPanel implements Runnable {
 						xPixel = 405;
 						currentQuadrant--;
 						drawPanel.currentQuadrant--;
+						myApp.sendServerMessage("L:1");
 					} else { // Don't do anything
 						xPixel = 0;
 					}
@@ -257,6 +260,7 @@ public class ClientPlayer extends JPanel implements Runnable {
 						yPixel = 405;
 						currentQuadrant -= 2;
 						drawPanel.currentQuadrant -= 2;
+						myApp.sendServerMessage("U:1");
 					} else { // Don't do anything
 						yPixel = 0;
 					}
@@ -271,6 +275,7 @@ public class ClientPlayer extends JPanel implements Runnable {
 						yPixel = 0;
 						currentQuadrant += 2;
 						drawPanel.currentQuadrant += 2;
+						myApp.sendServerMessage("D:1");
 					} else { // Don't do anything
 						yPixel = 405;
 					}
