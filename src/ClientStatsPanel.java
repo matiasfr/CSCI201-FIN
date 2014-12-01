@@ -1,8 +1,11 @@
 import java.awt.Color;
 import java.awt.Dimension;
+import java.util.ArrayList;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import Models.ItemModel;
 
 public class ClientStatsPanel extends JPanel {
 	private static final long serialVersionUID = -8464325570681311400L;
@@ -12,56 +15,89 @@ public class ClientStatsPanel extends JPanel {
 	JLabel weaponLabel;
 	JLabel teamLabel;
 	JLabel healthNum;
+	JLabel armorLabel;
 	JLabel weaponImage;
+	
+	int currHealth;
+	static final int totalHealth = 100;
+	
+	ArrayList<ItemModel> inventory;
 
 	public ClientStatsPanel() {
 		setLayout(null);
-		setSize(1000, 800);
+		setPreferredSize(new Dimension(150, 475));
 		setBackground(Color.white);
 		//// Game client ////
-		//this.myClient = myClient;
+		header = new JLabel("Name: ");
+		
 		healthLabel = new JLabel("Health: 100");
-		Dimension healthLabelDim = healthLabel.getPreferredSize();
-		healthLabel.setBounds(50, 0, healthLabelDim.width, healthLabelDim.height);
-		add(healthLabel);
 		
 		weaponLabel = new JLabel("Weapon: none");
-		Dimension weaponLabelDim = healthLabel.getPreferredSize();
-		weaponLabel.setBounds(120, 0, weaponLabelDim.width, weaponLabelDim.height);
-		add(weaponLabel);
 		
-		experienceLabel = new JLabel("Experience: 100");
-		Dimension experienceLabelDim = experienceLabel.getPreferredSize();
-		experienceLabel.setBounds(200, 0, experienceLabelDim.width, experienceLabelDim.height);
-		add(experienceLabel);
+		armorLabel = new JLabel("Armor Points: 1");
+		
+		experienceLabel = new JLabel("Experience: 0");
 		
 		teamLabel = new JLabel("Team:");
-		Dimension teamLabelDim = teamLabel.getPreferredSize();
-		teamLabel.setBounds(270, 0, teamLabelDim.width, teamLabelDim.height);
-		add(teamLabel);
+		
+		refreshStats();
+		setVisible(true);
 	} //end public ClientStatsPanel constructor
 	//theGame.statsPanel.setCurrentWeapon( );
-	//theGame.statsPanel.setCurrentHealth(gammaPlayer.playerCurrentHealth, gammaPlayer.playerTotalHealth );
 	//theGame.statsPanel.setExperience(gammaPlayer.playerExperiencePoints, gammaPlayer.playerExperienceLevel);
-	//theGame.statsPanel.setTeam(gammaPlayer.playerTeam);
+	public void setName(String playerName) {
+		header.setText("Name: " + playerName);
+	}
+
 	public void setTeam(int num) {
-		String teamNum = Integer.toString(num);
-		teamLabel.setText("Weapon: " + teamNum);
+		String teamName = (num == 1) ? "Red" : "Green";
+		teamLabel.setText("Team: " + teamName);
 	} // end public void setTeam(int)
 	
 	public void setCurrentWeapon(String weapon) {
 		weaponLabel.setText("Weapon: " + weapon);
 	} // end public void setCurrentWeapon(String)
 	
-	public void setExperience(int xpLevel, int xpPoints) {
+	public void setArmorPoints(int armorPoints) {
+		armorLabel.setText("Armor Points: " + armorPoints);
+	}
+	
+	public void setExperience(int xpPoints) {
 		String points = Integer.toString(xpPoints);
-		String level = Integer.toString(xpLevel);
-		experienceLabel.setText("XP Level:" + level + " XP Points:" + points);
+		experienceLabel.setText(" XP Points:" + points);
 	} // end public void setExperience(int, int)
 	
-	public void setCurrentHealth(int currentHealth, int totalHealth) {
+	public void setCurrentHealth(int currentHealth) {
 		String curr = Integer.toString(currentHealth);
 		String total = Integer.toString(totalHealth);
 		healthLabel.setText("Health: " + curr + "/"  + total);
 	} // end public void setCurrentHealth(int, int)
+	
+	public void refreshStats() {
+		Dimension headerDim = header.getPreferredSize();
+		header.setBounds(0, 0, headerDim.width, headerDim.height);
+		add(header);
+
+		Dimension healthLabelDim = healthLabel.getPreferredSize();
+		healthLabel.setBounds(0, 50, healthLabelDim.width, healthLabelDim.height);
+		add(healthLabel);
+		
+		Dimension weaponLabelDim = healthLabel.getPreferredSize();
+		weaponLabel.setBounds(0, 120, weaponLabelDim.width, weaponLabelDim.height);
+		add(weaponLabel);
+		
+		Dimension armorDim = armorLabel.getPreferredSize();
+		armorLabel.setBounds(0, 150, armorDim.width, armorDim.height);
+		add(armorLabel);
+		
+		Dimension experienceLabelDim = experienceLabel.getPreferredSize();
+		experienceLabel.setBounds(0, 200, experienceLabelDim.width, experienceLabelDim.height);
+		add(experienceLabel);
+		
+		Dimension teamLabelDim = teamLabel.getPreferredSize();
+		teamLabel.setBounds(0, 270, teamLabelDim.width, teamLabelDim.height);
+		add(teamLabel);
+		
+		repaint();
+	}
 } //end class ClientStatsPanel

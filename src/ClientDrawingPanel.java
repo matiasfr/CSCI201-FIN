@@ -13,11 +13,12 @@ class ClientDrawingPanel extends JPanel {
 	private static final long serialVersionUID = 6563046194798024970L;
 	public static BufferedImage image;
 	public int currentQuadrant = 0;
-	private String playerName = "";
+	public String playerName = "";
 	private Boolean firstDrawDone = false;
 	public Boolean drawQuadChange = false;
 	private ClientPlayer thisPlayer;
 	private ClientApplication myApp;
+	private ClientGamePanel theGame;
 	//IMAGES
 	BufferedImage imgArmor = null;
 	BufferedImage imgSword = null;
@@ -36,6 +37,7 @@ class ClientDrawingPanel extends JPanel {
 
 	public ClientDrawingPanel(ClientApplication myApp, ClientGamePanel theGame) {
 		this.myApp = myApp;
+		this.theGame = theGame;
 
 		try {
 			//When we start these are the defaults.
@@ -105,6 +107,9 @@ class ClientDrawingPanel extends JPanel {
 		super.paintComponent(g);
 
 		//draw the background for the current quadrant.
+		if(!firstDrawDone) {
+			setQuadrant(ClientApplication.myGridMap.playerLookup.get(playerName).playerLocationQuarter);
+		}
 		if(firstDrawDone) {
 			g.drawImage(backgroundImage[currentQuadrant], 0, 0, null);
 		}
@@ -119,7 +124,7 @@ class ClientDrawingPanel extends JPanel {
 						// Get the PlayerModel
 						PlayerModel playerModel = (PlayerModel)ClientApplication.myGridMap.allModels[currentQuadrant][i][j];
 						int playerDirection = playerModel.playerDirection;
-						System.out.println("player: " + playerModel.playerName + ", x: " + (playerModel.playerLocationX * 45) + ", y: " + (playerModel.playerLocationY * 45));
+
 						// If not our player we draw them
 						if(!playerModel.playerName.equals(this.playerName)) {
 							for(int k = 0; k < 4; k++) {
@@ -136,6 +141,14 @@ class ClientDrawingPanel extends JPanel {
 								}
 							}
 						} else {
+							// Refresh stats panel information
+							theGame.statsPanel.setTeam(playerModel.playerTeam);
+							theGame.statsPanel.setName(this.playerName);
+							theGame.statsPanel.setCurrentHealth(playerModel.playerCurrentHealth);
+							theGame.statsPanel.setArmorPoints(playerModel.playerArmorPoints);
+							theGame.statsPanel.setExperience(playerModel.playerExperiencePoints);
+							theGame.statsPanel.refreshStats();
+
 							// If our player isn't drawn yet, make him
 							if(!firstDrawDone) {
 								String teamColor = "";
@@ -153,9 +166,6 @@ class ClientDrawingPanel extends JPanel {
 								thisPlayer.setYSq(j);
 								thisPlayer.setDirection(playerDirection);
 								thisPlayer.setQuadrant(playerModel.playerLocationQuarter);
-								
-								setQuadrant(playerModel.playerLocationQuarter);
-								g.drawImage(backgroundImage[currentQuadrant], 0, 0, null);
 								
 								// Go through player sprite and draw the images.
 								firstDrawDone = true;

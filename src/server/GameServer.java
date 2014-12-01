@@ -1,13 +1,9 @@
-
-import java.io.BufferedReader;
+package server;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -62,6 +58,7 @@ public class GameServer {
 	//////////////////CONNECT TO SERVER///////////////////////////
 	public GameServer(){	
 		try{
+			@SuppressWarnings("resource")
 			ServerSocket ss= new ServerSocket(5001);
 			while(true) {
 				//now listening
@@ -111,6 +108,7 @@ public class GameServer {
 	
 	///////////////STARTING SERVER///////////
 	public static void main(String[] args) {
+		@SuppressWarnings("unused")
 		GameServer s = new GameServer();
 	}
 	/////////////////////////////////////////

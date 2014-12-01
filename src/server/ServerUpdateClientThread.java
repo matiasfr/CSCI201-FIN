@@ -1,5 +1,5 @@
+package server;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -17,6 +17,7 @@ import Models.SwordModel;
 
 public class ServerUpdateClientThread extends Thread{
 
+	@SuppressWarnings("unused")
 	private Socket s;
 	int id;
 	GameServer parent;
@@ -105,7 +106,7 @@ public class ServerUpdateClientThread extends Thread{
 
 	public void run() {
 		while(running) {
-		try {sleep(50);} catch (InterruptedException e) {e.printStackTrace();}
+		try {sleep(69);} catch (InterruptedException e) {e.printStackTrace();}
 		//Broadcast GridMapModel to allClientsObjectWriters
 
 			Set<Integer> pwSet = parent.allClientObjectWriters.keySet();

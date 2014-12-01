@@ -13,14 +13,14 @@ public class ClientGamePanel extends JPanel {
 	ClientDrawingPanel drawingPanel;
 	ClientChatPanel chatPanel;
 	//ClientStatsPanel statsPanel;
-	//JPanel statsPanel;
+	ClientStatsPanel statsPanel;
 	@SuppressWarnings("unused")
 	private ClientApplication myApp;
 
 	public ClientGamePanel(ObjectOutputStream oos, ClientApplication myApp) {
 		// Initial GUI Setup
 		setLayout(new BorderLayout());
-		setSize(1000, 600);
+		setSize(800, 475);
 		
 		this.myApp = myApp;
 		this.oos = oos;
@@ -38,13 +38,13 @@ public class ClientGamePanel extends JPanel {
 		}
 		
 		// Set up stats panel
-		//statsPanel = new ClientStatsPanel();
-		//statsPanel.setSize(200,600);
+		statsPanel = new ClientStatsPanel();
 		
 		//set up drawing panel
 		drawingPanel = new ClientDrawingPanel(myApp, this);
 		
 		// Add panels
+		add(statsPanel, BorderLayout.WEST);
 		add(drawingPanel, BorderLayout.CENTER);
 		add(chatPanel, BorderLayout.EAST);
 		

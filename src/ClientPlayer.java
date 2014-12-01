@@ -275,7 +275,7 @@ public class ClientPlayer extends JPanel implements Runnable, MouseListener {
 				} // end if not past left border
 			} // end if left key pressed
 			else if(e.getKeyCode() == KeyEvent.VK_UP) {
-				if(yPixel <= 0) {
+				if(yPixel <= 0) { // If you go past top border
 					if(currentQuadrant == 2 || currentQuadrant == 3) { // Change to next quadrant up
 						yPixel = 405;
 						currentQuadrant -= 2;
@@ -290,7 +290,7 @@ public class ClientPlayer extends JPanel implements Runnable, MouseListener {
 				}
 			} // end if up key pressed
 			else if(e.getKeyCode() == KeyEvent.VK_DOWN) {
-				if(yPixel >= 405) {
+				if(yPixel >= 405) { // If you go past bottom border
 					if(currentQuadrant == 0 || currentQuadrant == 1) { // Change to next quadrant down
 						yPixel = 0;
 						currentQuadrant += 2;
@@ -306,7 +306,7 @@ public class ClientPlayer extends JPanel implements Runnable, MouseListener {
 			} // end if down key pressed
 			else if(e.getKeyCode() == KeyEvent.VK_A) {
 				//ATTACK
-				myApp.sendServerMessage("A:10");
+				myApp.sendServerMessage("A:" + ClientApplication.myGridMap.playerLookup.get(drawPanel.playerName).playerExperiencePoints);
 			} // end if 'A' key pressed
 		} // end public void keyPressed(KeyEvent)
 	} // end class DrawKeyListener extends KeyAdapter

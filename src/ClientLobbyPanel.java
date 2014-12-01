@@ -41,7 +41,7 @@ public class ClientLobbyPanel extends JPanel {
 		//// Countdown Setup ////
 		countdownLabel = new JLabel(TIME_UNTIL_START_STRING + countdownNum);
 		Dimension countdownLabelDimensions = countdownLabel.getPreferredSize();
-		countdownLabel.setBounds(400, 225, countdownLabelDimensions.width, countdownLabelDimensions.height);
+		countdownLabel.setBounds(350, 225, countdownLabelDimensions.width, countdownLabelDimensions.height);
 		add(countdownLabel);
 		
 		countdownTimer = new Timer(ONE_SECOND, new ActionListener() {

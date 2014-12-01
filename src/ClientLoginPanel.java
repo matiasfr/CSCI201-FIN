@@ -41,6 +41,8 @@ public class ClientLoginPanel extends JPanel {
 		}
 		
 		JPanel centerPane = new JPanel() {
+			private static final long serialVersionUID = -9099767103509630898L;
+
 			protected void paintComponent(Graphics g) {
 				super.paintComponent(g);
 				g.drawImage(backgroundImage, 0, 0, null);
@@ -89,11 +91,10 @@ public class ClientLoginPanel extends JPanel {
 	            public void actionPerformed(ActionEvent e) {
 	            	String str = usernameInput.getText();
 	            	while(true) {
-	            		if((!str.equals("")) || str.length() <= 3) {
+	            		if(!str.equals("")) {
 	            			try {
 								oos.writeObject(str);
 							} catch(IOException e1) {
-								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
 	            			break;

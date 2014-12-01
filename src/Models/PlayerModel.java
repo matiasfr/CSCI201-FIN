@@ -53,7 +53,7 @@ public class PlayerModel extends AbstractObjectModel implements Serializable
 	}
 	public void loadDefaults()
 	{
-		playerArmorPoints = 0;
+		playerArmorPoints = 1;
 		playerExperiencePoints = 0;
 		playerExperienceLevel = 0;
 		playerLocationX = 0;
@@ -72,8 +72,7 @@ public class PlayerModel extends AbstractObjectModel implements Serializable
 	public void setArmor(int armor)
 	{
 		lock.lock();
-		playerArmorPoints = armor;
-		playerSprite[2] = FOLDERS[2]+ARMOR[armor]+DIRECTION[playerDirection];
+		playerArmorPoints += armor;
 		lock.unlock();
 	}
 	public void setExperience(int ex)

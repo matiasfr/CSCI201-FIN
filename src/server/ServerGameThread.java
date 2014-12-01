@@ -1,13 +1,13 @@
-import java.io.BufferedReader;
+package server;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.StringTokenizer;
 
-import Models.*;
+import Models.AbstractObjectModel;
+import Models.ArmorModel;
+import Models.HealthRefillModel;
+import Models.ItemModel;
+import Models.PlayerModel;
+import Models.SwordModel;
 
 public class ServerGameThread extends Thread
 {
@@ -123,6 +123,7 @@ public class ServerGameThread extends Thread
 													}
 													else if(destination instanceof SwordModel){
 														//adding sword is all that is needed
+														server.gmm.playerLookup.get(this.name).setExperience(((SwordModel) destination).damage);
 													}
 													
 													//got an item and add it
@@ -159,6 +160,7 @@ public class ServerGameThread extends Thread
 													}
 													else if(destination instanceof SwordModel){
 														//adding sword is all that is needed
+														server.gmm.playerLookup.get(this.name).setExperience(((SwordModel) destination).damage);
 													}
 													
 													//got an item and add it
@@ -194,6 +196,7 @@ public class ServerGameThread extends Thread
 												}
 												else if(destination instanceof SwordModel){
 													//adding sword is all that is needed
+														server.gmm.playerLookup.get(this.name).setExperience(((SwordModel) destination).damage);
 												}
 												
 												//got an item and add it
@@ -248,6 +251,7 @@ public class ServerGameThread extends Thread
 													}
 													else if(destination instanceof SwordModel){
 														//adding sword is all that is needed
+														server.gmm.playerLookup.get(this.name).setExperience(((SwordModel) destination).damage);
 													}
 													
 													//got an item and add it
@@ -281,6 +285,7 @@ public class ServerGameThread extends Thread
 													}
 													else if(destination instanceof SwordModel){
 														//adding sword is all that is needed
+														server.gmm.playerLookup.get(this.name).setExperience(((SwordModel) destination).damage);
 													}
 													
 													//got an item and add it
@@ -316,6 +321,7 @@ public class ServerGameThread extends Thread
 												}
 												else if(destination instanceof SwordModel){
 													//adding sword is all that is needed
+														server.gmm.playerLookup.get(this.name).setExperience(((SwordModel) destination).damage);
 												}
 												
 												//got an item and add it
@@ -372,13 +378,14 @@ public class ServerGameThread extends Thread
 													}
 													else if(destination instanceof SwordModel){
 														//adding sword is all that is needed
+														server.gmm.playerLookup.get(this.name).setExperience(((SwordModel) destination).damage);
 													}
 													
 													//got an item and add it
 													server.gmm.playerLookup.get(this.name).playerInventory.add((ItemModel) destination);
 													
 													//update PlayerModel
-													server.gmm.playerLookup.get(this.name).setPostion(-1, 0);
+													server.gmm.playerLookup.get(this.name).setPostion(9, 0);
 													
 													//update the GridMapModel
 													server.gmm.moveObjects(quarterPos, xpos, ypos,0, 9, ypos);
@@ -387,7 +394,7 @@ public class ServerGameThread extends Thread
 												else {
 													//nothing there
 													//update PlayerModel
-													server.gmm.playerLookup.get(this.name).setPostion(-1, 0);
+													server.gmm.playerLookup.get(this.name).setPostion(9, 0);
 													
 													//update the GridMapModel
 													server.gmm.moveObjects(quarterPos, xpos, ypos,0, 9, ypos);
@@ -406,13 +413,14 @@ public class ServerGameThread extends Thread
 													}
 													else if(destination instanceof SwordModel){
 														//adding sword is all that is needed
+														server.gmm.playerLookup.get(this.name).setExperience(((SwordModel) destination).damage);
 													}
 													
 													//got an item and add it
 													server.gmm.playerLookup.get(this.name).playerInventory.add((ItemModel) destination);
 													
 													//update PlayerModel
-													server.gmm.playerLookup.get(this.name).setPostion(-1, 0);
+													server.gmm.playerLookup.get(this.name).setPostion(9, 0);
 													
 													//update the GridMapModel
 													server.gmm.moveObjects(quarterPos, xpos, ypos,2, 9, ypos);
@@ -421,7 +429,7 @@ public class ServerGameThread extends Thread
 												else {
 													//nothing there
 													//update PlayerModel
-													server.gmm.playerLookup.get(this.name).setPostion(-1, 0);
+													server.gmm.playerLookup.get(this.name).setPostion(9, 0);
 													
 													//update the GridMapModel
 													server.gmm.moveObjects(quarterPos, xpos, ypos,2, 9, ypos);
@@ -441,6 +449,7 @@ public class ServerGameThread extends Thread
 												}
 												else if(destination instanceof SwordModel){
 													//adding sword is all that is needed
+														server.gmm.playerLookup.get(this.name).setExperience(((SwordModel) destination).damage);
 												}
 												
 												//got an item and add it
@@ -494,6 +503,7 @@ public class ServerGameThread extends Thread
 													}
 													else if(destination instanceof SwordModel){
 														//adding sword is all that is needed
+														server.gmm.playerLookup.get(this.name).setExperience(((SwordModel) destination).damage);
 													}
 													
 													//got an item and add it
@@ -527,6 +537,7 @@ public class ServerGameThread extends Thread
 													}
 													else if(destination instanceof SwordModel){
 														//adding sword is all that is needed
+														server.gmm.playerLookup.get(this.name).setExperience(((SwordModel) destination).damage);
 													}
 													
 													//got an item and add it
@@ -561,6 +572,7 @@ public class ServerGameThread extends Thread
 												}
 												else if(destination instanceof SwordModel){
 													//adding sword is all that is needed
+														server.gmm.playerLookup.get(this.name).setExperience(((SwordModel) destination).damage);
 												}
 												
 												//got an item and add it

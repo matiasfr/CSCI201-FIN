@@ -36,7 +36,7 @@ public class ClientApplication extends JFrame implements Runnable {
 		super("Our Game");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setMinimumSize(new Dimension(800, 450));
+		setMinimumSize(new Dimension(800, 475));
 		setLocationRelativeTo(null);
 
 		try {
@@ -201,7 +201,7 @@ public class ClientApplication extends JFrame implements Runnable {
 	
 	public void sendServerMessage(String s) {
 		try {
-			System.out.println("server message: " + s);
+//			System.out.println("server message: " + s);
 			outToServer.writeObject(s);
 		} catch (IOException e) {
 			e.printStackTrace();
