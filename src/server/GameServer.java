@@ -145,7 +145,6 @@ public class GameServer {
 				} catch (InterruptedException e) {}
 				if(gameState[0]) {
 					//still in lobby, do nothing until all threads end
-					System.out.println("0");
 				}
 				else if(gameState[1]) {
 					//kill all ServerLobbyThread threads (should be dead)
@@ -169,7 +168,7 @@ public class GameServer {
 								name = pm.playerName;
 							}
 						}
-						System.out.println(name);
+						
 						//start all ServerGameThread threads
 						ServerGameThread sgt = new ServerGameThread(s,name, id, gs);
 						//gameThreads.add(sgt);
@@ -177,6 +176,7 @@ public class GameServer {
 							
 						//start all ServerUpdateClientThread threads
 						if(!updateThreadMade){
+							setUpdateThread();
 							ServerUpdateClientThread suc = new ServerUpdateClientThread(s, id, gs);
 							//updateClientThreads.add(suc);
 							suc.start();
