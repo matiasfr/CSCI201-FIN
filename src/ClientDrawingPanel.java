@@ -24,6 +24,16 @@ class ClientDrawingPanel extends JPanel {
 	BufferedImage imgHealth = null;
 	BufferedImage backgroundImage[] = new BufferedImage[4];
 
+	BufferedImage forwardGreen[] = new BufferedImage[4];
+	BufferedImage leftGreen[] = new BufferedImage[4];
+	BufferedImage rightGreen[] = new BufferedImage[4];
+	BufferedImage downGreen[] = new BufferedImage[4];
+
+	BufferedImage forwardRed[] = new BufferedImage[4];
+	BufferedImage leftRed[] = new BufferedImage[4];
+	BufferedImage rightRed[] = new BufferedImage[4];
+	BufferedImage downRed[] = new BufferedImage[4];
+
 	public ClientDrawingPanel(ClientApplication myApp, ClientGamePanel theGame) {
 		this.myApp = myApp;
 
@@ -37,10 +47,44 @@ class ClientDrawingPanel extends JPanel {
 			backgroundImage[1] = ImageIO.read(new File("images/quad2.png"));
 			backgroundImage[2] = ImageIO.read(new File("images/quad3.png"));
 			backgroundImage[3] = ImageIO.read(new File("images/quad4.png"));
+
+			forwardGreen[0] = ImageIO.read(new File("images/playerSkeleton/facing_forward.png"));
+			forwardGreen[1] = ImageIO.read(new File("images/teamColor/green/facing_forward.png"));
+			forwardGreen[2] = ImageIO.read(new File("images/armor/basic/facing_forward.png"));
+			forwardGreen[3] = ImageIO.read(new File("images/arms/withoutWeapon/still/facing_forward.png"));
+			leftGreen[0] = ImageIO.read(new File("images/playerSkeleton/facing_left.png"));
+			leftGreen[1] = ImageIO.read(new File("images/teamColor/green/facing_left.png"));
+			leftGreen[2] = ImageIO.read(new File("images/armor/basic/facing_left.png"));
+			leftGreen[3] = ImageIO.read(new File("images/arms/withoutWeapon/still/facing_left.png"));
+			rightGreen[0] = ImageIO.read(new File("images/playerSkeleton/facing_right.png"));
+			rightGreen[1] = ImageIO.read(new File("images/teamColor/green/facing_right.png"));
+			rightGreen[2] = ImageIO.read(new File("images/armor/basic/facing_right.png"));
+			rightGreen[3] = ImageIO.read(new File("images/arms/withoutWeapon/still/facing_right.png"));
+			downGreen[0] = ImageIO.read(new File("images/playerSkeleton/facing_backwards.png"));
+			downGreen[1] = ImageIO.read(new File("images/teamColor/green/facing_backwards.png"));
+			downGreen[2] = ImageIO.read(new File("images/armor/basic/facing_backwards.png"));
+			downGreen[3] = ImageIO.read(new File("images/arms/withoutWeapon/still/facing_backwards.png"));
+
+			forwardRed[0] = ImageIO.read(new File("images/playerSkeleton/facing_forward.png"));
+			forwardRed[1] = ImageIO.read(new File("images/teamColor/red/facing_forward.png"));
+			forwardRed[2] = ImageIO.read(new File("images/armor/basic/facing_forward.png"));
+			forwardRed[3] = ImageIO.read(new File("images/arms/withoutWeapon/still/facing_forward.png"));
+			leftRed[0] = ImageIO.read(new File("images/playerSkeleton/facing_left.png"));
+			leftRed[1] = ImageIO.read(new File("images/teamColor/red/facing_left.png"));
+			leftRed[2] = ImageIO.read(new File("images/armor/basic/facing_left.png"));
+			leftRed[3] = ImageIO.read(new File("images/arms/withoutWeapon/still/facing_left.png"));
+			rightRed[0] = ImageIO.read(new File("images/playerSkeleton/facing_right.png"));
+			rightRed[1] = ImageIO.read(new File("images/teamColor/red/facing_right.png"));
+			rightRed[2] = ImageIO.read(new File("images/armor/basic/facing_right.png"));
+			rightRed[3] = ImageIO.read(new File("images/arms/withoutWeapon/still/facing_right.png"));
+			downRed[0] = ImageIO.read(new File("images/playerSkeleton/facing_backwards.png"));
+			downRed[1] = ImageIO.read(new File("images/teamColor/red/facing_backwards.png"));
+			downRed[2] = ImageIO.read(new File("images/armor/basic/facing_backwards.png"));
+			downRed[3] = ImageIO.read(new File("images/arms/withoutWeapon/still/facing_backwards.png"));
 		} catch(IOException e) {
 			System.out.println(e.getStackTrace());
 		}
-		
+
 		setSize(450,450);
 		setLayout(null);
 	} // end public ClientDrawingPanel(ClientApplication, ClientGamePanel) constructor
@@ -59,10 +103,10 @@ class ClientDrawingPanel extends JPanel {
 
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-	
+
 		//draw the background for the current quadrant.
 		g.drawImage(backgroundImage[currentQuadrant], 0, 0, null);
-		
+
 		// Go through GridMapModel and fill in map as necessary
 		for(int i = 0; i < 10; i++) { // loop through x of GridMapModel
 			for(int j = 0; j < 10; j++) { // loop through y of GridMapModel
@@ -77,6 +121,17 @@ class ClientDrawingPanel extends JPanel {
 						if(!playerModel.playerName.equals(this.playerName)) {
 							for(int k = 0; k < 4; k++) {
 								//TODO:  Draw other players
+								if(playerModel.playerTeam == 1) {
+									g.drawImage(forwardRed[k], playerModel.playerLocationX, playerModel.playerLocationY, null);
+									g.drawImage(leftRed[k], playerModel.playerLocationX, playerModel.playerLocationY, null);
+									g.drawImage(rightRed[k], playerModel.playerLocationX, playerModel.playerLocationY, null);
+									g.drawImage(downRed[k], playerModel.playerLocationX, playerModel.playerLocationY, null);
+								} else {
+									g.drawImage(forwardGreen[k], playerModel.playerLocationX, playerModel.playerLocationY, null);
+									g.drawImage(leftGreen[k], playerModel.playerLocationX, playerModel.playerLocationY, null);
+									g.drawImage(rightGreen[k], playerModel.playerLocationX, playerModel.playerLocationY, null);
+									g.drawImage(downGreen[k], playerModel.playerLocationX, playerModel.playerLocationY, null);
+								}
 							}
 						} else {
 							// If our player isn't drawn yet, make him
