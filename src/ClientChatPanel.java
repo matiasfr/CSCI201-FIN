@@ -5,12 +5,13 @@ import java.awt.event.*;
 import java.io.ObjectOutputStream;
 import java.util.*;
 
+import Models.GridMapModel;
 import Models.PlayerModel;
 
 public class ClientChatPanel extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 8301904130678673097L;
 	
-	private Map<Integer, PlayerModel> players;
+	private Map<String, PlayerModel> players;
 	private ObjectOutputStream oos;
 	
 	private JCheckBox global, team1, team2;
@@ -23,7 +24,6 @@ public class ClientChatPanel extends JPanel implements ActionListener {
 	private JTextField input;
 	
 	///////NEW
-	@SuppressWarnings("unused")
 	private ClientApplication myClient;
 	///////
 	
@@ -126,9 +126,9 @@ public class ClientChatPanel extends JPanel implements ActionListener {
 	
 	//////////////NEW////////////////////
 	public void initPlayers() {
-		this.players = ClientApplication.myGridMap.getPlayers();
+		this.players = myClient.myGridMap.getPlayers();
 		
-		for(Map.Entry<Integer, PlayerModel> playerEntry : players.entrySet()) {
+		for(Map.Entry<String, PlayerModel> playerEntry : players.entrySet()) {
 			PlayerModel player = playerEntry.getValue();
 			JCheckBox box = new JCheckBox(player.playerName);
 			box.addActionListener(this);
@@ -150,7 +150,7 @@ public class ClientChatPanel extends JPanel implements ActionListener {
 			if(box.isSelected()) playerNames.add(box.getText());
 		
 		String s = "CHAT:";
-		for(Map.Entry<Integer, PlayerModel> player : players.entrySet())
+		for(Map.Entry<String, PlayerModel> player : players.entrySet())
 			for(String playerName : playerNames)
 				if(player.getValue().playerName.equals(playerName))
 					s += (player.getKey()) + ",";

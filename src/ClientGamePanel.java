@@ -1,17 +1,26 @@
-import java.awt.BorderLayout;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.util.Map;
 
-import javax.swing.JPanel;
+import javax.swing.*;
+
+import Models.*;
 
 public class ClientGamePanel extends JPanel {
 	private static final long serialVersionUID = 3074976706165093453L;
-	@SuppressWarnings("unused")
 	private ObjectOutputStream oos;
+	private BufferedReader br;	
+	private static Socket mySocket;
+	private GridMapModel gridMap;
 	ClientDrawingPanel drawingPanel;
 	ClientChatPanel chatPanel;
 	//ClientStatsPanel statsPanel;
 	//JPanel statsPanel;
-	@SuppressWarnings("unused")
 	private ClientApplication myApp;
 
 	public ClientGamePanel(ObjectOutputStream oos, ClientApplication myApp) {
@@ -19,6 +28,7 @@ public class ClientGamePanel extends JPanel {
 		setLayout(new BorderLayout());
 		setSize(1000, 600);
 		
+		this.gridMap = myApp.myGridMap;
 		this.myApp = myApp;
 		this.oos = oos;
 		//Sets up the entire view for the game. Main panel will include:
@@ -46,6 +56,7 @@ public class ClientGamePanel extends JPanel {
 		add(chatPanel, BorderLayout.EAST);
 		
 		// Final GUI Setup
+//		setPreferredSize(new Dimension(600, 600));
 		setVisible(true);	
 	} // end public ClientGamePanel(ObjectOutputStream, ClientApplication) constructor
 
