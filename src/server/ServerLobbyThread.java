@@ -1,6 +1,10 @@
-package server;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -87,13 +91,6 @@ public class ServerLobbyThread extends Thread{
 						//parent.allClientWriters.get(nextKey).flush();
 						//parent.allClientWriters.get(nextKey).flush();
 					}
-					/*
-					for(int i =0; i<parent.allClientWriters.size();i++) {
-						parent.allClientWriters.get(i).println(announcement);
-						parent.allClientWriters.get(i).flush();
-						parent.allClientWriters.get(i).println(timerPush);
-						parent.allClientWriters.get(i).flush();
-					}*/
 					
 					//status:ready
 					//Listen for player starting game confirmation
@@ -112,10 +109,8 @@ public class ServerLobbyThread extends Thread{
 							////make thread safe method//
 							parent.gameState[0] = false;
 							parent.gameState[1] = true;
-							//parent.gameStart = true;
 							/////////////////////////////
 							/////alternative/////////////
-							//parent.changeState(0, 1);
 							parent.setPlayersReady();
 							/////////////////////////////
 							/*

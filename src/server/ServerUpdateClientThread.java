@@ -1,6 +1,5 @@
-package server;
-
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -18,7 +17,6 @@ import Models.SwordModel;
 
 public class ServerUpdateClientThread extends Thread{
 
-	@SuppressWarnings("unused")
 	private Socket s;
 	int id;
 	GameServer parent;
@@ -38,18 +36,18 @@ public class ServerUpdateClientThread extends Thread{
 		//creates the GridMapModel object using the two sets of playerModels (team1, team2)
 		GridMapModel gmm = new GridMapModel();
 		AbstractObjectModel[][][] allModels = new AbstractObjectModel[4][10][10];
-		Map<Integer, PlayerModel> playerLookup = new HashMap<Integer, PlayerModel>();
+		Map<String, PlayerModel> playerLookup = new HashMap<String, PlayerModel>();
 		Iterator<PlayerModel> teamOneIt = parent.team1.iterator();
 		Iterator<PlayerModel> teamTwoIt = parent.team2.iterator();
 
 		//setting up map
 		while(teamOneIt.hasNext()){
 			PlayerModel pm = teamOneIt.next();
-			playerLookup.put(pm.playerID, pm);
+			playerLookup.put(pm.playerName, pm);
 		}
 		while(teamTwoIt.hasNext()){
 			PlayerModel pm = teamTwoIt.next();
-			playerLookup.put(pm.playerID, pm);
+			playerLookup.put(pm.playerName, pm);
 		}
 		teamOneIt = parent.team1.iterator();
 		teamTwoIt = parent.team2.iterator();

@@ -1,12 +1,16 @@
-package server;
+
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
@@ -50,18 +54,17 @@ public class GameServer {
 	//////////////////////////////////////////////
 
 	//Threads
-	ArrayList<ServerLobbyThread> lobbyThreads = new ArrayList<ServerLobbyThread>();
-	ArrayList<ServerGameThread> gameThreads = new ArrayList<ServerGameThread>();
-	ArrayList<ServerUpdateClientThread> updateClientThreads = new ArrayList<ServerUpdateClientThread>(); 
+	//ArrayList<ServerLobbyThread> lobbyThreads = new ArrayList<ServerLobbyThread>();
+	//ArrayList<ServerGameThread> gameThreads = new ArrayList<ServerGameThread>();
+	//ArrayList<ServerUpdateClientThread> updateClientThreads = new ArrayList<ServerUpdateClientThread>(); 
 
 	//////////////////CONNECT TO SERVER///////////////////////////
 	public GameServer(){	
 		try{
-			@SuppressWarnings("resource")
 			ServerSocket ss= new ServerSocket(5001);
 			while(true) {
 				//now listening
-				new ServerThread(ss.accept(), ++id, this).start();			
+				new ServerThread(ss.accept(), id++, this).start();			
 			}
 		} 
 		catch (IOException ioe) {}
@@ -97,7 +100,6 @@ public class GameServer {
 	
 	///////////////STARTING SERVER///////////
 	public static void main(String[] args) {
-		@SuppressWarnings("unused")
 		GameServer s = new GameServer();
 	}
 	/////////////////////////////////////////
@@ -123,10 +125,8 @@ public class GameServer {
 				this.s = s;
 				this.id = id;
 				this.gs = gs; 
-				//pw = new PrintWriter(s.getOutputStream());
 				oos = new ObjectOutputStream(s.getOutputStream());
 				ois = new ObjectInputStream(s.getInputStream());
-				//allClientWriters.put(id, pw);
 				allClientObjectWriters.put(id, oos);
 				allClientObjectReaders.put(id, ois);
 			} 
@@ -134,7 +134,7 @@ public class GameServer {
 			
 			//start the login/lobby
 			ServerLobbyThread slt = new ServerLobbyThread(id, gs);
-			lobbyThreads.add(slt);
+			//lobbyThreads.add(slt);
 			slt.start();
 		}
 		
@@ -152,15 +152,33 @@ public class GameServer {
 					//this code will only run once
 	
 					if(!gameStart){
+						
+						Iterator<PlayerModel> teamOneIt = team1.iterator();
+						Iterator<PlayerModel> teamTwoIt = team2.iterator();
+						String name ="";
+						//setting up map
+						while(teamOneIt.hasNext()){
+							PlayerModel pm = teamOneIt.next();
+							if(pm.playerID == id){
+								name = pm.playerName;
+							}
+						}
+						while(teamTwoIt.hasNext()){
+							PlayerModel pm = teamTwoIt.next();
+							if(pm.playerID == id){
+								name = pm.playerName;
+							}
+						}
+						System.out.println(name);
 						//start all ServerGameThread threads
-						ServerGameThread sgt = new ServerGameThread(s, id, gs);
-						gameThreads.add(sgt);
+						ServerGameThread sgt = new ServerGameThread(s,name, id, gs);
+						//gameThreads.add(sgt);
 						sgt.start();
 							
 						//start all ServerUpdateClientThread threads
 						if(!updateThreadMade){
 							ServerUpdateClientThread suc = new ServerUpdateClientThread(s, id, gs);
-							updateClientThreads.add(suc);
+							//updateClientThreads.add(suc);
 							suc.start();
 						}
 						gameStart = true;
