@@ -59,21 +59,24 @@ public class ServerLobbyThread extends Thread{
 					e1.printStackTrace();
 				}
 				
-				if(parent.team == true) {
-					team = 1;
-				} else {
-					team =2;
-				}
+				synchronized(parent){
+					if(parent.team == true) {
+						team = 1;
+						PlayerModel player = new PlayerModel(id, finalUsername, team);
+
+						parent.team1.add(player);
+					} else {
+						team =2;
+						PlayerModel player = new PlayerModel(id, finalUsername, team);
+
+						parent.team2.add(player);
+					}
 				
-				PlayerModel player = new PlayerModel(id, finalUsername, team);
-				//creates a PlayerModel	
-				//assigns the PlayerModel to a random team team1 or team2
-				if(team1 == true) {
-					parent.team1.add(player);
-				} else {
-					parent.team2.add(player);
+					//creates a PlayerModel	
+					//assigns the PlayerModel to a random team team1 or team2
+			
+					parent.flipTeam();
 				}
-				parent.flipTeam();
 
 				
 					//Broadcast that a new player has joined

@@ -22,7 +22,56 @@ public class ClientChatPanel extends JPanel implements ActionListener {
 	private JScrollPane outputPane;
 	private JTextField input;
 	
+	/*public ClientChatPanel(Map<Integer, PlayerModel> players, ObjectOutputStream oos) {
+		this.players = players;
+		this.oos = oos;
+		
+		team1_list = new ArrayList<JCheckBox>();
+		team2_list = new ArrayList<JCheckBox>();
+		
+		global = new JCheckBox("global"); global.addActionListener(this);
+		team1 = new JCheckBox("team 1"); team1.addActionListener(this);
+		team2 = new JCheckBox("team 2"); team2.addActionListener(this);
+		
+		for (Map.Entry<Integer, PlayerModel> playerEntry : players.entrySet()) {
+			PlayerModel player = playerEntry.getValue();
+			JCheckBox box = new JCheckBox(player.playerName);
+			box.addActionListener(this);
+			if (player.playerTeam == 1) team1_list.add(box);
+			else //if player.playerTeam == 2 team2_list.add(box);
+		}
+		
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		team1_panel = new JPanel(); team1_panel.setLayout(new BoxLayout(team1_panel, BoxLayout.Y_AXIS));
+		team2_panel = new JPanel(); team2_panel.setLayout(new BoxLayout(team2_panel, BoxLayout.Y_AXIS));
+		JScrollPane team1_panel_pane = new JScrollPane(team1_panel);
+		JScrollPane team2_panel_pane = new JScrollPane(team2_panel);
+		inputOutputPanel = new JPanel();
+		
+		output = new JTextArea(5, 0); output.setEditable(false);
+		input = new JTextField(); input.addActionListener(this);
+		outputPane = new JScrollPane(output); outputPane.setPreferredSize(new Dimension(200, 200));
+		inputOutputPanel.setMaximumSize(new Dimension(200, 250));
+		inputOutputPanel.setMinimumSize(new Dimension(200, 250));
+		inputOutputPanel.setLayout(new BoxLayout(inputOutputPanel, BoxLayout.Y_AXIS));
+		
+		inputOutputPanel.add(outputPane);
+		inputOutputPanel.add(input);
+		add(inputOutputPanel);
+		add(global);
+		add(team1);
+		add(team1_panel_pane);
+		add(team2);
+		add(team2_panel_pane);
+		for (JCheckBox box : team1_list) team1_panel.add(box);
+		for (JCheckBox box : team2_list) team2_panel.add(box);
+		
+		setSize(200, 600);
+	} */
+	
+	//////////NEW CONSTRUCTOR////////////
 	public ClientChatPanel(ObjectOutputStream oos) {
+		//this.players = players;
 		this.oos = oos;
 		
 		team1_list = new ArrayList<JCheckBox>();
@@ -62,8 +111,6 @@ public class ClientChatPanel extends JPanel implements ActionListener {
 		add(team1_panel_pane);
 		add(team2);
 		add(team2_panel_pane);
-		for (JCheckBox box : team1_list) team1_panel.add(box);
-		for (JCheckBox box : team2_list) team2_panel.add(box);
 		
 		setSize(200, 600);
 	} // end public ClientChatPanel(ClientApplication, ObjectOutputStream) constructor
@@ -76,10 +123,15 @@ public class ClientChatPanel extends JPanel implements ActionListener {
 		for(Map.Entry<String, PlayerModel> playerEntry : players.entrySet()) {
 			PlayerModel player = playerEntry.getValue();
 			JCheckBox box = new JCheckBox(player.playerName);
+			//System.out.println("new player added to chat: " + player.playerName);
 			box.addActionListener(this);
 			if (player.playerTeam == 1) team1_list.add(box);
 			else /*if player.playerTeam == 2*/ team2_list.add(box);
 		}
+		
+		for (JCheckBox box : team1_list) team1_panel.add(box);
+		for (JCheckBox box : team2_list) team2_panel.add(box);
+		//revalidate(); repaint();
 	} // end public void initPlayers
 	/////////////////////////////////////
 
@@ -100,11 +152,11 @@ public class ClientChatPanel extends JPanel implements ActionListener {
 				if(player.getValue().playerName.equals(playerName))
 					s += (player.getKey()) + ",";
 		
-		return s.substring(0, s.length() - 1) + ":";
+		return s + ":";
 	} // end private String getSelectedPlayerIDs
 	
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == input && !getSelectedPlayerIDs().equals("CHAT:") && !input.getText().equals("")) {
+		if(e.getSource() == input && !getSelectedPlayerIDs().equals("CHAT::") && !input.getText().equals("")) {
 		//send "CHAT:playerID1,playerID2,etc:message" only if at least 1 recipient is selected, and message is not empty
 			Object outputObject = getSelectedPlayerIDs() + input.getText();
 			try {
@@ -141,6 +193,7 @@ public class ClientChatPanel extends JPanel implements ActionListener {
 				team1_checked = false;
 				team1.setSelected(false);
 			}
+		if (team1_list.isEmpty()) team1_checked = false;
 		if(team1_checked) {
 			team1.setSelected(true);
 			if(team1.isSelected() && team2.isSelected()) global.setSelected(true);
@@ -152,6 +205,7 @@ public class ClientChatPanel extends JPanel implements ActionListener {
 				team2_checked = false;
 				team2.setSelected(false);
 			}
+		if (team2_list.isEmpty()) team2_checked = false;
 		if(team2_checked) {
 			team2.setSelected(true);
 			if(team1.isSelected() && team2.isSelected()) global.setSelected(true);

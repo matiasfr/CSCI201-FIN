@@ -593,7 +593,7 @@ public class ServerGameThread extends Thread
 					int xpos = server.gmm.playerLookup.get(this.name).playerLocationX;
 					int ypos = server.gmm.playerLookup.get(this.name).playerLocationY;
 					int quarterPos = server.gmm.playerLookup.get(this.name).playerLocationQuarter;
-					//System.out.println("X: "+xpos+" Y: "+ypos+" Q: "+quarterPos);
+					System.out.println("X: "+xpos+" Y: "+ypos+" Q: "+quarterPos);
 			}
 			else{
 				break;

@@ -105,7 +105,9 @@ class ClientDrawingPanel extends JPanel {
 		super.paintComponent(g);
 
 		//draw the background for the current quadrant.
-		g.drawImage(backgroundImage[currentQuadrant], 0, 0, null);
+		if(firstDrawDone) {
+			g.drawImage(backgroundImage[currentQuadrant], 0, 0, null);
+		}
 
 		// Go through GridMapModel and fill in map as necessary
 		for(int i = 0; i < 10; i++) { // loop through x of GridMapModel
@@ -142,7 +144,7 @@ class ClientDrawingPanel extends JPanel {
 								} else {
 									teamColor = "green";
 								}
-
+								
 								// Create our player
 								thisPlayer = new ClientPlayer(myApp, teamColor, this);
 								thisPlayer.setX(playerModel.playerLocationX);
@@ -150,7 +152,11 @@ class ClientDrawingPanel extends JPanel {
 								thisPlayer.setXSq(i);
 								thisPlayer.setYSq(j);
 								thisPlayer.setDirection(playerDirection);
-								thisPlayer.setQuadrant(currentQuadrant);
+								thisPlayer.setQuadrant(playerModel.playerLocationQuarter);
+								
+								setQuadrant(playerModel.playerLocationQuarter);
+								g.drawImage(backgroundImage[currentQuadrant], 0, 0, null);
+								
 								// Go through player sprite and draw the images.
 								firstDrawDone = true;
 								new Thread(thisPlayer).start();

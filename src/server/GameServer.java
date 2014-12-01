@@ -34,7 +34,7 @@ import Models.PlayerModel;
 public class GameServer {
 	////////////////////////////////////ALL SHARED DATA////////////////////////////////////
 	boolean gameState[] = {true, false, false}; //0: joining game  1:game play  2:game over
-	static GridMapModel gmm;
+	GridMapModel gmm;
 	//Map<Integer, PrintWriter> allClientWriters = new HashMap<Integer, PrintWriter>();
 	Map<Integer, ObjectOutputStream> allClientObjectWriters = new HashMap<Integer, ObjectOutputStream>();
 	Map<Integer, ObjectInputStream> allClientObjectReaders = new HashMap<Integer, ObjectInputStream>();
