@@ -41,13 +41,12 @@ public class ServerGameThread extends Thread
 					    	processMessage(messages);
 					    }
 					    else{
-					    	
 							int distance;
-							//client attacked another client
 							
+							//client attacked another client			
 							if(typeMessage.equals("A")) {
 								//value of attack (strength)
-								String attack = messages[1];
+								int attack = Integer.parseInt(messages[1]);
 								
 								int xpos = server.gmm.playerLookup.get(this.name).playerLocationX;
 								int ypos = server.gmm.playerLookup.get(this.name).playerLocationY;
@@ -58,27 +57,35 @@ public class ServerGameThread extends Thread
 								if(direction == 0 && server.gmm.playerLookup.get(this.name).playerLocationY != 0){
 									AbstractObjectModel destination = server.gmm.allModels[quarterPos][xpos][ypos-1];
 									if(destination instanceof PlayerModel){
-										((PlayerModel) destination).setHealth(-1*Integer.parseInt(attack));
+										PlayerModel pm = (PlayerModel) destination;
+										int attackValue = attack/pm.playerArmorPoints;
+										((PlayerModel) destination).setHealth(-1*attackValue);
 									}
 								}
 								else if(direction == 1 && server.gmm.playerLookup.get(this.name).playerLocationX != 9){
 									AbstractObjectModel destination = server.gmm.allModels[quarterPos][xpos+1][ypos];
 									if(destination instanceof PlayerModel){
-										((PlayerModel) destination).setHealth(-1*Integer.parseInt(attack));
+										PlayerModel pm = (PlayerModel) destination;
+										int attackValue = attack/pm.playerArmorPoints;
+										((PlayerModel) destination).setHealth(-1*attackValue);
 									}
 								}
 								else if(direction == 2 && server.gmm.playerLookup.get(this.name).playerLocationY != 9)
 								{
 									AbstractObjectModel destination = server.gmm.allModels[quarterPos][xpos][ypos+1];
 									if(destination instanceof PlayerModel){
-										((PlayerModel) destination).setHealth(-1*Integer.parseInt(attack));
+										PlayerModel pm = (PlayerModel) destination;
+										int attackValue = attack/pm.playerArmorPoints;
+										((PlayerModel) destination).setHealth(-1*attackValue);
 									}
 								}
 								else if(server.gmm.playerLookup.get(this.name).playerLocationX != 0) //direction == 3
 								{
 									AbstractObjectModel destination = server.gmm.allModels[quarterPos][xpos-1][ypos];
 									if(destination instanceof PlayerModel){
-										((PlayerModel) destination).setHealth(-1*Integer.parseInt(attack));
+										PlayerModel pm = (PlayerModel) destination;
+										int attackValue = attack/pm.playerArmorPoints;
+										((PlayerModel) destination).setHealth(-1*attackValue);
 									}
 								}
 							}
@@ -177,7 +184,7 @@ public class ServerGameThread extends Thread
 										}
 										else
 										{
-											AbstractObjectModel destination = server.gmm.allModels[quarterPos][xpos][ypos-1];
+											AbstractObjectModel destination = server.gmm.allModels[quarterPos][xpos][ypos-distance];
 											if(destination instanceof PlayerModel){
 												//another player so we cant move
 											}
@@ -196,18 +203,18 @@ public class ServerGameThread extends Thread
 												server.gmm.playerLookup.get(this.name).playerInventory.add((ItemModel) destination);
 												
 												//update PlayerModel
-												server.gmm.playerLookup.get(this.name).setPostion(0, -1);
+												server.gmm.playerLookup.get(this.name).setPostion(0, -1*distance);
 												
 												//update the GridMapModel
-												server.gmm.moveObjects(quarterPos, xpos, ypos,quarterPos, xpos, ypos-1);													
+												server.gmm.moveObjects(quarterPos, xpos, ypos,quarterPos, xpos, ypos-distance);													
 											}
 											else {
 												//nothing there
 												//update PlayerModel
-												server.gmm.playerLookup.get(this.name).setPostion(0, -1);		
+												server.gmm.playerLookup.get(this.name).setPostion(0, -distance);		
 												
 												//update the GridMapModel
-												server.gmm.moveObjects(quarterPos, xpos, ypos,quarterPos, xpos, ypos-1);
+												server.gmm.moveObjects(quarterPos, xpos, ypos,quarterPos, xpos, ypos-distance);
 											}	
 										}
 									}
@@ -224,7 +231,7 @@ public class ServerGameThread extends Thread
 			
 								if(distance == 0){}
 								else{
-									if(server.gmm.playerLookup.get(this.name).playerLocationY==9){
+									if(server.gmm.playerLookup.get(this.name).playerLocationY+distance > 9){
 										if(quarterPos==2||quarterPos==3){
 											isMoveable=false;
 										}
@@ -304,7 +311,7 @@ public class ServerGameThread extends Thread
 										}
 										else
 										{
-											AbstractObjectModel destination = server.gmm.allModels[quarterPos][xpos][ypos+1];
+											AbstractObjectModel destination = server.gmm.allModels[quarterPos][xpos][ypos+distance];
 											if(destination instanceof PlayerModel){
 												//another player so we cant move
 											}
@@ -323,19 +330,19 @@ public class ServerGameThread extends Thread
 												server.gmm.playerLookup.get(this.name).playerInventory.add((ItemModel) destination);
 												
 												//update PlayerModel
-												server.gmm.playerLookup.get(this.name).setPostion(0, 1);
+												server.gmm.playerLookup.get(this.name).setPostion(0, distance);
 												
 												//update the GridMapModel
-												server.gmm.moveObjects(quarterPos, xpos, ypos,quarterPos, xpos, ypos+1);
+												server.gmm.moveObjects(quarterPos, xpos, ypos,quarterPos, xpos, ypos+distance);
 											}
 											else 
 											{
 												//nothing there
 												//update PlayerModel
-												server.gmm.playerLookup.get(this.name).setPostion(0, 1);
+												server.gmm.playerLookup.get(this.name).setPostion(0, distance);
 												
 												//update the GridMapModel
-												server.gmm.moveObjects(quarterPos, xpos, ypos,quarterPos, xpos, ypos+1);
+												server.gmm.moveObjects(quarterPos, xpos, ypos,quarterPos, xpos, ypos+distance);
 											}
 										}
 									}
@@ -353,7 +360,7 @@ public class ServerGameThread extends Thread
 								
 								if(distance == 0){}
 								else{
-									if(server.gmm.playerLookup.get(this.name).playerLocationX==0){
+									if(server.gmm.playerLookup.get(this.name).playerLocationX-distance < 0){
 										if(quarterPos==0||quarterPos==2){
 											isMoveable=false;
 										}
@@ -434,7 +441,7 @@ public class ServerGameThread extends Thread
 										}
 										else
 										{
-											AbstractObjectModel destination = server.gmm.allModels[quarterPos][xpos-1][ypos];
+											AbstractObjectModel destination = server.gmm.allModels[quarterPos][xpos-distance][ypos];
 											if(destination instanceof PlayerModel){
 												//another player so we cant move
 											}
@@ -453,18 +460,18 @@ public class ServerGameThread extends Thread
 												server.gmm.playerLookup.get(this.name).playerInventory.add((ItemModel) destination);
 												
 												//update PlayerModel
-												server.gmm.playerLookup.get(this.name).setPostion(-1, 0);
+												server.gmm.playerLookup.get(this.name).setPostion(-1*distance, 0);
 												
 												//update the GridMapModel
-												server.gmm.moveObjects(quarterPos, xpos, ypos,quarterPos, xpos-1, ypos);
+												server.gmm.moveObjects(quarterPos, xpos, ypos,quarterPos, xpos-distance, ypos);
 											}
 											else {
 												//nothing there
 												//update PlayerModel
-												server.gmm.playerLookup.get(this.name).setPostion(-1, 0);
+												server.gmm.playerLookup.get(this.name).setPostion(-1*distance, 0);
 												
 												//update the GridMapModel
-												server.gmm.moveObjects(quarterPos, xpos, ypos,quarterPos, xpos-1, ypos);
+												server.gmm.moveObjects(quarterPos, xpos, ypos,quarterPos, xpos-distance, ypos);
 											}
 										}
 									}				
@@ -481,7 +488,7 @@ public class ServerGameThread extends Thread
 			
 								if(distance == 0){}
 								else{
-									if(server.gmm.playerLookup.get(this.name).playerLocationX==9){
+									if(server.gmm.playerLookup.get(this.name).playerLocationX+distance > 9){
 										if(quarterPos==1||quarterPos==3){
 											isMoveable=false;
 										}
@@ -559,7 +566,7 @@ public class ServerGameThread extends Thread
 											}
 										}
 										else{
-											AbstractObjectModel destination = server.gmm.allModels[quarterPos][xpos+1][ypos];
+											AbstractObjectModel destination = server.gmm.allModels[quarterPos][xpos+distance][ypos];
 											if(destination instanceof PlayerModel){
 												//another player so we cant move
 											}
@@ -578,19 +585,19 @@ public class ServerGameThread extends Thread
 												server.gmm.playerLookup.get(this.name).playerInventory.add((ItemModel) destination);
 												
 												//update PlayerModel
-												server.gmm.playerLookup.get(this.name).setPostion(1, 0);
+												server.gmm.playerLookup.get(this.name).setPostion(distance, 0);
 												
 												//update the GridMapModel
-												server.gmm.moveObjects(quarterPos, xpos, ypos,quarterPos, xpos+1, ypos);
+												server.gmm.moveObjects(quarterPos, xpos, ypos,quarterPos, xpos+distance, ypos);
 											}
 											else 
 											{
 												//nothing there
 												//update PlayerModel
-												server.gmm.playerLookup.get(this.name).setPostion(1, 0);
+												server.gmm.playerLookup.get(this.name).setPostion(distance, 0);
 												
 												//update the GridMapModel
-												server.gmm.moveObjects(quarterPos, xpos, ypos,quarterPos, xpos+1, ypos);
+												server.gmm.moveObjects(quarterPos, xpos, ypos,quarterPos, xpos+distance, ypos);
 											}
 										}
 									}
@@ -601,7 +608,9 @@ public class ServerGameThread extends Thread
 					catch (IOException e) {} 
 					catch (ClassNotFoundException e) {e.printStackTrace();}
 					
-					
+					int xpos = server.gmm.playerLookup.get(this.name).playerLocationX;
+					int ypos = server.gmm.playerLookup.get(this.name).playerLocationY;
+					System.out.println("X: "+xpos+" Y: "+ypos);
 			}
 			else{
 				break;
