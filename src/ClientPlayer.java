@@ -1,6 +1,8 @@
 import java.awt.Graphics;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -8,7 +10,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-public class ClientPlayer extends JPanel implements Runnable {
+public class ClientPlayer extends JPanel implements Runnable, MouseListener {
 	private static final long serialVersionUID = -3929233179764541207L;
 	BufferedImage imgPlayerSkeletonF = null;
 	BufferedImage imgPlayerColorF = null;
@@ -51,6 +53,7 @@ public class ClientPlayer extends JPanel implements Runnable {
 		DrawKeyListener ls = new DrawKeyListener();
 		myApp.addKeyListener(ls);
 		myApp.setFocusable(true);
+		this.drawPanel.addMouseListener(this);
 		setVisible(true);
 		setLayout(null);
 		setLocation(0,0);
@@ -158,6 +161,7 @@ public class ClientPlayer extends JPanel implements Runnable {
 				} // end if direction is left
 				
 				repaint();
+				drawPanel.repaint();
 			} catch(InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -306,4 +310,18 @@ public class ClientPlayer extends JPanel implements Runnable {
 			} // end if 'A' key pressed
 		} // end public void keyPressed(KeyEvent)
 	} // end class DrawKeyListener extends KeyAdapter
+
+	//// MouseListener methods ////
+	public void mouseClicked(MouseEvent e) {}
+
+	public void mousePressed(MouseEvent e) {
+		myApp.requestFocusInWindow();
+	}
+
+	public void mouseReleased(MouseEvent e) {}
+
+	public void mouseEntered(MouseEvent e) {}
+
+	public void mouseExited(MouseEvent e) {}
+
 } // end public class ClientPlayer extends JPanel implements Runnable
