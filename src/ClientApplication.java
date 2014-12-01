@@ -167,7 +167,7 @@ public class ClientApplication extends JFrame implements Runnable {
 					lobby.addPlayer(playerFinalName);
 				} else {
 					System.out.println("CHAT:" + content);
-					myGame.chatPanel.writeChatMessage(content);
+					myGame.chatPanel.writeChatMessage(content + ": " + serverMessage[2]);
 				}
 			} // end if(prefix.equals("CHAT"))
 

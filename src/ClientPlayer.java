@@ -99,8 +99,12 @@ public class ClientPlayer extends JPanel implements Runnable {
 						yPixel -= movementVar;
 						int deltaMovement = Math.abs(((int)(yPixel + 22.5) / 45) - ySquare);
 						if(deltaMovement != 0) {
+//							System.out.println("delta: " + deltaMovement);
 							ySquare = (int)(yPixel + 22.5) / 45;
-							myApp.sendServerMessage("U:1");
+							if(deltaMovement != 9) {
+//								System.out.println("direction");
+								myApp.sendServerMessage("U:1");	
+							}
 						}
 					}
 				} // end if direction is up
@@ -111,8 +115,12 @@ public class ClientPlayer extends JPanel implements Runnable {
 						xPixel += movementVar;
 						int deltaMovement = Math.abs(((int)(xPixel + 22.5) / 45) - xSquare);
 						if(deltaMovement != 0) {
+//							System.out.println("delta: " + deltaMovement);
 							xSquare = (int)(xPixel + 22.5) / 45;
-							myApp.sendServerMessage("R:1");
+							if(deltaMovement != 9) {
+								myApp.sendServerMessage("R:1");	
+//								System.out.println("direction");
+							}
 						}
 					}
 				} // end if direction is right
@@ -124,7 +132,11 @@ public class ClientPlayer extends JPanel implements Runnable {
 						int deltaMovement = Math.abs(((int)(yPixel + 22.5) / 45) - ySquare);
 						if(deltaMovement != 0) {
 							ySquare = (int)(yPixel + 22.5) / 45;
-							myApp.sendServerMessage("D:1");
+//							System.out.println("delta: " + deltaMovement);
+							if(deltaMovement != 9) {
+								myApp.sendServerMessage("D:1");	
+//								System.out.println("direction");
+							}
 						}
 					}
 				} // end if direction is down
@@ -136,7 +148,11 @@ public class ClientPlayer extends JPanel implements Runnable {
 						int deltaMovement = Math.abs(((int)(xPixel + 22.5) / 45) - xSquare);
 						if(deltaMovement != 0) {
 							xSquare = (int)(xPixel + 22.5) / 45;
-							myApp.sendServerMessage("L:1");
+//							System.out.println("delta: " + deltaMovement);
+							if(deltaMovement != 9) {
+								myApp.sendServerMessage("L:1");	
+//								System.out.println("direction");
+							}
 						}
 					}
 				} // end if direction is left
