@@ -6,6 +6,7 @@ import java.io.*;
 import java.awt.image.*;
 
 import javax.imageio.*;
+
 import Models.*;
 
 class ClientDrawingPanel extends JPanel {
@@ -17,6 +18,7 @@ class ClientDrawingPanel extends JPanel {
 	public Boolean drawQuadChange = false;
 	private ClientPlayer thisPlayer;
 	private ClientApplication myApp;
+	@SuppressWarnings("unused")
 	private ClientGamePanel theGame;
 	//IMAGES
 	BufferedImage imgArmor = null;
@@ -62,7 +64,7 @@ class ClientDrawingPanel extends JPanel {
 		
 		//check which quadrant is beigng drawn
 		if(drawQuadChange || !firstDrawDone) {
-			currentQuadrant = myApp.myGridMap.playerLookup.get(this.playerName).playerLocationQuarter;
+			currentQuadrant = ClientApplication.myGridMap.playerLookup.get(this.playerName).playerLocationQuarter;
 		}
 		
 		//draw the background for the current quadrant.
@@ -70,13 +72,14 @@ class ClientDrawingPanel extends JPanel {
 		for(int i = 0; i < 10; i++) {
 			for(int j = 0; j < 10; j++) {
 				//need to check what kind of model is in the current index.
-				if(myApp.myGridMap.allModels[currentQuadrant][i][j] != null) {
+				if(ClientApplication.myGridMap.allModels[currentQuadrant][i][j] != null) {
 					//if it is a player model, check the id, if not our own then
-					if(myApp.myGridMap.allModels[currentQuadrant][i][j] instanceof PlayerModel) {
-						PlayerModel myPlayer = (PlayerModel)myApp.myGridMap.allModels[currentQuadrant][i][j];
+					if(ClientApplication.myGridMap.allModels[currentQuadrant][i][j] instanceof PlayerModel) {
+						PlayerModel myPlayer = (PlayerModel)ClientApplication.myGridMap.allModels[currentQuadrant][i][j];
 						//if the player names are not the same then we can draw them.
 						if(!((myPlayer.playerName).equals(this.playerName))) {
 							//go into the player model and get the player direction so we know which images to get
+							@SuppressWarnings("unused")
 							int playerDirection = myPlayer.playerDirection;
 							//, and  playerImage image icon
 							//go through the players image icons
@@ -87,7 +90,7 @@ class ClientDrawingPanel extends JPanel {
 						else if(!firstDrawDone) {
 							//draw our own player
 							//but we should also start up the other player model to get the position of the player.
-							PlayerModel gammaPlayer = (PlayerModel)myApp.myGridMap.allModels[currentQuadrant][i][j];
+							PlayerModel gammaPlayer = (PlayerModel)ClientApplication.myGridMap.allModels[currentQuadrant][i][j];
 							String teamColor = "";
 							if(gammaPlayer.playerTeam == 1) {
 								teamColor = "red";
@@ -112,8 +115,7 @@ class ClientDrawingPanel extends JPanel {
 							//thisPlayer.setBounds(gammaPlayer.playerLocationX, gammaPlayer.playerLocationY, 45, 45);
 							add(thisPlayer);
 						} else if(drawQuadChange) {
-							//PlayerModel gammaPlayer = (PlayerModel)myApp.myGridMap.allModels[currentQuadrant][i][j];
-							PlayerModel gammaPlayer = myApp.myGridMap.playerLookup.get(this.playerName);
+							PlayerModel gammaPlayer = ClientApplication.myGridMap.playerLookup.get(this.playerName);
 							System.out.println(gammaPlayer.playerLocationX);
 							System.out.println(gammaPlayer.playerLocationY);
 							thisPlayer.setX(gammaPlayer.playerLocationX);
@@ -131,16 +133,16 @@ class ClientDrawingPanel extends JPanel {
 					//draw all of that player's images.
 
 					//if it is a sword model, show an image of a sword
-					else if(myApp.myGridMap.allModels[currentQuadrant][i][j] instanceof SwordModel) {
+					else if(ClientApplication.myGridMap.allModels[currentQuadrant][i][j] instanceof SwordModel) {
 						System.out.println("THERE SHOULD BE A SHARP POINTY THING");
 						g.drawImage(imgSword, i * 45, j * 45, null);
 					}
 					//if it is a armor model, show an image of a armor
-					else if(myApp.myGridMap.allModels[currentQuadrant][i][j] instanceof ArmorModel) {
+					else if(ClientApplication.myGridMap.allModels[currentQuadrant][i][j] instanceof ArmorModel) {
 						g.drawImage(imgArmor, i * 45, j * 45, null);
 					}
 					//if it is a health model, show an image of a health
-					else if(myApp.myGridMap.allModels[currentQuadrant][i][j] instanceof HealthRefillModel) {
+					else if(ClientApplication.myGridMap.allModels[currentQuadrant][i][j] instanceof HealthRefillModel) {
 						g.drawImage(imgHealth, i * 45, j * 45, null);
 					}
 					else {

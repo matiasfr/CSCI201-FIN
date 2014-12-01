@@ -5,7 +5,6 @@ import java.awt.event.*;
 import java.io.ObjectOutputStream;
 import java.util.*;
 
-import Models.GridMapModel;
 import Models.PlayerModel;
 
 public class ClientChatPanel extends JPanel implements ActionListener {
@@ -22,10 +21,6 @@ public class ClientChatPanel extends JPanel implements ActionListener {
 	private JTextArea output;
 	private JScrollPane outputPane;
 	private JTextField input;
-	
-	///////NEW
-	private ClientApplication myClient;
-	///////
 	
 	/*public ClientChatPanel(Map<Integer, PlayerModel> players, ObjectOutputStream oos) {
 		this.players = players;
@@ -75,9 +70,8 @@ public class ClientChatPanel extends JPanel implements ActionListener {
 	} */
 	
 	//////////NEW CONSTRUCTOR////////////
-	public ClientChatPanel(ClientApplication myClient, ObjectOutputStream oos) {
+	public ClientChatPanel(ObjectOutputStream oos) {
 		//this.players = players;
-		this.myClient = myClient;
 		this.oos = oos;
 		
 		team1_list = new ArrayList<JCheckBox>();
@@ -126,7 +120,7 @@ public class ClientChatPanel extends JPanel implements ActionListener {
 	
 	//////////////NEW////////////////////
 	public void initPlayers() {
-		this.players = myClient.myGridMap.getPlayers();
+		this.players = ClientApplication.myGridMap.getPlayers();
 		
 		for(Map.Entry<String, PlayerModel> playerEntry : players.entrySet()) {
 			PlayerModel player = playerEntry.getValue();

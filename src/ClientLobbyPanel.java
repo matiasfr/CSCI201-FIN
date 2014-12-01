@@ -105,7 +105,7 @@ public class ClientLobbyPanel extends JPanel {
 	private void updateCountdown() {
 		if(countdownNum > 0) {
 			countdownLabel.setText(TIME_UNTIL_START_STRING + countdownNum);
-		}else { 
+		} else { 
 			myClient.sendReadySignal();
 			countdownTimer.stop();
 		}

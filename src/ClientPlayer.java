@@ -1,12 +1,11 @@
 import java.awt.Graphics;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+
 import javax.imageio.ImageIO;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class ClientPlayer extends JPanel implements Runnable {
@@ -41,6 +40,7 @@ public class ClientPlayer extends JPanel implements Runnable {
 	//private int quadrant=9;
 	private int direction = 2;
 	private int currentQuadrant = 9;
+	@SuppressWarnings("unused")
 	private String teamColor;
 	int movementVar = 0;
 	
@@ -51,7 +51,6 @@ public class ClientPlayer extends JPanel implements Runnable {
 		DrawKeyListener ls = new DrawKeyListener();
 		myApp.addKeyListener(ls);
 		myApp.setFocusable(true);
-//		addKeyListener(ls);
 		setVisible(true);
 		setLayout(null);
 		setLocation(0,0);
@@ -92,20 +91,20 @@ public class ClientPlayer extends JPanel implements Runnable {
 				Thread.sleep(5);
 				
 				//moving up 
-				if(direction == 0){
-					yPixel-= movementVar;
+				if(direction == 0) {
+					yPixel -= movementVar;
 				}
 				//moving right
-				else if(direction == 1){
-					xPixel+= movementVar;
+				else if(direction == 1) {
+					xPixel += movementVar;
 				}
 				//moving down 
-				else if(direction == 2){
-					yPixel+= movementVar;
+				else if(direction == 2) {
+					yPixel += movementVar;
 				}
 				//moving left
-				else if(direction == 3){
-					xPixel-= movementVar;
+				else if(direction == 3) {
+					xPixel -= movementVar;
 				}
 				
 				repaint();
@@ -118,7 +117,6 @@ public class ClientPlayer extends JPanel implements Runnable {
 	
 	public void setPlayerChange(String armorType, String weaponType) {
 		try {
-			
 			forward[2] = ImageIO.read(new File(armorType));
 			forward[3] = ImageIO.read(new File(weaponType));
 			
@@ -187,32 +185,31 @@ public class ClientPlayer extends JPanel implements Runnable {
 	
 	class DrawKeyListener extends KeyAdapter {
 		public void keyReleased(KeyEvent e) {
-//			System.out.println("pressed something");
 			movementVar = 0;
 			//sending quadrant movement to server
 			//moving up 
-			if(direction == 0){
-				int deltaMovement = Math.abs(((int)(yPixel + 22.5) / 45)- ySquare);
+			if(direction == 0) {
+				int deltaMovement = Math.abs(((int)(yPixel + 22.5) / 45) - ySquare);
 				ySquare = (int)(yPixel + 22.5) / 45;
-				myApp.sendServerMessage("U:"+deltaMovement);
+				myApp.sendServerMessage("U:" + deltaMovement);
 			}
 			//moving right
-			else if(direction == 1){
-				int deltaMovement = Math.abs(((int)(xPixel + 22.5) / 45)- xSquare);
+			else if(direction == 1) {
+				int deltaMovement = Math.abs(((int)(xPixel + 22.5) / 45) - xSquare);
 				xSquare = (int)(xPixel + 22.5) / 45;
-				myApp.sendServerMessage("R:"+deltaMovement);
+				myApp.sendServerMessage("R:" + deltaMovement);
 			}
 			//moving down 
-			else if(direction == 2){
-				int deltaMovement = Math.abs(((int)(yPixel + 22.5) / 45)- ySquare);
+			else if(direction == 2) {
+				int deltaMovement = Math.abs(((int)(yPixel + 22.5) / 45) - ySquare);
 				ySquare = (int)(yPixel + 22.5) / 45;
-				myApp.sendServerMessage("D:"+deltaMovement);
+				myApp.sendServerMessage("D:" + deltaMovement);
 			}
 			//moving left
-			else if(direction == 3){
-				int deltaMovement = Math.abs(((int)(xPixel + 22.5) / 45)- xSquare);
+			else if(direction == 3) {
+				int deltaMovement = Math.abs(((int)(xPixel + 22.5) / 45) - xSquare);
 				xSquare = (int)(xPixel + 22.5) / 45;
-				myApp.sendServerMessage("L:"+deltaMovement);
+				myApp.sendServerMessage("L:" + deltaMovement);
 			}
 		}
 		public void keyPressed(KeyEvent e) {
@@ -228,11 +225,8 @@ public class ClientPlayer extends JPanel implements Runnable {
 					//DO NOTHING, too close to the right border.
 				}
 				else {
-					
 					//Right arrow key code --> SEND THE SERVER THE MESSAGE R	
 					// If moving into a new square
-					//int temp = (int)(xPixel + 22.5 + 5);
-					//System.out.println("xSquare: " + xSquare + ", temp: " + temp);
 					if(((int)(xPixel + 22.5 + 5) / 45) != xSquare) {
 						myApp.sendServerMessage("R:1");
 			            //Up arrow key code
@@ -311,6 +305,5 @@ public class ClientPlayer extends JPanel implements Runnable {
 				myApp.sendServerMessage("A:10");
 			}
 		} // end public void keyPressed(KeyEvent)
-		
 	} // end class DrawKeyListener extends KeyAdapter
 } // end public class ClientPlayer extends JPanel implements Runnable

@@ -1,20 +1,14 @@
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.BufferedReader;
+import java.awt.CardLayout;
+import java.awt.Dimension;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.Socket;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import Models.*;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+import Models.GridMapModel;
 
 public class ClientApplication extends JFrame implements Runnable {
 	private static final long serialVersionUID = 2466254954333927929L;
@@ -28,14 +22,16 @@ public class ClientApplication extends JFrame implements Runnable {
 	//Model
 	private ObjectOutputStream outToServer;
 	private ObjectInputStream inFromServer;
-	//private PrintWriter pw;
 	private static Socket mySocket;
 	
 	public static GridMapModel myGridMap = null;
 	private static ClientGamePanel myGame;
+	@SuppressWarnings("unused")
 	private Boolean needToLogin = true;
+	@SuppressWarnings("unused")
 	private Boolean inLobby = true;
-	private int timerTest=1;
+	@SuppressWarnings("unused")
+	private int timerTest = 1;
 	
 	public ClientApplication() {
 		super("Our Game");
@@ -232,6 +228,7 @@ public class ClientApplication extends JFrame implements Runnable {
 	} // end public void addChatMessage(String)
 
 	public static void main(String [] args){
+		@SuppressWarnings("unused")
 		ClientApplication myClient = new ClientApplication();
 	} // end public static void main
 } // end public class ClientApplication extends JFrame implements Runnable
