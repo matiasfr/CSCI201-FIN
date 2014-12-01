@@ -16,7 +16,7 @@ public class ServerLobbyThread extends Thread{
 	int id;
 	GameServer parent;
 	boolean team1 = true;
-	int team = 1;
+	int team;
 	String finalUsername = null;
 	
 	public ServerLobbyThread(int id, GameServer parent) {
@@ -49,8 +49,8 @@ public class ServerLobbyThread extends Thread{
 				//send result to client (unique/not unique)	
 				SQLCommand c = new SQLCommand(parent.queryLock, this, originalName);
 				c.run();
-				//finalUsername = "Matias#95";
 				String msg = "USERNAME:" + finalUsername;
+				
 				try {
 					oos.writeObject(msg);
 					//oos.flush();
@@ -59,21 +59,23 @@ public class ServerLobbyThread extends Thread{
 					e1.printStackTrace();
 				}
 				
-				if(team1 == true) {
+				if(parent.team == true) {
 					team = 1;
 				} else {
 					team =2;
 				}
+				
 				PlayerModel player = new PlayerModel(id, finalUsername, team);
-					//creates a PlayerModel	
-					//assigns the PlayerModel to a random team team1 or team2
-					if(team1 == true) {
-						parent.team1.add(player);
-						flipTeam();
-					} else {
-						parent.team2.add(player);
-						flipTeam();
-					}
+				//creates a PlayerModel	
+				//assigns the PlayerModel to a random team team1 or team2
+				if(team1 == true) {
+					parent.team1.add(player);
+				} else {
+					parent.team2.add(player);
+				}
+				parent.flipTeam();
+
+				
 					//Broadcast that a new player has joined
 					//broadcast the time left in Lobby = 30
 					String announcement = "CHAT:Broadcast:"+finalUsername;
@@ -144,13 +146,4 @@ public class ServerLobbyThread extends Thread{
 		}*/
 		return true; 
 	}
-
-	void flipTeam() {
-		if(team1 == true) {
-			team1 = false;
-		} else {
-			team1 = true;
-		}
-	}
-	
 }

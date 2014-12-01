@@ -34,7 +34,7 @@ import Models.PlayerModel;
 public class GameServer {
 	////////////////////////////////////ALL SHARED DATA////////////////////////////////////
 	boolean gameState[] = {true, false, false}; //0: joining game  1:game play  2:game over
-	GridMapModel gmm;
+	static GridMapModel gmm;
 	//Map<Integer, PrintWriter> allClientWriters = new HashMap<Integer, PrintWriter>();
 	Map<Integer, ObjectOutputStream> allClientObjectWriters = new HashMap<Integer, ObjectOutputStream>();
 	Map<Integer, ObjectInputStream> allClientObjectReaders = new HashMap<Integer, ObjectInputStream>();
@@ -44,6 +44,7 @@ public class GameServer {
 	int id = 0;
 	boolean allPlayersReady = false;
 	boolean updateThreadMade = false;
+	boolean team = false;
 	boolean gridMapInit = false;
 	boolean readyState[] = {false, false, false, false}; //fixed at player cap
 	///////////////////////////////////////////////////////////////////////////////////////
@@ -70,6 +71,16 @@ public class GameServer {
 		catch (IOException ioe) {}
 	}
 	/////////////////////////////////////////////////////////////
+	
+	public void flipTeam() {
+		stateLock.lock();
+		if(team == true) {
+			team = false;
+		} else {
+			team = true;
+		}
+		stateLock.unlock();
+	}
 	
 	public void isGridMapInit(){
 		stateLock.lock();

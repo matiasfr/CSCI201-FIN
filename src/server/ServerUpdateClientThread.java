@@ -105,7 +105,7 @@ public class ServerUpdateClientThread extends Thread{
 
 	public void run() {
 		while(running) {
-		try {sleep(50);} catch (InterruptedException e) {e.printStackTrace();}
+		try {sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
 		//Broadcast GridMapModel to allClientsObjectWriters
 
 			Set<Integer> pwSet = parent.allClientObjectWriters.keySet();

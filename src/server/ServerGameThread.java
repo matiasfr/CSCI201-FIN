@@ -37,7 +37,7 @@ public class ServerGameThread extends Thread
 						System.out.println(message);
 						String messages[] = message.split(":");
 						String typeMessage = messages[0];
-					    if(messages[0] == "CHAT") {
+					    if(messages[0].equals("CHAT")) {
 					    	processMessage(messages);
 					    }
 					    else{
@@ -102,7 +102,7 @@ public class ServerGameThread extends Thread
 								
 								if(distance == 0){}
 								else{
-									if(server.gmm.playerLookup.get(this.name).playerLocationY-distance < 0){
+									if(server.gmm.playerLookup.get(this.name).playerLocationY <= 0){
 										if(quarterPos==0||quarterPos==1){
 											isMoveable=false;
 										}
@@ -114,10 +114,7 @@ public class ServerGameThread extends Thread
 										if(movingQuarter){
 											if(quarterPos==2){
 												AbstractObjectModel destination = server.gmm.allModels[0][xpos][9];
-												if(destination instanceof PlayerModel){
-													//another player so we cant move
-												}
-												else if(destination instanceof ItemModel){
+												if(destination instanceof ItemModel){
 													if(destination instanceof HealthRefillModel){
 														server.gmm.playerLookup.get(this.name).setHealth(((HealthRefillModel) destination).healthPoints);
 													}
@@ -136,6 +133,8 @@ public class ServerGameThread extends Thread
 													
 													//update the GridMapModel
 													server.gmm.moveObjects(quarterPos, xpos, ypos,0, xpos, 9);
+													
+													server.gmm.playerLookup.get(this.name).playerLocationQuarter = 0;
 												}
 												else {
 													//nothing there
@@ -144,15 +143,14 @@ public class ServerGameThread extends Thread
 													
 													//update the GridMapModel
 													server.gmm.moveObjects(quarterPos, xpos, ypos,0, xpos, 9);
+													
+													server.gmm.playerLookup.get(this.name).playerLocationQuarter = 0;
 												}	
 											}
 											else//quarterPos==3
 											{
 												AbstractObjectModel destination = server.gmm.allModels[1][xpos][9];
-												if(destination instanceof PlayerModel){
-													//another player so we can't move
-												}
-												else if(destination instanceof ItemModel){
+												if(destination instanceof ItemModel){
 													if(destination instanceof HealthRefillModel){
 														server.gmm.playerLookup.get(this.name).setHealth(((HealthRefillModel) destination).healthPoints);
 													}
@@ -171,6 +169,7 @@ public class ServerGameThread extends Thread
 													
 													//update the GridMapModel
 													server.gmm.moveObjects(quarterPos, xpos, ypos,1, xpos, 9);
+													server.gmm.playerLookup.get(this.name).playerLocationQuarter = 1;
 												}
 												else {
 													//nothing there
@@ -179,16 +178,14 @@ public class ServerGameThread extends Thread
 													
 													//update the GridMapModel
 													server.gmm.moveObjects(quarterPos, xpos, ypos,1, xpos, 9);
+													server.gmm.playerLookup.get(this.name).playerLocationQuarter = 1;
 												}	
 											}
 										}
 										else
 										{
 											AbstractObjectModel destination = server.gmm.allModels[quarterPos][xpos][ypos-distance];
-											if(destination instanceof PlayerModel){
-												//another player so we cant move
-											}
-											else if(destination instanceof ItemModel){
+											if(destination instanceof ItemModel){
 												if(destination instanceof HealthRefillModel){
 													server.gmm.playerLookup.get(this.name).setHealth(((HealthRefillModel) destination).healthPoints);
 												}
@@ -231,7 +228,7 @@ public class ServerGameThread extends Thread
 			
 								if(distance == 0){}
 								else{
-									if(server.gmm.playerLookup.get(this.name).playerLocationY+distance > 9){
+									if(server.gmm.playerLookup.get(this.name).playerLocationY >= 9){
 										if(quarterPos==2||quarterPos==3){
 											isMoveable=false;
 										}
@@ -242,10 +239,7 @@ public class ServerGameThread extends Thread
 										if(movingQuarter){
 											if(quarterPos==0){
 												AbstractObjectModel destination = server.gmm.allModels[2][xpos][0];
-												if(destination instanceof PlayerModel){
-													//another player so we cant move
-												}
-												else if(destination instanceof ItemModel){
+												if(destination instanceof ItemModel){
 													if(destination instanceof HealthRefillModel){
 														server.gmm.playerLookup.get(this.name).setHealth(((HealthRefillModel) destination).healthPoints);
 													}
@@ -264,6 +258,7 @@ public class ServerGameThread extends Thread
 													
 													//update the GridMapModel
 													server.gmm.moveObjects(quarterPos, xpos, ypos,2, xpos, 0);
+													server.gmm.playerLookup.get(this.name).playerLocationQuarter = 2;
 												}
 												else {
 													//nothing there
@@ -272,14 +267,12 @@ public class ServerGameThread extends Thread
 													
 													//update the GridMapModel
 													server.gmm.moveObjects(quarterPos, xpos, ypos,2, xpos, 0);
+													server.gmm.playerLookup.get(this.name).playerLocationQuarter = 2;
 												}
 											}
 											else{//quarterPos == 1
 												AbstractObjectModel destination = server.gmm.allModels[3][xpos][0];
-												if(destination instanceof PlayerModel){
-													//another player so we cant move
-												}
-												else if(destination instanceof ItemModel){
+												if(destination instanceof ItemModel){
 													if(destination instanceof HealthRefillModel){
 														server.gmm.playerLookup.get(this.name).setHealth(((HealthRefillModel) destination).healthPoints);
 													}
@@ -294,28 +287,27 @@ public class ServerGameThread extends Thread
 													server.gmm.playerLookup.get(this.name).playerInventory.add((ItemModel) destination);
 													
 													//update PlayerModel
-													server.gmm.playerLookup.get(this.name).setPostion(0, 9);
+													server.gmm.playerLookup.get(this.name).setPostion(0, -9);
 													
 													//update the GridMapModel
-													server.gmm.moveObjects(quarterPos, xpos, ypos,3, xpos, 9);
+													server.gmm.moveObjects(quarterPos, xpos, ypos,3, xpos, 0);
+													server.gmm.playerLookup.get(this.name).playerLocationQuarter = 3;
 												}
 												else {
 													//nothing there
 													//update PlayerModel
-													server.gmm.playerLookup.get(this.name).setPostion(0, 9);
+													server.gmm.playerLookup.get(this.name).setPostion(0, -9);
 													
 													//update the GridMapModel
-													server.gmm.moveObjects(quarterPos, xpos, ypos,3, xpos, 9);
+													server.gmm.moveObjects(quarterPos, xpos, ypos,3, xpos, 0);
+													server.gmm.playerLookup.get(this.name).playerLocationQuarter = 3;
 												}
 											}
 										}
 										else
 										{
 											AbstractObjectModel destination = server.gmm.allModels[quarterPos][xpos][ypos+distance];
-											if(destination instanceof PlayerModel){
-												//another player so we cant move
-											}
-											else if(destination instanceof ItemModel){
+											if(destination instanceof ItemModel){
 												if(destination instanceof HealthRefillModel){
 													server.gmm.playerLookup.get(this.name).setHealth(((HealthRefillModel) destination).healthPoints);
 												}
@@ -360,7 +352,7 @@ public class ServerGameThread extends Thread
 								
 								if(distance == 0){}
 								else{
-									if(server.gmm.playerLookup.get(this.name).playerLocationX-distance < 0){
+									if(server.gmm.playerLookup.get(this.name).playerLocationX <= 0){
 										if(quarterPos==0||quarterPos==2){
 											isMoveable=false;
 										}
@@ -371,10 +363,7 @@ public class ServerGameThread extends Thread
 										if(movingQuarter){
 											if(quarterPos==1){
 												AbstractObjectModel destination = server.gmm.allModels[0][9][ypos];
-												if(destination instanceof PlayerModel){
-													//another player so we cant move
-												}
-												else if(destination instanceof ItemModel){
+												if(destination instanceof ItemModel){
 													if(destination instanceof HealthRefillModel){
 														server.gmm.playerLookup.get(this.name).setHealth(((HealthRefillModel) destination).healthPoints);
 													}
@@ -393,6 +382,7 @@ public class ServerGameThread extends Thread
 													
 													//update the GridMapModel
 													server.gmm.moveObjects(quarterPos, xpos, ypos,0, 9, ypos);
+													server.gmm.playerLookup.get(this.name).playerLocationQuarter = 0;
 												}
 												else {
 													//nothing there
@@ -401,15 +391,13 @@ public class ServerGameThread extends Thread
 													
 													//update the GridMapModel
 													server.gmm.moveObjects(quarterPos, xpos, ypos,0, 9, ypos);
+													server.gmm.playerLookup.get(this.name).playerLocationQuarter = 0;
 												}
 											}
 											else//quarterPos==3
 											{
 												AbstractObjectModel destination = server.gmm.allModels[2][9][ypos];
-												if(destination instanceof PlayerModel){
-													//another player so we cant move
-												}
-												else if(destination instanceof ItemModel){
+												if(destination instanceof ItemModel){
 													if(destination instanceof HealthRefillModel){
 														server.gmm.playerLookup.get(this.name).setHealth(((HealthRefillModel) destination).healthPoints);
 													}
@@ -428,6 +416,7 @@ public class ServerGameThread extends Thread
 													
 													//update the GridMapModel
 													server.gmm.moveObjects(quarterPos, xpos, ypos,2, 9, ypos);
+													server.gmm.playerLookup.get(this.name).playerLocationQuarter = 2;
 												}
 												else {
 													//nothing there
@@ -436,16 +425,14 @@ public class ServerGameThread extends Thread
 													
 													//update the GridMapModel
 													server.gmm.moveObjects(quarterPos, xpos, ypos,2, 9, ypos);
+													server.gmm.playerLookup.get(this.name).playerLocationQuarter = 2;
 												}
 											}
 										}
 										else
 										{
 											AbstractObjectModel destination = server.gmm.allModels[quarterPos][xpos-distance][ypos];
-											if(destination instanceof PlayerModel){
-												//another player so we cant move
-											}
-											else if(destination instanceof ItemModel){
+											if(destination instanceof ItemModel){
 												if(destination instanceof HealthRefillModel){
 													server.gmm.playerLookup.get(this.name).setHealth(((HealthRefillModel) destination).healthPoints);
 												}
@@ -488,7 +475,7 @@ public class ServerGameThread extends Thread
 			
 								if(distance == 0){}
 								else{
-									if(server.gmm.playerLookup.get(this.name).playerLocationX+distance > 9){
+									if(server.gmm.playerLookup.get(this.name).playerLocationX >= 9){
 										if(quarterPos==1||quarterPos==3){
 											isMoveable=false;
 										}
@@ -498,10 +485,7 @@ public class ServerGameThread extends Thread
 										if(movingQuarter){
 											if(quarterPos==0){
 												AbstractObjectModel destination = server.gmm.allModels[1][0][ypos];
-												if(destination instanceof PlayerModel){
-													//another player so we cant move
-												}
-												else if(destination instanceof ItemModel){
+												if(destination instanceof ItemModel){
 													if(destination instanceof HealthRefillModel){
 														server.gmm.playerLookup.get(this.name).setHealth(((HealthRefillModel) destination).healthPoints);
 													}
@@ -520,6 +504,7 @@ public class ServerGameThread extends Thread
 													
 													//update the GridMapModel
 													server.gmm.moveObjects(quarterPos, xpos, ypos,1, 0, ypos);
+													server.gmm.playerLookup.get(this.name).playerLocationQuarter = 1;
 												}
 												else {
 													//nothing there
@@ -528,14 +513,12 @@ public class ServerGameThread extends Thread
 													
 													//update the GridMapModel
 													server.gmm.moveObjects(quarterPos, xpos, ypos,1, 0, ypos);
+													server.gmm.playerLookup.get(this.name).playerLocationQuarter = 1;
 												}
 											}
 											else{//quarterPos ==2
 												AbstractObjectModel destination = server.gmm.allModels[3][0][ypos];
-												if(destination instanceof PlayerModel){
-													//another player so we cant move
-												}
-												else if(destination instanceof ItemModel){
+												if(destination instanceof ItemModel){
 													if(destination instanceof HealthRefillModel){
 														server.gmm.playerLookup.get(this.name).setHealth(((HealthRefillModel) destination).healthPoints);
 													}
@@ -554,6 +537,7 @@ public class ServerGameThread extends Thread
 													
 													//update the GridMapModel
 													server.gmm.moveObjects(quarterPos, xpos, ypos,3, 0, ypos);
+													server.gmm.playerLookup.get(this.name).playerLocationQuarter = 3;
 												}
 												else {
 													//nothing there
@@ -562,15 +546,13 @@ public class ServerGameThread extends Thread
 													
 													//update the GridMapModel
 													server.gmm.moveObjects(quarterPos, xpos, ypos,3, 0, ypos);
+													server.gmm.playerLookup.get(this.name).playerLocationQuarter = 3;
 												}
 											}
 										}
 										else{
 											AbstractObjectModel destination = server.gmm.allModels[quarterPos][xpos+distance][ypos];
-											if(destination instanceof PlayerModel){
-												//another player so we cant move
-											}
-											else if(destination instanceof ItemModel){
+											if(destination instanceof ItemModel){
 												if(destination instanceof HealthRefillModel){
 													server.gmm.playerLookup.get(this.name).setHealth(((HealthRefillModel) destination).healthPoints);
 												}
@@ -610,7 +592,8 @@ public class ServerGameThread extends Thread
 					
 					int xpos = server.gmm.playerLookup.get(this.name).playerLocationX;
 					int ypos = server.gmm.playerLookup.get(this.name).playerLocationY;
-					System.out.println("X: "+xpos+" Y: "+ypos);
+					int quarterPos = server.gmm.playerLookup.get(this.name).playerLocationQuarter;
+					//System.out.println("X: "+xpos+" Y: "+ypos+" Q: "+quarterPos);
 			}
 			else{
 				break;
@@ -618,17 +601,16 @@ public class ServerGameThread extends Thread
 		}
 	}
 	private void processMessage(String[] m) {
-		String content = m[m.length];//message content is last
+		String content = m[m.length-1];//message content is last
 		String[] recipients  = m[1].split(",");
 		//boradcast
 		for(int i=0; i<recipients.length;i++) {
 			String str = "CHAT:"+server.gmm.playerLookup.get(recipients[i]).playerName+ ":"+content;
 			
 			try {
-				server.allClientObjectWriters.get(recipients[i]).writeObject(str);
+				server.allClientObjectWriters.get(server.gmm.getPlayers().get(recipients[i]).playerID).writeObject(str);
 			}
 			catch (IOException e) {e.printStackTrace();}
-			//server.allClientWriters.get(recipients[i]).flush();
 		}
 	}
 
