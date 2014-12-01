@@ -60,7 +60,7 @@ public class GameServer {
 		try{
 			@SuppressWarnings("resource")
 			ServerSocket ss= new ServerSocket(5001);
-			while(true) {
+			while(gameState[0]) {
 				//now listening
 				new ServerThread(ss.accept(), id++, this).start();			
 			}

@@ -34,7 +34,7 @@ public class ServerGameThread extends Thread
 					try {
 						message = (String) server.allClientObjectReaders.get(id).readObject();
 						//parses the incoming string
-						System.out.println(message);
+						System.out.println("incoming: " + message);
 						String messages[] = message.split(":");
 						String typeMessage = messages[0];
 					    if(messages[0].equals("CHAT")) {
@@ -605,7 +605,7 @@ public class ServerGameThread extends Thread
 					int xpos = server.gmm.playerLookup.get(this.name).playerLocationX;
 					int ypos = server.gmm.playerLookup.get(this.name).playerLocationY;
 					int quarterPos = server.gmm.playerLookup.get(this.name).playerLocationQuarter;
-					System.out.println("X: "+xpos+" Y: "+ypos+" Q: "+quarterPos);
+//					System.out.println("X: "+xpos+" Y: "+ypos+" Q: "+quarterPos);
 			}
 			else{
 				break;
@@ -617,10 +617,11 @@ public class ServerGameThread extends Thread
 		String[] recipients  = m[1].split(",");
 		//boradcast
 		for(int i=0; i<recipients.length;i++) {
-			String str = "CHAT:"+server.gmm.playerLookup.get(recipients[i]).playerName+ ":"+content;
+			String str = "CHAT:"+server.gmm.playerLookup.get(this.name).playerName+ ":"+content;
 			
 			try {
 				server.allClientObjectWriters.get(server.gmm.getPlayers().get(recipients[i]).playerID).writeObject(str);
+				server.allClientObjectWriters.get(server.gmm.getPlayers().get(recipients[i]).playerID).reset();
 			}
 			catch (IOException e) {e.printStackTrace();}
 		}

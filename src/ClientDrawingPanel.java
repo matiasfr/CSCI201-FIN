@@ -34,6 +34,8 @@ class ClientDrawingPanel extends JPanel {
 	BufferedImage leftRed[] = new BufferedImage[4];
 	BufferedImage rightRed[] = new BufferedImage[4];
 	BufferedImage downRed[] = new BufferedImage[4];
+	
+	BufferedImage doneImage;
 
 	public ClientDrawingPanel(ClientApplication myApp, ClientGamePanel theGame) {
 		this.myApp = myApp;
@@ -83,6 +85,8 @@ class ClientDrawingPanel extends JPanel {
 			downRed[1] = ImageIO.read(new File("images/teamColor/red/facing_backwards.png"));
 			downRed[2] = ImageIO.read(new File("images/armor/basic/facing_backwards.png"));
 			downRed[3] = ImageIO.read(new File("images/arms/withoutWeapon/still/facing_backwards.png"));
+			
+			doneImage = ImageIO.read(new File("images/GameOver.jpg"));
 		} catch(IOException e) {
 			System.out.println(e.getStackTrace());
 		}
@@ -111,10 +115,15 @@ class ClientDrawingPanel extends JPanel {
 			setQuadrant(ClientApplication.myGridMap.playerLookup.get(playerName).playerLocationQuarter);
 		}
 		if(firstDrawDone) {
-			g.drawImage(backgroundImage[currentQuadrant], 0, 0, null);
+			if(ClientApplication.myGridMap.playerLookup.get(playerName).playerCurrentHealth >= 0) {
+				g.drawImage(backgroundImage[currentQuadrant], 0, 0, null);
+			} else {
+				g.drawImage(doneImage, 0, 0, null);
+			}
 		}
 
 		// Go through GridMapModel and fill in map as necessary
+		if(ClientApplication.myGridMap.playerLookup.get(playerName).playerCurrentHealth >= 0) {
 		for(int i = 0; i < 10; i++) { // loop through x of GridMapModel
 			for(int j = 0; j < 10; j++) { // loop through y of GridMapModel
 				// Check if the current index holds a model
@@ -127,6 +136,7 @@ class ClientDrawingPanel extends JPanel {
 
 						// If not our player we draw them
 						if(!playerModel.playerName.equals(this.playerName)) {
+							if(playerModel.playerCurrentHealth >= 0) {
 							for(int k = 0; k < 4; k++) {
 								if(playerModel.playerTeam == 1) {
 									g.drawImage(forwardRed[k], playerModel.playerLocationX * 45, playerModel.playerLocationY * 45, null);
@@ -140,11 +150,14 @@ class ClientDrawingPanel extends JPanel {
 									g.drawImage(downGreen[k], playerModel.playerLocationX * 45, playerModel.playerLocationY * 45, null);
 								}
 							}
+							}
 						} else {
 							// Refresh stats panel information
 							theGame.statsPanel.setTeam(playerModel.playerTeam);
 							theGame.statsPanel.setName(this.playerName);
-							theGame.statsPanel.setCurrentHealth(playerModel.playerCurrentHealth);
+							if(playerModel.playerCurrentHealth >= 0) {
+								theGame.statsPanel.setCurrentHealth(playerModel.playerCurrentHealth);
+							}
 							theGame.statsPanel.setArmorPoints(playerModel.playerArmorPoints);
 							theGame.statsPanel.setExperience(playerModel.playerExperiencePoints);
 							theGame.statsPanel.refreshStats();
@@ -194,6 +207,7 @@ class ClientDrawingPanel extends JPanel {
 				} // end if there is somthing in this square
 			} // end loop through y
 		} // end loop through x
+		}
 		//Render GridMapModel
 	} //end protected void paintComponent
 } //end class ClientDrawingPanel

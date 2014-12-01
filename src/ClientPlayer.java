@@ -10,6 +10,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import Models.PlayerModel;
+
 public class ClientPlayer extends JPanel implements Runnable, MouseListener {
 	private static final long serialVersionUID = -3929233179764541207L;
 	BufferedImage imgPlayerSkeletonF = null;
@@ -94,67 +96,71 @@ public class ClientPlayer extends JPanel implements Runnable, MouseListener {
 			try {
 				Thread.sleep(5);
 				
+				if(ClientApplication.myGridMap.playerLookup.get(drawPanel.playerName).playerCurrentHealth <= 0) {
+					break;
+				}
+				
 				//sending quadrant movement to server
 				if(direction == 0) { // up
-					if(yPixel <= 0) {
+					if(ySquare != 0 && ClientApplication.myGridMap.allModels[currentQuadrant][xSquare][ySquare-1] instanceof PlayerModel) {
+						continue;
+					} else if(yPixel <= 0) {
 						continue;
 					} else {
 						yPixel -= movementVar;
 						int deltaMovement = Math.abs(((int)(yPixel + 22.5) / 45) - ySquare);
 						if(deltaMovement != 0) {
-//							System.out.println("delta: " + deltaMovement);
 							ySquare = (int)(yPixel + 22.5) / 45;
 							if(deltaMovement != 9) {
-//								System.out.println("direction");
 								myApp.sendServerMessage("U:1");	
 							}
 						}
 					}
 				} // end if direction is up
 				else if(direction == 1) { // right
-					if(xPixel >= 405) {
+					if(xSquare != 9 && ClientApplication.myGridMap.allModels[currentQuadrant][xSquare+1][ySquare] instanceof PlayerModel) {
+						continue;
+					} else if(xPixel >= 405) {
 						continue;
 					} else {
 						xPixel += movementVar;
 						int deltaMovement = Math.abs(((int)(xPixel + 22.5) / 45) - xSquare);
 						if(deltaMovement != 0) {
-//							System.out.println("delta: " + deltaMovement);
 							xSquare = (int)(xPixel + 22.5) / 45;
 							if(deltaMovement != 9) {
 								myApp.sendServerMessage("R:1");	
-//								System.out.println("direction");
 							}
 						}
 					}
 				} // end if direction is right
 				else if(direction == 2) { // down
-					if(yPixel >= 405) {
+					if(ySquare != 9 && ClientApplication.myGridMap.allModels[currentQuadrant][xSquare][ySquare+1] instanceof PlayerModel) {
+						continue;
+					} else if(yPixel >= 405) {
 						continue;
 					} else {
 						yPixel += movementVar;
 						int deltaMovement = Math.abs(((int)(yPixel + 22.5) / 45) - ySquare);
 						if(deltaMovement != 0) {
 							ySquare = (int)(yPixel + 22.5) / 45;
-//							System.out.println("delta: " + deltaMovement);
 							if(deltaMovement != 9) {
 								myApp.sendServerMessage("D:1");	
-//								System.out.println("direction");
 							}
 						}
 					}
 				} // end if direction is down
 				else if(direction == 3) { // left
-					if(xPixel <= 0) {
+					if(xSquare != 0 && ClientApplication.myGridMap.allModels[currentQuadrant][xSquare-1][ySquare] instanceof PlayerModel) {
+						continue;
+					} else if(xPixel <= 0) {
 						continue;
 					} else {
 						xPixel -= movementVar;
 						int deltaMovement = Math.abs(((int)(xPixel + 22.5) / 45) - xSquare);
 						if(deltaMovement != 0) {
 							xSquare = (int)(xPixel + 22.5) / 45;
-//							System.out.println("delta: " + deltaMovement);
 							if(deltaMovement != 9) {
 								myApp.sendServerMessage("L:1");	
-//								System.out.println("direction");
 							}
 						}
 					}
@@ -212,27 +218,29 @@ public class ClientPlayer extends JPanel implements Runnable, MouseListener {
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-
-		if(direction == 0) { //up
-			for(int i = 0; i < 4; i++) {
-				g.drawImage(down[i], xPixel, yPixel, null);
-			}
-		} // end if(direction == 0)
-		else if(direction == 1) { // right
-			for(int i = 0; i < 4; i++) {
-				g.drawImage(right[i], xPixel, yPixel, null);
-			}
-		} // end if(direction == 1)
-		else if(direction == 2) { // down
-			for(int i = 0; i < 4; i++) {
-				g.drawImage(forward[i], xPixel, yPixel, null);
-			}
-		} // end if(direction == 2)
-		else if(direction == 3) { // left
-			for(int i = 0; i < 4; i++) {
-				g.drawImage(left[i], xPixel, yPixel, null);
-			}
-		} // end if(direction == 3)
+		
+		if(ClientApplication.myGridMap.playerLookup.get(drawPanel.playerName).playerCurrentHealth >= 0) {
+			if(direction == 0) { //up
+				for(int i = 0; i < 4; i++) {
+					g.drawImage(down[i], xPixel, yPixel, null);
+				}
+			} // end if(direction == 0)
+			else if(direction == 1) { // right
+				for(int i = 0; i < 4; i++) {
+					g.drawImage(right[i], xPixel, yPixel, null);
+				}
+			} // end if(direction == 1)
+			else if(direction == 2) { // down
+				for(int i = 0; i < 4; i++) {
+					g.drawImage(forward[i], xPixel, yPixel, null);
+				}
+			} // end if(direction == 2)
+			else if(direction == 3) { // left
+				for(int i = 0; i < 4; i++) {
+					g.drawImage(left[i], xPixel, yPixel, null);
+				}
+			} // end if(direction == 3)
+		}
 	} // end public void paintComponent(Graphics)
 	
 	class DrawKeyListener extends KeyAdapter {

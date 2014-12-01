@@ -130,11 +130,17 @@ public class ClientApplication extends JFrame implements Runnable {
 		try {
 			Object serverObject = inFromServer.readObject();
 			if(serverObject instanceof GridMapModel) {
-				myGridMap = (GridMapModel)inFromServer.readObject();
-				//System.out.println(myGridMap.playerLookup.size());
-				//System.out.println(myGridMap.allModels.length);				
-				myGame.drawingPanel.refreshMap();
-				//update gridmapModel on our side.
+				Object serverObject2 = inFromServer.readObject();
+				if(serverObject2 instanceof GridMapModel) {
+					myGridMap = (GridMapModel)serverObject2;
+					//System.out.println(myGridMap.playerLookup.size());
+					//System.out.println(myGridMap.allModels.length);				
+					myGame.drawingPanel.refreshMap();
+					//update gridmapModel on our side.
+				} else {
+					String serverString = (String)serverObject2;
+					readServerString(serverString);
+				}
 			} else {
 				String serverString = (String)serverObject;
 				readServerString(serverString);
