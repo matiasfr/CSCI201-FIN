@@ -92,7 +92,7 @@ public class ClientPlayer extends JPanel implements Runnable {
 				
 				//sending quadrant movement to server
 				if(direction == 0) { // up
-					if((currentQuadrant == 0 || currentQuadrant == 2) && yPixel <= 0) { 
+					if(yPixel <= 0) {
 						continue;
 					} else {
 						yPixel -= movementVar;
@@ -104,7 +104,7 @@ public class ClientPlayer extends JPanel implements Runnable {
 					}
 				} // end if direction is up
 				else if(direction == 1) { // right
-					if((currentQuadrant == 1 || currentQuadrant == 3) && xPixel >= 405) {
+					if(xPixel >= 405) {
 						continue;
 					} else {
 						xPixel += movementVar;
@@ -116,7 +116,7 @@ public class ClientPlayer extends JPanel implements Runnable {
 					}
 				} // end if direction is right
 				else if(direction == 2) { // down
-					if((currentQuadrant == 2 || currentQuadrant == 3) && yPixel >= 405) { 
+					if(yPixel >= 405) {
 						continue;
 					} else {
 						yPixel += movementVar;
@@ -128,7 +128,7 @@ public class ClientPlayer extends JPanel implements Runnable {
 					}
 				} // end if direction is down
 				else if(direction == 3) { // left
-					if((currentQuadrant == 0 || currentQuadrant == 2) && xPixel <= 0) { 
+					if(xPixel <= 0) {
 						continue;
 					} else {
 						xPixel -= movementVar;
@@ -223,7 +223,7 @@ public class ClientPlayer extends JPanel implements Runnable {
 			//Check the potential new position. If it is in a different square
 			//if the new potential position is within 5 of a border, then check. Set quad change boolean to true; 
 			if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
-				if(xPixel >= 450) { // If you go past the right border
+				if(xPixel >= 405) { // If you go past the right border
 					if(currentQuadrant == 0 || currentQuadrant == 2) { // Change to next quadrant to the right 
 						xPixel = 0;
 						currentQuadrant++;
@@ -266,7 +266,7 @@ public class ClientPlayer extends JPanel implements Runnable {
 				}
 			} // end if up key pressed
 			else if(e.getKeyCode() == KeyEvent.VK_DOWN) {
-				if(yPixel >= 450) {
+				if(yPixel >= 405) {
 					if(currentQuadrant == 0 || currentQuadrant == 1) { // Change to next quadrant down
 						yPixel = 0;
 						currentQuadrant += 2;
