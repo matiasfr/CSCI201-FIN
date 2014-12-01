@@ -1,9 +1,15 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.Timer;
+
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.*;
+
 import Models.PlayerModel;
 
 public class ClientLobbyPanel extends JPanel {
@@ -20,12 +26,13 @@ public class ClientLobbyPanel extends JPanel {
 	private ArrayList<String> usersList;
 	// Game stuff
 	private ClientApplication myClient;
+	BufferedImage backgroundImage;
 
 	//// Constructor ////
 	public ClientLobbyPanel(ClientApplication myClient) {
 		//// Initial GUI setup ////
 		setLayout(null);
-		setSize(1000, 800);
+		setSize(800, 450);
 		setBackground(Color.white);
 		
 		//// Game client ////
@@ -34,7 +41,7 @@ public class ClientLobbyPanel extends JPanel {
 		//// Countdown Setup ////
 		countdownLabel = new JLabel(TIME_UNTIL_START_STRING + countdownNum);
 		Dimension countdownLabelDimensions = countdownLabel.getPreferredSize();
-		countdownLabel.setBounds(700, 300, countdownLabelDimensions.width, countdownLabelDimensions.height);
+		countdownLabel.setBounds(400, 225, countdownLabelDimensions.width, countdownLabelDimensions.height);
 		add(countdownLabel);
 		
 		countdownTimer = new Timer(ONE_SECOND, new ActionListener() {
@@ -51,9 +58,14 @@ public class ClientLobbyPanel extends JPanel {
 		usersTextArea.setBorder(BorderFactory.createLineBorder(Color.black));
 		Dimension usersTextAreaDimensions = usersTextArea.getPreferredSize();
 		usersTextArea.setBounds(100, 300, usersTextAreaDimensions.width, usersTextAreaDimensions.height);
-		add(usersTextArea);
+//		add(usersTextArea);
 		
 		// Final GUI Setup
+		try {
+			backgroundImage = ImageIO.read(new File("images/Login.png"));
+		} catch(Exception e) {
+			System.out.println(e.getStackTrace());
+		}
 	} // end public ClientLobbyPanel constructor
 
 	//// Player List Methods ////
@@ -110,4 +122,9 @@ public class ClientLobbyPanel extends JPanel {
 			countdownTimer.stop();
 		}
 	} // end public void updateCountdown
+	
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		g.drawImage(backgroundImage, 0, 0, null);
+	}
 } // end class ClientLobbyPanel

@@ -36,7 +36,7 @@ public class ClientApplication extends JFrame implements Runnable {
 		super("Our Game");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setMinimumSize(new Dimension(1000, 600));
+		setMinimumSize(new Dimension(800, 450));
 		setLocationRelativeTo(null);
 
 		try {
@@ -63,7 +63,6 @@ public class ClientApplication extends JFrame implements Runnable {
 		add(cardsPanel);
 		setVisible(true);
 		cl.show(cardsPanel, "LoginScreen");
-		
 		new Thread(this).start();
 	} //end public Client constructor
 	

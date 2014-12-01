@@ -1,12 +1,18 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
+import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
+import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -23,12 +29,24 @@ public class ClientLoginPanel extends JPanel {
 	JButton createAccountButton;
 	ObjectOutputStream oos;
 	Container frame;
+	BufferedImage backgroundImage;
 
 	public ClientLoginPanel(final ObjectOutputStream oos) {
 		frame = this.getParent();
 		this.oos = oos;
-		JPanel centerPane = new JPanel();
-		this.setLayout(new BorderLayout());
+		try {
+			backgroundImage = ImageIO.read(new File("images/Login.png"));
+		} catch(Exception e) {
+			System.out.println(e.getStackTrace());
+		}
+		
+		JPanel centerPane = new JPanel() {
+			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				g.drawImage(backgroundImage, 0, 0, null);
+			}
+		};
+		setLayout(new BorderLayout());
 		
 		centerPane.setLayout(new GridBagLayout());
 		GridBagConstraints cs = new GridBagConstraints();
@@ -46,6 +64,7 @@ public class ClientLoginPanel extends JPanel {
 		cs.gridy = 0;
 		cs.gridwidth = 2;
 		centerPane.add(usernameInput, cs);
+		centerPane.setBorder(BorderFactory.createLineBorder(Color.black));
 
 		/*passwordLabel = new JLabel("Password: ");
 		cs.gridx = 0;
@@ -63,6 +82,8 @@ public class ClientLoginPanel extends JPanel {
 		
 		this.add(centerPane, BorderLayout.CENTER);
 		this.add(loginButton, BorderLayout.SOUTH);
+		
+		
 		
 		loginButton.addActionListener(new ActionListener() {
 	            public void actionPerformed(ActionEvent e) {

@@ -117,20 +117,20 @@ class ClientDrawingPanel extends JPanel {
 						// Get the PlayerModel
 						PlayerModel playerModel = (PlayerModel)ClientApplication.myGridMap.allModels[currentQuadrant][i][j];
 						int playerDirection = playerModel.playerDirection;
+						System.out.println("player: " + playerModel.playerName + ", x: " + (playerModel.playerLocationX * 45) + ", y: " + (playerModel.playerLocationY * 45));
 						// If not our player we draw them
 						if(!playerModel.playerName.equals(this.playerName)) {
 							for(int k = 0; k < 4; k++) {
-								//TODO:  Draw other players
 								if(playerModel.playerTeam == 1) {
-									g.drawImage(forwardRed[k], playerModel.playerLocationX, playerModel.playerLocationY, null);
-									g.drawImage(leftRed[k], playerModel.playerLocationX, playerModel.playerLocationY, null);
-									g.drawImage(rightRed[k], playerModel.playerLocationX, playerModel.playerLocationY, null);
-									g.drawImage(downRed[k], playerModel.playerLocationX, playerModel.playerLocationY, null);
+									g.drawImage(forwardRed[k], playerModel.playerLocationX * 45, playerModel.playerLocationY * 45, null);
+									g.drawImage(leftRed[k], playerModel.playerLocationX * 45, playerModel.playerLocationY * 45, null);
+									g.drawImage(rightRed[k], playerModel.playerLocationX * 45, playerModel.playerLocationY * 45, null);
+									g.drawImage(downRed[k], playerModel.playerLocationX * 45, playerModel.playerLocationY * 45, null);
 								} else {
-									g.drawImage(forwardGreen[k], playerModel.playerLocationX, playerModel.playerLocationY, null);
-									g.drawImage(leftGreen[k], playerModel.playerLocationX, playerModel.playerLocationY, null);
-									g.drawImage(rightGreen[k], playerModel.playerLocationX, playerModel.playerLocationY, null);
-									g.drawImage(downGreen[k], playerModel.playerLocationX, playerModel.playerLocationY, null);
+									g.drawImage(forwardGreen[k], playerModel.playerLocationX * 45, playerModel.playerLocationY * 45, null);
+									g.drawImage(leftGreen[k], playerModel.playerLocationX * 45, playerModel.playerLocationY * 45, null);
+									g.drawImage(rightGreen[k], playerModel.playerLocationX * 45, playerModel.playerLocationY * 45, null);
+									g.drawImage(downGreen[k], playerModel.playerLocationX * 45, playerModel.playerLocationY * 45, null);
 								}
 							}
 						} else {
